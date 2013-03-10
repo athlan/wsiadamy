@@ -1,4 +1,7 @@
-package org.wsiadamy.common.model;
+package pl.wsiadamy.common.model;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -33,6 +36,9 @@ public class AppTest
      */
     public void testApp()
     {
+    	ApplicationContext appContext = 
+            	  new ClassPathXmlApplicationContext("config/BeanLocations.xml");
+        
         assertTrue( true );
     }
 }

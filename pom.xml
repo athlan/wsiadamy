@@ -15,5 +15,5 @@
 	<modules>
 		<module>wsiadamy-webapp</module>
    		<module>wsiadamy-common</module>
-  </modules>
+  	</modules>
 </project>
