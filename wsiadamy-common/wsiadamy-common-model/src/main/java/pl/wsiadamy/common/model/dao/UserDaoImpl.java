@@ -1,40 +1,15 @@
 package pl.wsiadamy.common.model.dao;
 
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-import pl.wsiadamy.common.model.User;
+import pl.wsiadamy.common.model.common.AbstractDaoImpl;
+import pl.wsiadamy.common.model.entity.User;
 
-@Repository("userDao")
-public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
-	
-	@Autowired
-    public void anyMethodName(SessionFactory sessionFactory)
-    {
-        setSessionFactory(sessionFactory);
-    }
-	
-	@Override
-	public void save(User user) {
-		getHibernateTemplate().save(user);
-	}
+@Component
+public class UserDaoImpl extends AbstractDaoImpl<User, Integer> implements UserDao {
 
-	@Override
-	public void update(User user) {
-		getHibernateTemplate().update(user);
-	}
-
-	@Override
-	public void delete(User user) {
-		getHibernateTemplate().delete(user);
-	}
-
-	@Override
-	public User getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+	public UserDaoImpl() {
+		super(User.class);
 	}
 
 }

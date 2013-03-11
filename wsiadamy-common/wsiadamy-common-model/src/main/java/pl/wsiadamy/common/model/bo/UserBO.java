@@ -1,6 +1,6 @@
 package pl.wsiadamy.common.model.bo;
 
-import pl.wsiadamy.common.model.User;
+import pl.wsiadamy.common.model.entity.User;
 
 public interface UserBO {
 	void save(User user);

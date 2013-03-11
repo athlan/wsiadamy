@@ -37,7 +37,7 @@ public class AppTest
     public void testApp()
     {
     	ApplicationContext appContext = 
-            	  new ClassPathXmlApplicationContext("config/BeanLocations.xml");
+            	  new ClassPathXmlApplicationContext("context.xml");
         
         assertTrue( true );
     }
