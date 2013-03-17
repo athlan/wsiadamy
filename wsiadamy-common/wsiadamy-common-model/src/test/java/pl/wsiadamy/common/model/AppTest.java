@@ -37,7 +37,7 @@ public class AppTest
     public void testApp()
     {
     	ApplicationContext appContext = 
-            	  new ClassPathXmlApplicationContext("context.xml");
+            	  new ClassPathXmlApplicationContext("wsiadamy-common-model-context.xml");
         
         assertTrue( true );
     }

@@ -11,6 +11,16 @@ public class UserBOImpl implements UserBO {
 	@Autowired
 	UserDao userDao;
 	
+	public User createUser(String username, String password) {
+		User user = new User();
+		
+		user.setName(username);
+		
+		userDao.create(user);
+		
+		return user;
+	}
+	
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}

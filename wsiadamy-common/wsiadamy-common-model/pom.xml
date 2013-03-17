@@ -14,20 +14,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   
-  <build>
-     <defaultGoal>install</defaultGoal>
-     <plugins>
-          <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-compiler-plugin</artifactId>
-               <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-               </configuration>
-          </plugin>
-      </plugins>
-	</build>
-
   <dependencies>
     <!-- JUnit testing framework -->
     <dependency>
@@ -51,6 +37,24 @@
       <scope>compile</scope>
     </dependency>
     
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <version>3.0.5.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+    
+    <dependency> 
+	    <groupId>org.springframework</groupId> 
+	    <artifactId>spring-aspects</artifactId> 
+	    <version>3.0.5.RELEASE</version> 
+	</dependency>
+	
+	<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjrt</artifactId>
+    <version>1.6.12</version>
+</dependency>
     <!-- PostgreSQL database driver -->
 	<dependency>
 		<groupId>postgresql</groupId>
