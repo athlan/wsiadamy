@@ -11,6 +11,7 @@
 	
  	<context:annotation-config />
 	<context:spring-configured />
+	
 	<!-- Auto scan the components -->
 	<context:component-scan base-package="pl.wsiadamy.common.model" />
 	
