@@ -1,9 +1,9 @@
-<%@tag description="Simple Wrapper Tag" pageEncoding="UTF-8"%>
+<%@tag description="Simple Wrapper Tag" pageEncoding="UTF-8" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Bootstrap, from Twitter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -27,5 +27,7 @@
       <p>Language : <a href="?language=en">English</a>|<a href="?language=zh_CN">Chinese</a></p>
 <jsp:doBody/>
 	</div>
+	
+	<script src="${pageContext.request.contextPath}/static/js/jquery-1.9.1.min.js"></script>
   </body>
 </html>

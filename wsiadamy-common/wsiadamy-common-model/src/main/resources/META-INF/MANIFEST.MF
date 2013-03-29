@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Class-Path: wsiadamy-common-model-1.0.jar

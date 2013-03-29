@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import pl.wsiadamy.common.model.common.AbstractEntity;
+import pl.wsiadamy.common.model.common.PasswordCryptography;
 
 @Entity
 @Table(name = "users")
@@ -16,9 +17,15 @@ public class User extends AbstractEntity<Integer> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@Column(length = 255)
-	private String name;
+	private String username;
+
+	@Column(length = 32)
+	private String password;
+	
+	@Column(length = 32)
+	private String password_salt;
 	
 	public User() {
 	}
@@ -31,14 +38,33 @@ public class User extends AbstractEntity<Integer> {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		String passwordSalt = PasswordCryptography.getSalt(password);
+		
+		this.setPasswordSalt(passwordSalt);
+		this.password = PasswordCryptography.encode(password, passwordSalt);
+	}
+
+	public String getPasswordSalt() {
+		return password_salt;
+	}
+	
+	private void setPasswordSalt(String passwordSalt) {
+		this.password_salt = passwordSalt;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + "]";

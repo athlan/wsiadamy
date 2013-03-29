@@ -8,6 +8,9 @@ public interface UserBO {
 	void delete(User user);
 	
 	User getById(Integer id);
+	User getByUsername(String username);
 	
 	User createUser(String username, String password);
+	
+	boolean authenticateUser(User user, String password);
 }

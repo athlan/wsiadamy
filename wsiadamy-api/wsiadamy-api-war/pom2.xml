@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
 		<groupId>pl.wsiadamy</groupId>
-		<artifactId>wsiadamy-webapp</artifactId>
+		<artifactId>wsiadamy-api</artifactId>
 		<version>1.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-  <artifactId>wsiadamy-webapp-war</artifactId>
+  <artifactId>wsiadamy-api-war</artifactId>
   <packaging>war</packaging>
-  <name>webapp-war</name>
+  <name>api-war</name>
   <url>http://maven.apache.org</url>
   
   <dependencies>
@@ -54,33 +54,9 @@
     	<version>1.0.0.GA</version>
     </dependency>
     
-    <!-- Spring Security -->
-	<dependency>
-		<groupId>org.springframework.security</groupId>
-		<artifactId>spring-security-core</artifactId>
-		<version>3.0.5.RELEASE</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>org.springframework.security</groupId>
-		<artifactId>spring-security-web</artifactId>
-		<version>3.0.5.RELEASE</version>
-	</dependency>
-
-	<dependency>
-		<groupId>org.springframework.security</groupId>
-		<artifactId>spring-security-config</artifactId>
-		<version>3.0.5.RELEASE</version>
-	</dependency>
-	
-	<dependency>
-	    <groupId>org.springframework.social</groupId>
-	    <artifactId>spring-social-facebook</artifactId>
-	    <version>1.0.2.RELEASE</version>
-	</dependency>
   </dependencies>
   <build>
-    <finalName>wsiadamy-webapp-war</finalName>
+    <finalName>wsiadamy-api-war</finalName>
   </build>
   
 </project>
