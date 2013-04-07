@@ -28,12 +28,29 @@
 		  <!-- JSON View -->
 		  <bean
 			class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+			<!-- <property name="objectMapper" ref="jacksonJsonObjectMapper" /> -->
 		  </bean>
 		 </list>
 	  </property>
 	  <property name="ignoreAcceptHeader" value="true" />
 	</bean>
- 	
+	<!-- 
+	<bean id="jacksonJsonObjectMapper" class="pl.wsiadamy.api.CustomObjectMapper">
+		<property name="customSerializerFactory" ref="jacksonJsonCustomSerializerFactory" />
+	</bean>
+	
+	<bean id="jacksonJsonCustomSerializerFactory"
+	 class="nl.hajari.wha.service.json.CustomSerializerFactoryRegistry">
+	<property name="serializers">
+		<map>
+			<entry key="nl.hajari.wha.domain.Customer" value-ref="customerSerializer" />
+		</map>
+	</property>
+	</bean>
+ 
+<bean id="customerSerializer" class="nl.hajari.wha.service.json.CustomerSerializer" />
+ 	 -->
+ 	 
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">

@@ -22,7 +22,20 @@
 		<servlet-name>mvc-dispatcher</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
- 
+	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/welcome</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/accessDenied</location>
+	</error-page>
+	
+	<welcome-file-list>
+		<welcome-file>welcome</welcome-file>
+	</welcome-file-list>
+	
 	<!-- Define Spring Context Loader Listener -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
