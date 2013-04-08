@@ -1,6 +1,10 @@
 package pl.wsiadamy.common.model.bo;
 
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,19 +31,37 @@ public class RouteBOImpl implements RouteBO {
 		
 		route.setOwner(owner);
 		
+		// set source and destination
 		Point waypointStartPoint = GeometryPointFactory.createPointFromString(input.getLocationSourceCoords());
-		RouteWaypoint waypointStart = new RouteWaypoint(waypointStartPoint);
+		RouteWaypoint waypointStart = new RouteWaypoint(route, waypointStartPoint);
+		waypointStart.setName(input.getLocationSource());
 		
 		route.setWaypointSource(waypointStart);
 		
 		Point waypointStopPoint = GeometryPointFactory.createPointFromString(input.getLocationDestinationCoords());
-		RouteWaypoint waypointStop = new RouteWaypoint(waypointStopPoint);
+		RouteWaypoint waypointStop = new RouteWaypoint(route, waypointStopPoint);
+		waypointStop.setName(input.getLocationDestination());
 		
 		route.setWaypointDestination(waypointStop);
 		
+		// set waypoints
+		for(Map.Entry<String, String> entry : input.getWaypoints().entrySet()) {
+			if(!entry.getValue().equals("")
+				&& input.getWaypointsCoords().containsKey(entry.getKey())
+				&& !input.getWaypointsCoords().get(entry.getKey()).equals("")) {
+				Point waypointPoint = GeometryPointFactory.createPointFromString(input.getWaypointsCoords().get(entry.getKey()));
+				
+				RouteWaypoint waypoint = new RouteWaypoint(route, waypointPoint);
+				waypoint.setName(entry.getValue());
+				route.addWaypoint(waypoint);
+			}
+		}
+		
+		// set linestring
 		LineString lineString = GeometryPointFactory.createLineStringFromString(input.getRouteLine());
 		route.getRouteLine().setLineString(lineString);
 		
+		// set date and details
 		route.setDateDeparture(input.getDateDepartureObject());
 		route.setSeats(input.getSeats());
 		

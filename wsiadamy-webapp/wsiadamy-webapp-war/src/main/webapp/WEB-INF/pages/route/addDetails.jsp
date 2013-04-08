@@ -42,6 +42,9 @@
 	<form:form method="post" action="" commandName="routeAddInput">
 		<form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" />
 		<form:input path="locationDestinationCoords" type="hidden" id="fieldLocationDestinationCoords" />
+<c:forEach items="${routeAddInput.waypointsCoords}" var="waypointCoord">
+    <input name="waypointsCoords['${waypointCoord.key}']" type="hidden" value="${waypointCoord.value}" class="waypoint" />
+</c:forEach>
 	</form:form>
 	
 <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
@@ -81,9 +84,25 @@
 	var map;
 	
 	function calcRoute() {
+    var requestWaypoints = [];
+    
+    $('.waypoint').each(function() {
+      var point = $(this).val();
+      var coords = point.split(' ');
+      
+      if(coords.length != 2)
+        return;
+      
+      requestWaypoints.push({
+        location: new google.maps.LatLng(coords[0], coords[1]),
+        stopover: false
+      });
+    });
+    
 		var request = {
 		    origin: $('#fieldLocationSourceCoords').val(),
 		    destination: $('#fieldLocationDestinationCoords').val(),
+		    waypoints: requestWaypoints,
 		    travelMode: google.maps.DirectionsTravelMode.DRIVING
 		};
 		

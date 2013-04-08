@@ -2,10 +2,10 @@ package pl.wsiadamy.common.model.input;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -31,10 +31,10 @@ public class RouteAddInput {
 	private String locationDestinationCoords;
 	
 //	@NotEmpty
-	private List<String> waypoints;
+	private HashMap<String, String> waypoints;
 	
 //	@NotEmpty
-	private List<String> waypointsCoords;
+	private HashMap<String, String> waypointsCoords;
 	
 	private Calendar dateDeparture;
 	
@@ -60,6 +60,9 @@ public class RouteAddInput {
     	setDateDeparture(dateTommorow);
     	
     	setSeats(2);
+    	
+    	waypoints = new LinkedHashMap<String, String>();
+    	waypointsCoords = new LinkedHashMap<String, String>();
     }
     
 	public String getLocationSource() {
@@ -94,19 +97,19 @@ public class RouteAddInput {
 		this.locationDestinationCoords = locationDestinationCoords;
 	}
 
-	public List<String> getWaypoints() {
+	public HashMap<String, String> getWaypoints() {
 		return waypoints;
 	}
 
-	public void setWaypoints(List<String> waypoints) {
+	public void setWaypoints(HashMap<String, String> waypoints) {
 		this.waypoints = waypoints;
 	}
 
-	public List<String> getWaypointsCoords() {
+	public HashMap<String, String> getWaypointsCoords() {
 		return waypointsCoords;
 	}
 	
-	public void setWaypointsCoords(List<String> waypointsCoords) {
+	public void setWaypointsCoords(HashMap<String, String> waypointsCoords) {
 		this.waypointsCoords = waypointsCoords;
 	}
 

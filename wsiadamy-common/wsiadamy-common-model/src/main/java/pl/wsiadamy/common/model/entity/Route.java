@@ -1,6 +1,7 @@
 package pl.wsiadamy.common.model.entity;
 
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,8 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -36,14 +36,13 @@ public class Route extends AbstractEntity<Integer> {
 	@OneToOne(cascade = CascadeType.ALL)
 	RouteDetails routeDetails;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	RouteWaypoint waypointSource;
-	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	RouteWaypoint waypointDestination;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "route_waypoint_handler")
+	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	Set<RouteWaypoint> waypoints;
 	
 	@Column
@@ -60,6 +59,8 @@ public class Route extends AbstractEntity<Integer> {
 	
 	public Route() {
 		routeLine = new RouteLine(this);
+		
+		waypoints = new LinkedHashSet<RouteWaypoint>();
 		
 		routeDetails = new RouteDetails(this);
 	}

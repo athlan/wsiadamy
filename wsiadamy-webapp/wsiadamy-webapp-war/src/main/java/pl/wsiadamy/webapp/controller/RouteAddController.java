@@ -1,11 +1,12 @@
 package pl.wsiadamy.webapp.controller;
  
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -56,6 +57,19 @@ public class RouteAddController {
         @ModelAttribute("routeAddInput")
         @Valid RouteAddInput form,
         BindingResult result, ModelMap model) {
+		
+		HashMap<String, String> waypoints = form.getWaypoints();
+		HashMap<String, String> waypointsCoords = form.getWaypointsCoords();
+		
+		for(Map.Entry<String, String> entry : waypoints.entrySet()) {
+			if(entry.getValue().equals("")) {
+//				waypoints.remove(entry.getKey());
+//				waypointsCoords.remove(entry.getKey());
+			}
+		}
+		
+		form.setWaypoints(waypoints);
+		form.setWaypointsCoords(waypointsCoords);
 		
         if (result.hasErrors()) {
             return "route/add";

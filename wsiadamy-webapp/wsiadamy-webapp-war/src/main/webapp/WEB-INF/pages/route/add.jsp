@@ -9,41 +9,46 @@
 		<div class="span5">
 		<form:form method="post" action="" commandName="routeAddInput">
 			<div>
-				<form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." />
-				<form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" />
+				<form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="locationAutocomplete" />
+				<form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" class="locationAutocompleteCoords" />
 				<form:errors path="locationSource" cssClass="error" />
 		    </div>
 		    
 		    <div>
-				<form:input path="locationDestination" id="fieldLocationDestination" placeholder="Jadę do..." />
-				<form:input path="locationDestinationCoords" type="hidden" id="fieldLocationDestinationCoords" />
+				<form:input path="locationDestination" id="fieldLocationDestination" placeholder="Jadę do..." class="locationAutocomplete" />
+				<form:input path="locationDestinationCoords" type="hidden" id="fieldLocationDestinationCoords" class="locationAutocompleteCoords" />
 				<form:errors path="locationDestination" cssClass="error" />
 			</div>
 			
-		    <div>
-			<c:forEach items="${routeAddInput.waypoints}" var="waypoint">
-				<input name="waypoints[]" type="text" value="${waypoint}"  placeholder="Przez..." />
-			</c:forEach>
-			
-			<c:forEach items="${routeAddInput.waypointsCoords}" var="waypointCoord">
-				<input name="waypointsCoords[]" type="text" value="${waypointCoord}"/>
-			</c:forEach>
+      <div class="waypoints">
+<c:forEach items="${routeAddInput.waypoints}" var="waypoint">
+				<div class="waypoint">
+          <input name="waypoints['${waypoint.key}']" type="text" value="${waypoint.value}"  placeholder="Przez..." class="locationAutocomplete" />
+          <input name="waypointsCoords['${waypoint.key}']" type="hidden" value="${routeAddInput.waypointsCoords[waypoint.key]}" class="locationAutocompleteCoords" />
+          <div class="delete">x</div>
+        </div>
+</c:forEach>
+        <div class="pattern">
+					<input name="pattern_waypoints['__index__']" type="text" value=""  placeholder="Przez..." class="locationAutocomplete" />
+					<input name="pattern_waypointsCoords['__index__']" type="hidden" value="" class="locationAutocompleteCoords" />
+          <div class="delete">x</div>
+				</div>
 			</div>
-			
-		    <div>
-		    	<label for="fieldSeats">Data wyjazdu:</label>
-				<form:input path="dateDeparture" id="fieldDateDeparture" />
-				<form:errors path="dateDeparture" cssClass="error" />
-			</div>
-			
-		    <div>
-		    	<label for="fieldSeats">Liczba dostępnych miejsc:</label>
-				<form:input path="seats" id="fieldSeats" />
-				<form:errors path="seats" cssClass="error" />
-			</div>
-			
-		    <div>
-		    	<form:input path="routeLine" type="hidden" id="fieldRouteLine" />
+      
+      <div>
+        <label for="fieldSeats">Data wyjazdu:</label>
+        <form:input path="dateDeparture" id="fieldDateDeparture" />
+        <form:errors path="dateDeparture" cssClass="error" />
+      </div>
+      
+      <div>
+        <label for="fieldSeats">Liczba dostępnych miejsc:</label>
+        <form:input path="seats" id="fieldSeats" />
+        <form:errors path="seats" cssClass="error" />
+      </div>
+      
+      <div>
+        <form:input path="routeLine" type="hidden" id="fieldRouteLine" />
 				<input type="submit" value="Dalej" class="btn btn-success" >
 			</div>
 			
@@ -60,24 +65,65 @@
 	
 <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
 <script type="text/javascript">
+  function initLocationService(inputObject) {
+    inputObject.bind('keypress', function(e) {
+      if(e.keyCode == 13) {
+        e.preventDefault();
+      }
+    });
+    
+    var autocompleteFieldLocation = new google.maps.places.Autocomplete(inputObject.get(0), {
+      types: ['(cities)'],
+    });
+    
+    google.maps.event.addListener(autocompleteFieldLocation, 'place_changed', function() {
+      var place = autocompleteFieldLocation.getPlace();
+      inputObject.next('.locationAutocompleteCoords').val(place.geometry.location.jb + " " + place.geometry.location.kb);
+      calcRoute();
+    });
+  }
+  
 	$(function() {
-		$('#fieldLocationSource').bind('keypress', function(e) {
-			if(e.keyCode == 13) {
-				e.preventDefault();
-				//$('#fieldLocationDestination').focus();
-			}
-		});
+    $(document).on('click', '.waypoints .waypoint .delete', function() {
+      $(this).parents('div.waypoint:first').remove();
+      return false;
+    });
+    
+    $('.locationAutocomplete').each(function() {
+      initLocationService($(this));
+    });
 		
-		$('#fieldLocationDestination').bind('keypress', function(e) {
-			if(e.keyCode == 13) {
-				e.preventDefault();
-			}
-		});
-		
-    	$("#fieldDateArrival").datepicker({
-    		dateFormat: 'dd.mm.yy'/*,
-    		minDate: new Date()*/
-    	});
+    $("#fieldDateArrival").datepicker({
+      dateFormat: 'dd.mm.yy'/*,
+      minDate: new Date()*/
+    });
+    
+    $(".waypoints .pattern input").bind('focus', function() {
+      var pattern = $(this).parents('.pattern').clone();
+      pattern.unbind('focus').bind('keypress', function(e) {
+        if(e.keyCode == 13) {
+          e.preventDefault();
+        }
+      });
+      pattern.removeClass('pattern').addClass('waypoint');
+      
+      var lastIndex = 0;
+      var lastIndexObject = $(".waypoints .waypoint:last input:eq(0)").attr('name');
+      if(lastIndexObject)
+        lastIndex = lastIndexObject.match(/\['([0-9]+)'\]/)[1];
+      
+      ++lastIndex;
+      
+      $(this).parents('.pattern').before(pattern);
+      var inputLocation = pattern.find('input:eq(0)');
+      inputLocation.focus();
+      
+      pattern.find('input').each(function() {
+        $(this).attr('name', $(this).attr('name').replace(/__index__/, lastIndex).replace(/pattern_/, ''));
+      });
+      
+      initLocationService(inputLocation);
+    });
 	});
 	
 	function initialize() {
@@ -92,32 +138,8 @@
 		}
 		map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 		directionsDisplay.setMap(map);
-	  	
-		var fieldLocationSource = document.getElementById('fieldLocationSource');
-		var autocompleteFieldLocationSource = new google.maps.places.Autocomplete(fieldLocationSource, {
-			types: ['(cities)'],
-		});
-		
-		google.maps.event.addListener(autocompleteFieldLocationSource, 'place_changed', function() {
-			var place = autocompleteFieldLocationSource.getPlace();
-			
-			$('#fieldLocationSourceCoords').val(place.geometry.location.jb + " " + place.geometry.location.kb);
-			//console.log(place.geometry.location.jb);
-			//console.log(place.geometry.location.kb);
-			calcRoute();
-		});
-		
-		var fieldLocationDestination = document.getElementById('fieldLocationDestination');
-		var autocompleteFieldLocationDestination = new google.maps.places.Autocomplete(fieldLocationDestination, {
-			types: ['(cities)'],
-		});
-		
-		google.maps.event.addListener(autocompleteFieldLocationDestination, 'place_changed', function() {
-			var place = autocompleteFieldLocationDestination.getPlace();
-			
-			$('#fieldLocationDestinationCoords').val(place.geometry.location.jb + " " + place.geometry.location.kb);
-			calcRoute();
-		});
+    
+    calcRoute();
 	}
 	
 	google.maps.event.addDomListener(window, 'load', initialize);
@@ -127,9 +149,25 @@
 	var map;
 	
 	function calcRoute() {
+    var requestWaypoints = [];
+    
+    $('.waypoint').each(function() {
+      var point = $(this).find('input:eq(1)').val();
+      var coords = point.split(' ');
+      
+      if(coords.length != 2)
+        return;
+      
+      requestWaypoints.push({
+        location: new google.maps.LatLng(coords[0], coords[1]),
+        stopover: false
+      });
+    });
+    
 		var request = {
 		    origin: $('#fieldLocationSourceCoords').val(),
 		    destination: $('#fieldLocationDestinationCoords').val(),
+		    waypoints: requestWaypoints,
 		    travelMode: google.maps.DirectionsTravelMode.DRIVING
 		};
 		
@@ -158,6 +196,28 @@
 			}
 		});
 	}
-</script> 
+</script>
+<style>
+  .pattern {
+    opacity: 0.7;
+  }
+  
+  .pattern .delete {
+    display: none;
+  }
+  
+  .pattern input {
+    border: 1px dashed #ccc;
+  }
+  
+  .waypoint {
+    position: relative;
+  }
+  
+  .waypoint .delete {
+    position: absolute;
+    top: 5px; left: 230px;
+  }
+</style>
 	
 </t:wrapper>

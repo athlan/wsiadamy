@@ -29,11 +29,16 @@ public class RouteWaypoint extends AbstractEntity<Integer> {
 	@Column(nullable = true)
 	@Type(type="org.hibernatespatial.GeometryUserType")
 	Point point;
-
+	
+	@Column
+	private
+	String name;
+	
 	public RouteWaypoint() {
 	}
 
-	public RouteWaypoint(Point point) {
+	public RouteWaypoint(Route route, Point point) {
+		this.route = route;
 		setPoint(point);
 	}
 
@@ -51,6 +56,14 @@ public class RouteWaypoint extends AbstractEntity<Integer> {
 
 	public void setPoint(Point point) {
 		this.point = point;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
