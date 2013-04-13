@@ -33,12 +33,12 @@ public class RouteSearchController {
         return new RouteSearchSimpleInput();
     }
 	
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchForm(ModelMap model) {
-        return "route/search";
-    }
+//	@RequestMapping(value = "/search", method = RequestMethod.GET)
+//    public String searchForm(ModelMap model) {
+//        return "route/search";
+//    }
 	
-	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
     public String searchFormProcess(
         @ModelAttribute("routeSearchSimpleInput")
         @Valid RouteSearchSimpleInput form,
@@ -49,6 +49,8 @@ public class RouteSearchController {
         }
         
         List<Route> results = routeBO.findRoutes(form);
+        
+        model.addAttribute("routes", results);
         
         return "route/search";
  

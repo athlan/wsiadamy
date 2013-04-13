@@ -60,7 +60,7 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 			sqlDistancePointSource + " <= " + pointSourceDistanceRange + " AND " + 
 			sqlDistancePointDestination + " <= " + pointDestinationDistanceRange + " " +
 			"AND St_Line_Locate_Point(route_line.lineString, ST_GeomFromText('POINT(" + pointSource.getX() + " " + pointSource.getY() + ")')) < " +
-			"St_Line_Locate_Point(route_line.lineString, ST_GeomFromText('POINT(" + pointDestinaton.getX() + " " + pointDestinaton.getY() + ")'))"
+			"St_Line_Locate_Point(route_line.lineString, ST_GeomFromText('POINT(" + pointDestinaton.getX() + " " + pointDestinaton.getY() + ")'))";
 		
 		sql += sqlWhere;
 		
@@ -74,6 +74,10 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 			routeIds[i] = (Integer) result[0];
 			++i;
 		}
+		
+		// no routes found
+		if(routeIds.length == 0)
+			return new ArrayList<Route>();
 		
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Route> q = cb.createQuery(Route.class);

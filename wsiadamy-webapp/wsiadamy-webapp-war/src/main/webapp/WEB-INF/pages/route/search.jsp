@@ -2,11 +2,13 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <t:wrapper>
   <h2>Szukaj przejazdu</h2>
 
   <div class="">
-  <form:form method="post" action="" commandName="routeSearchSimpleInput">
+  <form:form method="get" action="" commandName="routeSearchSimpleInput">
     <div>
       <form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="locationAutocomplete" />
       <form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" class="locationAutocompleteCoords" />
@@ -54,7 +56,6 @@
 	});
 	
 </script>
-
 <script>
 $(function() {
   $('.perspective .btn').click(function() {
@@ -66,5 +67,26 @@ $(function() {
   });
 });
 </script>
+	
+	<c:choose>
+		<c:when test="${not empty routes}">
+			<div class="">
+			<h1>Przejazdy:</h1>
+		<c:forEach items="${routes}" var="route">
+      <div class="route">
+      <a href="<c:url value='/route/get/${route.id}' />">
+        Przejazd #<c:out value="${route.id}" />
+        z <c:out value="${route.waypointSource.name}" />
+        do <c:out value="${route.waypointDestination.name}" />
+      </a>
+      w dniu <fmt:formatDate value="${route.dateDeparture}" pattern="dd.MM.yyyy" />
+      </div>
+		</c:forEach>
+			</div>
+		</c:when>
+		<c:otherwise>
+			ssdcsdc
+		</c:otherwise>
+	</c:choose>
   
 </t:wrapper>
