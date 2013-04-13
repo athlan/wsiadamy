@@ -1,4 +1,4 @@
-INSERT INTO "public"."users" ("id", "password", "password_salt", "username") VALUES ('1', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'athlan');
+INSERT INTO "public"."users" ("id", "password", "password_salt", "username") VALUES ('1', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'athlan@vgroup.pl');
 
 INSERT INTO "public"."route" VALUES ('1', '2013-04-08 00:00:00', '2', '0', '73', '1', '1', '1', '2');
 INSERT INTO "public"."route_details" VALUES ('1', '8', '5.62', '161.16', '1');

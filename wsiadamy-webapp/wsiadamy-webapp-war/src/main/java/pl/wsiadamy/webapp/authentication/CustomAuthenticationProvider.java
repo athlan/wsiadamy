@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import pl.wsiadamy.common.model.bo.UserBO;
 import pl.wsiadamy.common.model.entity.User;
@@ -37,16 +38,24 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		if(!userBO.authenticateUser(user, password))
 			throw new BadCredentialsException("Wrong username or password");
 		
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		
-		authorities.add(new GrantedAuthorityImpl("ROLE_USER"));
-		
-		return new UsernamePasswordAuthenticationToken(user, null, authorities);
+		return createToken(user);
 	}
 
 	@Override
 	public boolean supports(Class<? extends Object> authentication) {
 		return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
 	}
-
+	
+	public static UsernamePasswordAuthenticationToken createToken(User user) {
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		
+		authorities.add(new GrantedAuthorityImpl("ROLE_USER"));
+		
+		return new UsernamePasswordAuthenticationToken(user, null, authorities);
+	}
+	
+	public static void authenticateUser(User user) {
+        Authentication authentication = CustomAuthenticationProvider.createToken(user);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+	}
 }

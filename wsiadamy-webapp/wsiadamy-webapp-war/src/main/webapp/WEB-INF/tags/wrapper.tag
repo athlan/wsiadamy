@@ -30,8 +30,8 @@
       
 <sec:authorize access="isAuthenticated()">
       <p>Current user: <sec:authentication property="principal.username" /></p>
+      <a href="<c:url value="/logout" />" > Logout</a>
 </sec:authorize>
-      <a href="<c:url value="/j_spring_security_logout" />" > Logout</a>
       
       Text: <spring:message code="welcome.springmvc" text="default text" />
       
