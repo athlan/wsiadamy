@@ -33,7 +33,7 @@
 	</error-page>
 	
 	<welcome-file-list>
-		<welcome-file>welcome</welcome-file>
+		<welcome-file>route/search</welcome-file>
 	</welcome-file-list>
 	
 	<!-- Define Spring Context Loader Listener -->

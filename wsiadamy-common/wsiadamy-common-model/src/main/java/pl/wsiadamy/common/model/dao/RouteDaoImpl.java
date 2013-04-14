@@ -26,6 +26,51 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 	}
 	
 	@Override
+	public List<Route> listRoutes(Map<String, Object> params, int limit, int offset) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Route> q = cb.createQuery(Route.class);
+		Root<Route> root = q.from(Route.class);
+
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		
+//		predicates.add(root.get("id").in(routeIds));
+		
+		if(predicates.size() > 0)
+			q.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+		
+		TypedQuery<Route> tq = getEntityManager().createQuery(q);
+		
+		tq.setMaxResults(limit);
+		tq.setFirstResult(offset);
+		
+		return tq.getResultList();
+	}
+	
+	@Override
+	public Long listRoutesCount(Map<String, Object> params) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Route> q = cb.createQuery(Route.class);
+		Root<Route> root = q.from(Route.class);
+		
+		// predicates
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		getEntityManager().createQuery(q);
+		if(null != params) {
+			if(params.containsKey("ownerId")) {
+				predicates.add(cb.equal(root.get("owner"), params.get("ownerId")));
+			}
+		}
+		
+		CriteriaQuery<Long> qCount = cb.createQuery(Long.class);
+		qCount.select(cb.count(qCount.from(Route.class)));
+//		getEntityManager().createQuery(qCount);
+		if(predicates.size() > 0)
+			qCount.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+		
+		return getEntityManager().createQuery(qCount).getSingleResult();
+	}
+	
+	@Override
 	public List<Route> findRoutes(Point pointSource, Point pointDestinaton, float pointRange) {
 		return findRoutes(pointSource, pointDestinaton, pointRange, pointRange, null);
 	}

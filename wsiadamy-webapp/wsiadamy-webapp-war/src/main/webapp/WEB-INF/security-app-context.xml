@@ -10,12 +10,11 @@
  	
 	<http auto-config="true" use-expressions="true">
 		<intercept-url pattern="/register" access="!hasRole('ROLE_USER')" />
+		<intercept-url pattern="/account/*" access="hasRole('ROLE_USER')" />
 		<intercept-url pattern="/route/addCommit" access="hasRole('ROLE_USER')" />
-		<intercept-url pattern="/welcomeSecured" access="hasRole('ROLE_USER')" />
-		<intercept-url pattern="/welcomeSecuredAdmin" access="hasRole('ROLE_ADMIN')" />
 		
 		<logout logout-url="/logout" />
-		<form-login login-page="/login" />
+		<form-login login-page="/login" authentication-failure-url="/login?authfailed=1" />
 	</http>
 	
 	<authentication-manager>

@@ -25,6 +25,16 @@ import com.vividsolutions.jts.geom.Point;
 public class RouteBOImpl implements RouteBO {
 	@Autowired
 	RouteDao routeDao;
+
+	@Override
+	public List<Route> listRoutes(Map<String, Object> params, int limit, int offset) {
+		return routeDao.listRoutes(params, limit, offset);
+	}
+	
+	@Override
+	public Long listRoutesCount(Map<String, Object> params) {
+		return routeDao.listRoutesCount(params);
+	}
 	
 	public Route createRoute(User owner, RouteAddInput input, RouteAddDetailsInput inputDetails) {
 		Route route = new Route();
@@ -85,42 +95,6 @@ public class RouteBOImpl implements RouteBO {
 		
 		return routeDao.findRoutes(waypointStartPoint, waypointStopPoint, 5000);
 	}
-	
-//	public Route createRoute() {
-//		Route route = new Route();
-//		
-//		String wktPoint = "POINT(10 5)";
-//		
-//		WKTReader fromText = new WKTReader();
-//        Geometry geom = null;
-//        try {
-//            geom = fromText.read(wktPoint);
-//        } catch (ParseException e) {
-//            throw new RuntimeException("Not a WKT string:" + wktPoint);
-//        }
-//        if (!geom.getGeometryType().equals("Point")) {
-//            throw new RuntimeException("Geometry must be a point. Got a " + geom.getGeometryType());
-//        }
-//        
-//        GeometryFactory factory = new GeometryFactory();
-//        
-//        route.setPoint1(factory.createPoint(new Coordinate(17.006836, 51.117317)));
-//        route.setPoint2(factory.createPoint(new Coordinate(18.672638, 50.30206)));
-//        
-////        route.setWaypointStart(new RouteWaypoint((Point) geom));
-////        
-////        List<Coordinate> coords = new ArrayList<Coordinate>();
-////        
-////        coords.add(new Coordinate());
-////        
-////        
-////        LineString line = factory.createLineString(coords.toArray(new Coordinate[coords.size()]));
-////        route.getRouteLine().setLineString(line);
-//        
-//		routeDao.create(route);
-//		
-//		return route;
-//	}
 	
 	public void setUserDao(RouteDao routeDao) {
 		this.routeDao = routeDao;

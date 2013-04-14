@@ -1,6 +1,7 @@
 package pl.wsiadamy.common.model.bo;
 
 import java.util.List;
+import java.util.Map;
 
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
@@ -18,6 +19,10 @@ public interface RouteBO {
 //	Route createRoute();
 
 	Route createRoute(User owner, RouteAddInput input, RouteAddDetailsInput inputDetails);
-	
+
 	List<Route> findRoutes(RouteSearchSimpleInput input);
+	
+	List<Route> listRoutes(Map<String, Object> params, int limit, int offset);
+	
+	Long listRoutesCount(Map<String, Object> params);
 }

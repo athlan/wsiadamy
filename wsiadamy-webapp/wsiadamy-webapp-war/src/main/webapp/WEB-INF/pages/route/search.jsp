@@ -5,31 +5,44 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <t:wrapper>
-  <h2>Szukaj przejazdu</h2>
-
-  <div class="">
-  <form:form method="get" action="" commandName="routeSearchSimpleInput">
-    <div>
-      <form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="locationAutocomplete" />
-      <form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" class="locationAutocompleteCoords" />
-      <form:errors path="locationSource" />
+  
+  <form:form method="get" action="" commandName="routeSearchSimpleInput" class="form-search-route">
+    <h2>Szukaj przejazdu</h2>
+    
+    <div class="row">
+      <div class="span3">
+        <form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="input-block-level locationAutocomplete" />
+        <form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" class="locationAutocompleteCoords" />
+        <form:errors path="locationSource" />
+      </div>
+      
+      <div class="span3">
+        <form:input path="locationDestination" id="fieldLocationDestination" placeholder="Jadę do..." class="input-block-level locationAutocomplete" />
+        <form:input path="locationDestinationCoords" type="hidden" id="fieldLocationDestinationCoords" class="locationAutocompleteCoords" />
+        <form:errors path="locationDestination" />
+      </div>
     </div>
     
-    <div>
-      <form:input path="locationDestination" id="fieldLocationDestination" placeholder="Jadę do..." class="locationAutocomplete" />
-      <form:input path="locationDestinationCoords" type="hidden" id="fieldLocationDestinationCoords" class="locationAutocompleteCoords" />
-      <form:errors path="locationDestination" />
+    <div class="row">
+      <div class="span3">
+        <div class="btn-group perspective">
+          <button class="btn active" data-field-check="">Pasażer</button>
+          <button class="btn" data-field-check="">Kierowca</button>
+        </div>
+      </div>
+      <div class="span3">
+        <button class="btn btn-large btn-primary routeSearch"><i class="icon-road icon-white"></i> Szukaj przejazdu</button>
+      </div>
     </div>
     
-    <div class="btn-group perspective">
-      <button class="btn active" data-field-check="">Pasażer</button>
-      <button class="btn" data-field-check="">Kierowca</button>
-    </div>
-    
-    <input type="submit" value="Search" class="btn btn-primary" >
+    <a href="<c:url value="/route/add" />" class="btn btn-success routeAdd"><i class="icon-plus icon-white"></i> Dodaj przejazd</a>
   </form:form>
-  </div>
-
+  
+<style>
+.routeSearch {
+  float: right;
+}
+</style>
 <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
 <script type="text/javascript">
   function initLocationService(inputObject) {
@@ -54,7 +67,7 @@
 	      initLocationService($(this));
 	    });
 	});
-	
+  
 </script>
 <script>
 $(function() {

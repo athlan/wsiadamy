@@ -31,8 +31,7 @@ public class RouteWaypoint extends AbstractEntity<Integer> {
 	Point point;
 	
 	@Column
-	private
-	String name;
+	private String name;
 	
 	public RouteWaypoint() {
 	}

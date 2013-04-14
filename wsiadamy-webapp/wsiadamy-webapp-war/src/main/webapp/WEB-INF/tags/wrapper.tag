@@ -2,6 +2,8 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@attribute name="scriptsFragment" fragment="true" %>
+<%@attribute name="cssFragment" fragment="true" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,9 +16,12 @@
     <link href="${pageContext.request.contextPath}/static/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/static/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.custom.min.css" rel="stylesheet">
+    <jsp:invoke fragment="cssFragment"/>
     
-	<script src="${pageContext.request.contextPath}/static/js/jquery-1.9.1.min.js"></script>
-	<script src="${pageContext.request.contextPath}/static/jquery-ui/js/jquery-ui-1.10.2.custom.min.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/jquery-1.9.1.min.js"></script>
+    <script src="${pageContext.request.contextPath}/static/jquery-ui/js/jquery-ui-1.10.2.custom.min.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/common.js"></script>
+    <jsp:invoke fragment="scriptsFragment"/>
 	
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -32,31 +37,34 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Project name</a>
+          <a class="brand" href="<c:url value="/" />">Project name</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
 <sec:authorize access="isAuthenticated()">
-              Logged in as <a href="#" class="navbar-link"><sec:authentication property="principal.username" /></a> | <a href="<c:url value="/logout" />">Sign out</a>
+              Logged in as <a href="<c:url value="/account/routes" />" class="navbar-link"><sec:authentication property="principal.username" /></a> | <a href="<c:url value="/logout" />">Sign out</a>
 </sec:authorize>
 <sec:authorize access="!isAuthenticated()">
               <a href="<c:url value="/login" />" class="navbar-link">Log in</a> or <a href="<c:url value="/register" />" class="navbar-link">register now</a>.
 </sec:authorize>
             </p>
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+<sec:authorize access="!isAuthenticated()">
+              <li><a href="<c:url value="/" />">Znajdź przejazd</a></li>
+</sec:authorize>
+<sec:authorize access="isAuthenticated()">
+              <li><a href="<c:url value="/" />">Znajdź przejazd</a></li>
+              <li><a href="<c:url value="/account/routes" />">Przejazdy</a></li>
+              <li><a href="<c:url value="/account/data" />">Profil</a></li>
+</sec:authorize>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
   	<div class="container">
-  	  <h1>Bootstrap starter template</h1>
       <p>Current Locale : ${pageContext.response.locale}</p>
       
       Text: <spring:message code="welcome.springmvc" text="default text" />
-      
       <p>Language : <a href="?language=en">English</a>|<a href="?language=zh_CN">Chinese</a></p>
 <jsp:doBody/>
 

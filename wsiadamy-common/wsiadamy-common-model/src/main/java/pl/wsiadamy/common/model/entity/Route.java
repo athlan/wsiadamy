@@ -27,8 +27,7 @@ public class Route extends AbstractEntity<Integer> {
 	private Integer id;
 	
 	@OneToOne
-	private
-	User owner;
+	private User owner;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	RouteLine routeLine;

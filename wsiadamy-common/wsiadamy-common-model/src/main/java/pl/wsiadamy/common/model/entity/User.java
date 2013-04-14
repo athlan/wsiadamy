@@ -1,10 +1,13 @@
 package pl.wsiadamy.common.model.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import pl.wsiadamy.common.model.common.AbstractEntity;
@@ -26,6 +29,9 @@ public class User extends AbstractEntity<Integer> {
 	
 	@Column(length = 32)
 	private String password_salt;
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private UserData userData;
 	
 	public User() {
 	}
@@ -65,6 +71,14 @@ public class User extends AbstractEntity<Integer> {
 		this.password_salt = passwordSalt;
 	}
 
+	public UserData getUserData() {
+		return userData;
+	}
+
+	public void setUserData(UserData userData) {
+		this.userData = userData;
+	}
+	
 	@Override
 	public String toString() {
 		return "User [id=" + id + "]";

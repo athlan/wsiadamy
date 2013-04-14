@@ -39,18 +39,9 @@
 	    <div class="control-group">
 			<label class="control-label"></label>
 			<div class="controls">
-	    		<button class="btn btn-success"><i class="icon-user icon-white"></i> Zarejestruj się</button>
+	    		<button class="btn btn-success btnLocker"><i class="icon-user icon-white"></i> Zarejestruj się</button>
     		</div>
    		</div>
 	</form:form>
-	
-<script>
-$(function() {
-	$('button.btn-success').bind('click', function() {
-		$(this).addClass('disabled').attr('disabled', true);
-		$(this).parents('form').submit();
-	});
-});
-</script>
 	
 </t:wrapper>

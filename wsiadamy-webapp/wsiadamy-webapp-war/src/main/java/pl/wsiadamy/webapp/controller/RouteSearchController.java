@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.wsiadamy.common.model.bo.RouteBO;
 import pl.wsiadamy.common.model.bo.UserBO;
@@ -37,8 +38,18 @@ public class RouteSearchController {
 //    public String searchForm(ModelMap model) {
 //        return "route/search";
 //    }
-	
+
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String searchFormDisplay(
+        @ModelAttribute("routeSearchSimpleInput")
+        RouteSearchSimpleInput form,
+        ModelMap model) {
+		
+        return "route/searchSplash";
+ 
+    }
+	
+	@RequestMapping(value = "/search", method = RequestMethod.GET, params={"locationDestination"})
     public String searchFormProcess(
         @ModelAttribute("routeSearchSimpleInput")
         @Valid RouteSearchSimpleInput form,

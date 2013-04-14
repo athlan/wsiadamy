@@ -9,6 +9,10 @@ import pl.wsiadamy.common.model.entity.Route;
 import com.vividsolutions.jts.geom.Point;
 
 public interface RouteDao extends AbstractDao<Route, Integer> {
+
+	List<Route> listRoutes(Map<String, Object> params, int limit, int offset);
+	
+	Long listRoutesCount(Map<String, Object> params);
 	
 	List<Route> findRoutes(Point pointSource, Point pointDestinaton, float pointSourceDistanceRange, float pointDestinationDistanceRange, Map<String, Object> params);
 	

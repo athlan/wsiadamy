@@ -51,6 +51,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		
 		authorities.add(new GrantedAuthorityImpl("ROLE_USER"));
 		
+		if(null != user.getUserData())
+			authorities.add(new GrantedAuthorityImpl("ROLE_USER_WITH_DATA"));
+		
 		return new UsernamePasswordAuthenticationToken(user, null, authorities);
 	}
 	
