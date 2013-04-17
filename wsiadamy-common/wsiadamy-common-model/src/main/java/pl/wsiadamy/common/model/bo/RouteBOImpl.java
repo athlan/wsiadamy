@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.wsiadamy.common.model.dao.RouteDao;
+import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.RouteWaypoint;
 import pl.wsiadamy.common.model.entity.User;
@@ -118,5 +119,17 @@ public class RouteBOImpl implements RouteBO {
 	@Override
 	public Route getById(Integer id) {
 		return routeDao.get(id);
+	}
+
+	@Override
+	public boolean participateRoute(User participant, Route route) {
+		Participanse participanse = new Participanse(participant, route);
+		
+		if(false == route.addParticipanse(participanse))
+			return false;
+		
+		routeDao.update(route);
+		
+		return true;
 	}
 }

@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.ScriptAssert.List;
+
 import pl.wsiadamy.common.model.common.AbstractEntity;
 
 @Entity
@@ -56,12 +58,17 @@ public class Route extends AbstractEntity<Integer> {
 	@Column
 	private int seatsAvailable;
 	
+	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	Set<Participanse> participances;
+	
 	public Route() {
 		routeLine = new RouteLine(this);
 		
 		waypoints = new LinkedHashSet<RouteWaypoint>();
 		
 		routeDetails = new RouteDetails(this);
+		
+		participances = new LinkedHashSet<Participanse>();
 	}
 	
 	public Integer getId() {
@@ -108,12 +115,32 @@ public class Route extends AbstractEntity<Integer> {
 		return waypoints;
 	}
 
-	public void addWaypoint(RouteWaypoint waypoint) {
-		this.waypoints.add(waypoint);
+	public boolean addWaypoint(RouteWaypoint waypoint) {
+		return this.waypoints.add(waypoint);
 	}
 
+	public boolean removeWaypoint(RouteWaypoint waypoint) {
+		return this.waypoints.remove(waypoint);
+	}
+	
 	public void clearWaypoints() {
 		this.waypoints.clear();
+	}
+
+	public Set<Participanse> getParticipanses() {
+		return participances;
+	}
+
+	public boolean addParticipanse(Participanse participance) {
+		return this.participances.add(participance);
+	}
+
+	public boolean removeParticipanse(Participanse participance) {
+		return this.participances.remove(participance);
+	}
+	
+	public void clearParticipanses() {
+		this.participances.clear();
 	}
 	
 	public Date getDateDeparture() {

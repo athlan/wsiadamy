@@ -8,6 +8,7 @@
 	<div class="row">
 		<div class="span5">
 			Test route
+			<a href="<c:url value="/route/participate/${route.id}" />" class="btn">Participate</a>
 		</div>
 		<div class="span7">
 			<div id="map_canvas" style="width: 100%; height: 400px;"></div>

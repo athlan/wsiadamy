@@ -43,6 +43,22 @@ public class RouteController {
         return "route/display";
     }
 
+	@RequestMapping(value = "/route/participate/{id}", method = RequestMethod.GET)
+    public String participateRoute(@PathVariable("id") Integer id, ModelMap model) {
+		
+		Route route = routeBO.getById(id);
+		
+		if(null == route)
+			return "forward:/errors/404";
+		
+		User user = AthenticationUtil.getUser();
+		routeBO.participateRoute(user, route);
+		
+		model.addAttribute("route", route);
+		
+        return "route/display";
+    }
+
 	@RequestMapping(value = "/account/routesCreated", method = RequestMethod.GET)
     public String showCreatedRoutes(ModelMap model, HttpServletRequest request) {
 		Map<String, Object> params = new HashMap<String, Object>();

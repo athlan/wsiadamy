@@ -19,7 +19,9 @@ public interface RouteBO {
 //	Route createRoute();
 
 	Route createRoute(User owner, RouteAddInput input, RouteAddDetailsInput inputDetails);
-
+	
+	boolean participateRoute(User participant, Route route);
+	
 	List<Route> findRoutes(RouteSearchSimpleInput input);
 	
 	List<Route> listRoutes(Map<String, Object> params, int limit, int offset);
