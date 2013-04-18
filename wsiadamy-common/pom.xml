@@ -14,5 +14,6 @@
   
 	<modules>
     <module>wsiadamy-common-model</module>
+    <module>wsiadamy-common-security</module>
   </modules>
 </project>

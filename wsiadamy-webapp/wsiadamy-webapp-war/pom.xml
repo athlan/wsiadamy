@@ -40,6 +40,11 @@
 	    <artifactId>wsiadamy-common-model</artifactId>
 	    <version>1.0</version>
     </dependency>
+    <dependency>
+        <groupId>pl.wsiadamy</groupId>
+	    <artifactId>wsiadamy-common-security</artifactId>
+	    <version>1.0</version>
+    </dependency>
     
     <dependency>
         <groupId>javax.servlet</groupId>
