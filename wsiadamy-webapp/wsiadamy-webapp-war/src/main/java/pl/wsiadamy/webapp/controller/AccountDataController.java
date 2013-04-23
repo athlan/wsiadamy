@@ -18,8 +18,8 @@ import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.entity.UserData;
 import pl.wsiadamy.common.model.input.AccountDataInput;
 import pl.wsiadamy.common.model.input.validator.AccountDataValidator;
+import pl.wsiadamy.common.security.util.AthenticationUtil;
 import pl.wsiadamy.webapp.authentication.CustomAuthenticationProvider;
-import pl.wsiadamy.webapp.controller.util.AthenticationUtil;
 
 @Controller
 @RequestMapping("/account")

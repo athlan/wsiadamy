@@ -1,22 +1,14 @@
 package pl.wsiadamy.common.model.entity;
 
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import pl.wsiadamy.common.model.common.AbstractEntity;
 
@@ -115,15 +107,6 @@ public class Participanse extends AbstractEntity<Integer> {
 			&& null != objCast.getRoute() && null != this.getRoute()
 			&& objCast.getRoute().getId().equals(this.getRoute().getId())
 		);
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		return new HashCodeBuilder(17, 31).
-	            append(getUser().getId()).
-	            append(getRoute().getId()).
-	            toHashCode();
 	}
 	
 	@Override

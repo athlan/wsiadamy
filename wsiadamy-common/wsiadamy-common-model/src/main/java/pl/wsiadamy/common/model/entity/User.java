@@ -80,6 +80,19 @@ public class User extends AbstractEntity<Integer> {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		if(obj == this)
+			return true;
+		
+		if(!(obj instanceof User))
+			return false;
+		
+		User objCast = (User) obj;
+		
+		return objCast.getId().equals(this.getId());
+	}
+	
+	@Override
 	public String toString() {
 		return "User [id=" + id + "]";
 	}

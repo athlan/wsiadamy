@@ -23,7 +23,7 @@ import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.input.RouteAddDetailsInput;
 import pl.wsiadamy.common.model.input.RouteAddInput;
-import pl.wsiadamy.webapp.controller.util.AthenticationUtil;
+import pl.wsiadamy.common.security.util.AthenticationUtil;
 
 @Controller
 @RequestMapping("/route")
@@ -36,9 +36,6 @@ public class RouteAddController {
 	@Autowired
 	RouteBO routeBO;
 	
-	@Autowired
-	AthenticationUtil authenticationUtil;
-
 	@ModelAttribute("routeAddInput")
     public RouteAddInput getFormAddRoute() {
         return new RouteAddInput();

@@ -1,8 +1,8 @@
 package pl.wsiadamy.common.model.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,12 +11,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-
-import org.hibernate.validator.constraints.ScriptAssert.List;
 
 import pl.wsiadamy.common.model.common.AbstractEntity;
 
@@ -30,21 +29,21 @@ public class Route extends AbstractEntity<Integer> {
 	
 	@OneToOne
 	private User owner;
-
+	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	RouteLine routeLine;
+	private RouteLine routeLine;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	RouteDetails routeDetails;
+	private RouteDetails routeDetails;
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	RouteWaypoint waypointSource;
+	private RouteWaypoint waypointSource;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	RouteWaypoint waypointDestination;
+	private RouteWaypoint waypointDestination;
 	
 	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	Set<RouteWaypoint> waypoints;
+	private List<RouteWaypoint> waypoints;
 	
 	@Column
 	private Date dateDeparture;
@@ -59,16 +58,16 @@ public class Route extends AbstractEntity<Integer> {
 	private int seatsAvailable;
 	
 	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	Set<Participanse> participances;
+	private List<Participanse> participances;
 	
 	public Route() {
 		routeLine = new RouteLine(this);
 		
-		waypoints = new LinkedHashSet<RouteWaypoint>();
+		waypoints = new ArrayList<RouteWaypoint>();
 		
 		routeDetails = new RouteDetails(this);
 		
-		participances = new LinkedHashSet<Participanse>();
+		participances = new ArrayList<Participanse>();
 	}
 	
 	public Integer getId() {
@@ -111,7 +110,7 @@ public class Route extends AbstractEntity<Integer> {
 		this.waypointDestination = waypointStop;
 	}
 
-	public Set<RouteWaypoint> getWaypoints() {
+	public List<RouteWaypoint> getWaypoints() {
 		return waypoints;
 	}
 
@@ -127,16 +126,31 @@ public class Route extends AbstractEntity<Integer> {
 		this.waypoints.clear();
 	}
 
-	public Set<Participanse> getParticipanses() {
+	public List<Participanse> getParticipanses() {
 		return participances;
 	}
 
 	public boolean addParticipanse(Participanse participance) {
-		return this.participances.add(participance);
+		for(Participanse item : this.participances) {
+			if(item.equals(participance))
+				return false;
+		}
+		
+		boolean result = this.participances.add(participance);
+		
+		if(true == result)
+			recalculateSeatsAvailable();
+		
+		return result;
 	}
 
 	public boolean removeParticipanse(Participanse participance) {
-		return this.participances.remove(participance);
+		boolean result = this.participances.remove(participance);
+		
+		if(true == result)
+			recalculateSeatsAvailable();
+		
+		return result;
 	}
 	
 	public void clearParticipanses() {
@@ -180,8 +194,27 @@ public class Route extends AbstractEntity<Integer> {
 		this.seatsAvailable = seatsAvailable;
 	}
 	
+	@PrePersist
+	@PreUpdate
+	private void recalculateSeatsAvailable() {
+		this.seatsAvailable = this.seats - this.participances.size();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this)
+			return true;
+		
+		if(!(obj instanceof Route))
+			return false;
+		
+		Route objCast = (Route) obj;
+		
+		return objCast.getId().equals(this.getId());
+	}
+	
 	@Override
 	public String toString() {
-		return "User [id=" + id + "]";
+		return "Route [id=" + id + "]";
 	}
 }

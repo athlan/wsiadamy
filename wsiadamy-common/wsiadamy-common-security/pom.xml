@@ -15,11 +15,17 @@
   </properties>
   
   <dependencies>
+    <dependency>
+        <groupId>pl.wsiadamy</groupId>
+	    <artifactId>wsiadamy-common-model</artifactId>
+	    <version>1.0</version>
+    </dependency>
+    
     <!-- Spring Security -->
 	<dependency>
 		<groupId>org.springframework.security</groupId>
 		<artifactId>spring-security-core</artifactId>
-		<version>3.0.5.RELEASE</version>
+		<version>${spring.version}</version>
 	</dependency>
   </dependencies>
 </project>

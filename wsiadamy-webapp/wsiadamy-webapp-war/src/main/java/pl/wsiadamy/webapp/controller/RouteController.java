@@ -18,7 +18,7 @@ import pl.wsiadamy.common.model.bo.RouteBO;
 import pl.wsiadamy.common.model.bo.UserBO;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
-import pl.wsiadamy.webapp.controller.util.AthenticationUtil;
+import pl.wsiadamy.common.security.util.AthenticationUtil;
 import pl.wsiadamy.webapp.controller.util.Paginator;
 
 @Controller
@@ -32,7 +32,7 @@ public class RouteController {
 	RouteBO routeBO;
 	
 	@RequestMapping(value = "/route/get/{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasPermission(#id, 'RouteTest')")
+	@PreAuthorize("hasPermission(#id, 'RouteView')")
     public String showRoute(@PathVariable("id") Integer id, ModelMap model) {
 		
 		Route route = routeBO.getById(id);
@@ -59,6 +59,40 @@ public class RouteController {
 		model.addAttribute("route", route);
 		
         return "route/display";
+    }
+
+	@RequestMapping(value = "/route/remove/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission(#id, 'RouteRemove')")
+    public String removeRouteConfirmation(@PathVariable("id") Integer id, ModelMap model) {
+		
+		Route route = routeBO.getById(id);
+		
+		if(null == route)
+			return "forward:/errors/404";
+
+		model.addAttribute("route", route);
+		
+		return "route/removeConfirmation";
+    }
+
+	@RequestMapping(value = "/route/remove/{id}", method = RequestMethod.POST)
+	@PreAuthorize("hasPermission(#id, 'RouteRemove')")
+    public String removeRoute(@PathVariable("id") Integer id, ModelMap model) {
+		
+		Route route = routeBO.getById(id);
+		
+		if(null == route)
+			return "forward:/errors/404";
+		
+//		return "route/display";
+		return removeRoute(route, model);
+    }
+
+//	@PreAuthorize("hasPermission(#route, 'RouteRemove')")
+    public String removeRoute(Route route, ModelMap model) {
+		routeBO.delete(route);
+		
+        return "redirect:/account/routesCreated";
     }
 
 	@RequestMapping(value = "/account/routesCreated", method = RequestMethod.GET)

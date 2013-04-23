@@ -25,11 +25,11 @@
 	
 	<error-page>
 		<error-code>404</error-code>
-		<location>/welcome</location>
+		<location>/error404</location>
 	</error-page>
 	<error-page>
 		<error-code>403</error-code>
-		<location>/accessDenied</location>
+		<location>/error403</location>
 	</error-page>
 	
 	<welcome-file-list>
