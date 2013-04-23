@@ -21,6 +21,14 @@
  	<mvc:annotation-driven />
 	<mvc:resources mapping="/static/**" location="/static/" />
 	
+	<bean id="applicationSettings" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	    <property name="locations">
+	        <list>
+	            <value>/WEB-INF/wsiadamy-application.properties</value>
+	        </list>
+	    </property>
+	</bean>
+	
  	<sec:global-method-security pre-post-annotations="enabled">
  		<sec:expression-handler ref="expressionHandler"/>
  	</sec:global-method-security>

@@ -8,13 +8,17 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Component;
 
 import pl.wsiadamy.common.model.common.AbstractDaoImpl;
+import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
+import pl.wsiadamy.common.model.entity.User;
 
 import com.vividsolutions.jts.geom.Point;
 
@@ -28,12 +32,24 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 	@Override
 	public List<Route> listRoutes(Map<String, Object> params, int limit, int offset) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Route> q = cb.createQuery(Route.class);
-		Root<Route> root = q.from(Route.class);
-
-		List<Predicate> predicates = new ArrayList<Predicate>();
 		
-//		predicates.add(root.get("id").in(routeIds));
+		CriteriaQuery<Route> q = cb.createQuery(Route.class);
+		Root<Route> from = q.from(Route.class);
+		q.select(from);
+		
+		// predicates
+		List<Predicate> predicates = new ArrayList<Predicate>();
+//		getEntityManager().createQuery(q);
+		if(null != params) {
+			if(params.containsKey("ownerId")) {
+				predicates.add(cb.equal(from.get("owner"), params.get("ownerId")));
+			}
+			
+			if(params.containsKey("participantId")) {
+				Join<Route, Participanse> rootParticipances = from.joinList("participances", JoinType.INNER);
+				predicates.add(cb.equal(rootParticipances.get("user"), params.get("participantId")));
+			}
+		}
 		
 		if(predicates.size() > 0)
 			q.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
@@ -42,32 +58,34 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 		
 		tq.setMaxResults(limit);
 		tq.setFirstResult(offset);
-		
+		List<Route> aaaa = tq.getResultList();
 		return tq.getResultList();
 	}
 	
 	@Override
 	public Long listRoutesCount(Map<String, Object> params) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Route> q = cb.createQuery(Route.class);
-		Root<Route> root = q.from(Route.class);
+		
+		CriteriaQuery<Long> q = cb.createQuery(Long.class);
+		Root<Route> from = q.from(Route.class);
+		q.select(cb.count(from));
 		
 		// predicates
-		List<Predicate> predicates = new ArrayList<Predicate>();
-		getEntityManager().createQuery(q);
+		Predicate where = cb.conjunction();
 		if(null != params) {
 			if(params.containsKey("ownerId")) {
-				predicates.add(cb.equal(root.get("owner"), params.get("ownerId")));
+				where = cb.and(where, cb.equal(from.get("owner"), params.get("ownerId")));
+			}
+			
+			if(params.containsKey("participantId")) {
+				Join<Route, Participanse> rootParticipances = from.join("participances", JoinType.INNER);
+				where = cb.and(where, cb.equal(rootParticipances.get("user"), params.get("participantId")));
 			}
 		}
 		
-		CriteriaQuery<Long> qCount = cb.createQuery(Long.class);
-		qCount.select(cb.count(qCount.from(Route.class)));
-//		getEntityManager().createQuery(qCount);
-		if(predicates.size() > 0)
-			qCount.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+		q.where(where);
 		
-		return getEntityManager().createQuery(qCount).getSingleResult();
+		return getEntityManager().createQuery(q).getSingleResult();
 	}
 	
 	@Override
@@ -146,5 +164,23 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 		tq.setFirstResult(0);
 		
 		return tq.getResultList();
+	}
+
+	@Override
+	public Participanse getParticipation(User participant, Route route) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Participanse> q = cb.createQuery(Participanse.class);
+		Root<Participanse> root = q.from(Participanse.class);
+
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		
+		predicates.add(cb.equal(root.get("user"), participant.getId()));
+		predicates.add(cb.equal(root.get("route"), route.getId()));
+		
+		if(predicates.size() > 0)
+			q.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+		
+		TypedQuery<Participanse> tq = getEntityManager().createQuery(q);
+		return tq.getSingleResult();
 	}
 }

@@ -25,13 +25,13 @@
 				<div class="waypoint">
           <input name="waypoints['${waypoint.key}']" type="text" value="${waypoint.value}"  placeholder="Przez..." class="locationAutocomplete" />
           <input name="waypointsCoords['${waypoint.key}']" type="hidden" value="${routeAddInput.waypointsCoords[waypoint.key]}" class="locationAutocompleteCoords" />
-          <div class="delete">x</div>
+          <a href="" class="delete close">&times;</a>
         </div>
 </c:forEach>
         <div class="pattern">
 					<input name="pattern_waypoints['__index__']" type="text" value=""  placeholder="Przez..." class="locationAutocomplete" />
 					<input name="pattern_waypointsCoords['__index__']" type="hidden" value="" class="locationAutocompleteCoords" />
-          <div class="delete">x</div>
+          <a href="" class="delete close">&times;</a>
 				</div>
 			</div>
       
@@ -93,7 +93,7 @@
       initLocationService($(this));
     });
 		
-    $("#fieldDateArrival").datepicker({
+    $("#fieldDateDeparture").datepicker({
       dateFormat: 'dd.mm.yy'/*,
       minDate: new Date()*/
     });

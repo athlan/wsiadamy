@@ -28,7 +28,7 @@
   </div>
   <div class="alternative"><span>or</span></div>
   <div>
-    <button class="btn btn-primary btnLocker input-block-level" type="submit"><i class="icon-road icon-white"></i> Log in with Facebook</button>
+	<a href="<c:url value="/loginFacebook" />" class="btn btn-facebook btnLocker" type="submit"><i class="icon-facebook-sign icon-white"></i> Log in with Facebook</a>
   </div>
 </form>
 <script>

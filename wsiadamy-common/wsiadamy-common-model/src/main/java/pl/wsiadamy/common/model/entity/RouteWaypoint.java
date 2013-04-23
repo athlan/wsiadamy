@@ -20,7 +20,7 @@ import com.vividsolutions.jts.geom.Point;
 public class RouteWaypoint extends AbstractEntity<Integer> {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 	
 	@ManyToOne(cascade = CascadeType.ALL)

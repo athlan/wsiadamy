@@ -3,6 +3,7 @@ package pl.wsiadamy.common.model.bo;
 import java.util.List;
 import java.util.Map;
 
+import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.input.RouteAddDetailsInput;
@@ -19,8 +20,12 @@ public interface RouteBO {
 //	Route createRoute();
 
 	Route createRoute(User owner, RouteAddInput input, RouteAddDetailsInput inputDetails);
+
+	Participanse getParticipation(User participant, Route route);
 	
 	boolean participateRoute(User participant, Route route);
+	
+	boolean participateRouteCancel(User participant, Route route);
 	
 	List<Route> findRoutes(RouteSearchSimpleInput input);
 	

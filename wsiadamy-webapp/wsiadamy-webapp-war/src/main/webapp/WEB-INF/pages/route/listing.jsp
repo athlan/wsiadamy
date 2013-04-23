@@ -12,6 +12,9 @@
 		<h1>Przejazdy:</h1>
 	<c:forEach items="${routes}" var="route">
      <div class="route">
+  <c:if test="${route.owner.id == pageContext.request.userPrincipal.principal.id}">
+      <span class="label label-info">Kierowca</span>
+  </c:if>
      <a href="<c:url value='/route/get/${route.id}' />">
        Przejazd #<c:out value="${route.id}" />
        z <c:out value="${route.waypointSource.name}" />

@@ -40,6 +40,7 @@
 			<label class="control-label"></label>
 			<div class="controls">
 	    		<button class="btn btn-success btnLocker"><i class="icon-user icon-white"></i> Zarejestruj się</button>
+   				<a href="<c:url value="/loginFacebook" />" class="btn btn-facebook btnLocker" type="submit"><i class="icon-facebook-sign icon-white"></i> Log in with Facebook</a>
     		</div>
    		</div>
 	</form:form>

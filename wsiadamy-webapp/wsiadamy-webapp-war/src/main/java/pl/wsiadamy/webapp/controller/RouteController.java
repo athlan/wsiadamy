@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import pl.wsiadamy.common.model.bo.RouteBO;
 import pl.wsiadamy.common.model.bo.UserBO;
+import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.security.util.AthenticationUtil;
@@ -42,10 +43,18 @@ public class RouteController {
 		
 		model.addAttribute("route", route);
 		
+		// get participanse
+		User user = AthenticationUtil.getUser();
+		if(null != user) {
+			Participanse routeParticipanse = routeBO.getParticipation(user, route);
+			model.addAttribute("routeParticipanse", routeParticipanse);
+		}
+		
         return "route/display";
     }
-
+	
 	@RequestMapping(value = "/route/participate/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteParticipate')")
     public String participateRoute(@PathVariable("id") Integer id, ModelMap model) {
 		
 		Route route = routeBO.getById(id);
@@ -57,12 +66,29 @@ public class RouteController {
 		routeBO.participateRoute(user, route);
 		
 		model.addAttribute("route", route);
+
+        return "redirect:/route/get/" + id;
+    }
+
+	@RequestMapping(value = "/route/participateCancel/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteParticipateCancel')")
+    public String participateRouteCancel(@PathVariable("id") Integer id, ModelMap model) {
 		
-        return "route/display";
+		Route route = routeBO.getById(id);
+		
+		if(null == route)
+			return "forward:/errors/404";
+		
+		User user = AthenticationUtil.getUser();
+		routeBO.participateRouteCancel(user, route);
+		
+		model.addAttribute("route", route);
+		
+        return "redirect:/route/get/" + id;
     }
 
 	@RequestMapping(value = "/route/remove/{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasPermission(#id, 'RouteRemove')")
+	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteRemove')")
     public String removeRouteConfirmation(@PathVariable("id") Integer id, ModelMap model) {
 		
 		Route route = routeBO.getById(id);
@@ -76,7 +102,7 @@ public class RouteController {
     }
 
 	@RequestMapping(value = "/route/remove/{id}", method = RequestMethod.POST)
-	@PreAuthorize("hasPermission(#id, 'RouteRemove')")
+	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteRemove')")
     public String removeRoute(@PathVariable("id") Integer id, ModelMap model) {
 		
 		Route route = routeBO.getById(id);
@@ -96,13 +122,12 @@ public class RouteController {
     }
 
 	@RequestMapping(value = "/account/routesCreated", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_USER')")
     public String showCreatedRoutes(ModelMap model, HttpServletRequest request) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
 		User user = AthenticationUtil.getUser();
 		
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("ownerId", user.getId());
-//		params.put("ownerId", user);
 		
 		Long itemsCount = routeBO.listRoutesCount(params);
 		int itemsPage = 1;
@@ -119,8 +144,23 @@ public class RouteController {
     }
 	
 	@RequestMapping(value = "/account/routes", method = RequestMethod.GET)
-    public String showParticipatedRoutes(ModelMap model) {
+	@PreAuthorize("hasRole('ROLE_USER')")
+    public String showParticipatedRoutes(ModelMap model, HttpServletRequest request) {
+		User user = AthenticationUtil.getUser();
 		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("participantId", user.getId());
+		
+		Long itemsCount = routeBO.listRoutesCount(params);
+		int itemsPage = 1;
+		
+		if(null != request.getParameter("p"))
+			itemsPage = Integer.valueOf(request.getParameter("p"));
+		
+		Paginator paginator = new Paginator(5, itemsCount.intValue(), itemsPage);
+		
+		List<Route> result = routeBO.listRoutes(params, paginator.getLimit(), paginator.getOffset());
+		model.addAttribute("routes", result);
 		
         return "route/listing";
     }

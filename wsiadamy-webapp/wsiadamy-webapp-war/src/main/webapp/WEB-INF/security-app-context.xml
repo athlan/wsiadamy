@@ -6,33 +6,7 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
  	
- 	<beans:bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
-        <beans:property name="permissionEvaluator" ref="permissionEvaluator"/>
-    </beans:bean>
-    
-    <beans:bean id="permissionEvaluator" class="pl.wsiadamy.common.security.BasePermissionEvaluator">
-    	<beans:constructor-arg index="0">
-            <beans:map key-type="java.lang.String"
-                 value-type="pl.wsiadamy.common.security.Permission">
-                <beans:entry key="RouteView" value-ref="routeViewPermission" />
-                <beans:entry key="RouteRemove" value-ref="routeRemovePermission" />
-            </beans:map>
-        </beans:constructor-arg>
-    </beans:bean>
-    <beans:bean id="routeViewPermission" class="pl.wsiadamy.common.security.permission.RouteViewPermission" />
-    <beans:bean id="routeRemovePermission" class="pl.wsiadamy.common.security.permission.RouteRemovePermission" />
-    
-	<http auto-config="true" use-expressions="true">
-		<!-- <intercept-url pattern="/register" access="!hasRole('ROLE_USER')" />
-		<intercept-url pattern="/account/*" access="hasRole('ROLE_USER')" />
-		<intercept-url pattern="/route/addCommit" access="hasRole('ROLE_USER')" />
-		 -->
-		<logout logout-url="/logout" />
-		<form-login login-page="/login" authentication-failure-url="/login?authfailed=1" />
-		<expression-handler ref="expressionHandler"/>
-	</http>
-	
-	<authentication-manager>
+	<authentication-manager id="authenticationManager">
 		<authentication-provider ref="customAuthenticationProvider" />
 	  <!-- <authentication-provider>
 	    <user-service id="userDetailsService">
@@ -43,4 +17,40 @@
 	
 	<beans:bean id="customAuthenticationProvider" class="pl.wsiadamy.webapp.authentication.CustomAuthenticationProvider"/>
 	<beans:bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+	
+ 	<beans:bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <beans:property name="permissionEvaluator" ref="permissionEvaluator"/>
+    </beans:bean>
+    
+    <!-- for jsp -->
+    <beans:bean id="webExpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+		<beans:property name="permissionEvaluator" ref="permissionEvaluator"/>
+	</beans:bean>
+	
+    <beans:bean id="permissionEvaluator" class="pl.wsiadamy.common.security.BasePermissionEvaluator">
+    	<beans:constructor-arg index="0">
+            <beans:map key-type="java.lang.String"
+                 value-type="pl.wsiadamy.common.security.Permission">
+                <beans:entry key="RouteView" value-ref="routeViewPermission" />
+                <beans:entry key="RouteRemove" value-ref="routeRemovePermission" />
+                <beans:entry key="RouteParticipate" value-ref="routeParticipatePermission" />
+                <beans:entry key="RouteParticipateCancel" value-ref="routeParticipateCancelPermission" />
+            </beans:map>
+        </beans:constructor-arg>
+    </beans:bean>
+    <beans:bean id="routeViewPermission" class="pl.wsiadamy.common.security.permission.RouteViewPermission" />
+    <beans:bean id="routeRemovePermission" class="pl.wsiadamy.common.security.permission.RouteRemovePermission" />
+    <beans:bean id="routeParticipatePermission" class="pl.wsiadamy.common.security.permission.RouteParticipatePermission" />
+    <beans:bean id="routeParticipateCancelPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateCancelPermission" />
+    
+	<http auto-config="true" use-expressions="true" authentication-manager-ref="authenticationManager">
+		<!-- <intercept-url pattern="/register" access="!hasRole('ROLE_USER')" />
+		<intercept-url pattern="/account/*" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/route/addCommit" access="hasRole('ROLE_USER')" /> -->
+		
+		<logout logout-url="/logout" />
+		<form-login login-page="/login" authentication-failure-url="/login?authfailed=1" />
+		<expression-handler ref="webExpressionHandler"/>
+	</http>
+	
 </beans:beans>

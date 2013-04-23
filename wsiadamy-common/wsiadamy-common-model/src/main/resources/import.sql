@@ -1,4 +1,6 @@
-INSERT INTO "public"."users" ("id", "password", "password_salt", "username") VALUES ('1', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'athlan@vgroup.pl');
+INSERT INTO "public"."users" ("id", "accountscope", "password", "password_salt", "username") VALUES ('1', '0', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'athlan@vgroup.pl');
+INSERT INTO "public"."users_data" VALUES ('1', '1991-04-21', '660011034', '100000302544693', 'Piotr', 'Pelczar', '1');
+UPDATE "public"."users" SET userdata_id = '1' WHERE id = '1';
 
 -- ----------------------------
 -- Records of route
@@ -23,3 +25,6 @@ INSERT INTO "public"."route_waypoint" VALUES ('2', 'Racibórz, Polska', '0101000
 INSERT INTO "public"."route_waypoint" VALUES ('3', 'Krzyżanowice, Polska', '0101000000C03E8ADFB9443240068B1E53D2FD4840', '1');
 
 UPDATE "public"."route" SET waypointsource_id = '1', waypointdestination_id = '1', routeline_id = '1', routedetails_id = '1' WHERE id = '1';
+
+INSERT INTO "public"."participanse" VALUES ('1', '2013-04-15 00:00:00', '2013-04-15 00:00:00', '1', '1', '1');
+

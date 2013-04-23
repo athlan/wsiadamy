@@ -74,7 +74,8 @@ public class RouteBOImpl implements RouteBO {
 		
 		// set date and details
 		route.setDateDeparture(input.getDateDepartureObject());
-		route.setSeats(input.getSeats());
+		route.setSeats(input.getSeats() + 1);
+		route.addParticipanse(new Participanse(owner, route));
 		
 		route.setTotalPrice(inputDetails.getTotalPrice());
 		
@@ -86,8 +87,7 @@ public class RouteBOImpl implements RouteBO {
 		
 		return route;
 	}
-
-
+	
 	@Override
 	public List<Route> findRoutes(RouteSearchSimpleInput input) {
 
@@ -122,10 +122,30 @@ public class RouteBOImpl implements RouteBO {
 	}
 
 	@Override
+	public Participanse getParticipation(User participant, Route route) {
+		return routeDao.getParticipation(participant, route);
+	}
+
+	@Override
 	public boolean participateRoute(User participant, Route route) {
 		Participanse participanse = new Participanse(participant, route);
 		
 		if(false == route.addParticipanse(participanse))
+			return false;
+		
+		routeDao.update(route);
+		
+		return true;
+	}
+	
+	@Override
+	public boolean participateRouteCancel(User participant, Route route) {
+		Participanse participanse = getParticipation(participant, route);
+		
+		if(null == participanse)
+			return false;
+		
+		if(false == route.removeParticipanse(participanse))
 			return false;
 		
 		routeDao.update(route);

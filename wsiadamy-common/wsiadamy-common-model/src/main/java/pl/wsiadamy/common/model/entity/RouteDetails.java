@@ -16,7 +16,7 @@ import pl.wsiadamy.common.model.common.AbstractEntity;
 public class RouteDetails extends AbstractEntity<Integer> {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 	
 	@OneToOne(cascade = CascadeType.ALL)

@@ -2,7 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<t:wrapper>
+<t:account>
 	<h2>Uzupełnij dane profilu</h2>
 	
 	<form:form method="post" action="" commandName="accountDataInput" class="form-horizontal">
@@ -28,7 +28,7 @@
 	    </div>
 	    
 	    <div class="form-actions">
-	   		<button class="btn btn-success btnLocker">Zapisz dane</button>
+	   		<button class="btn btn-primary btnLocker">Zapisz dane</button>
 	    </div>
 	</form:form>
 <script>
@@ -37,5 +37,5 @@ $(function() {
       dateFormat: 'dd.mm.yy'
     });
 });
-</script>	
-</t:wrapper>
+</script>
+</t:account>

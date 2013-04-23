@@ -5,7 +5,7 @@ import java.util.Calendar;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -37,6 +37,7 @@ public class AccountDataController {
     }
 
 	@RequestMapping(value = "/data", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_USER')")
     public String showForm(
 		@ModelAttribute("accountDataInput")
         AccountDataInput form,
@@ -66,6 +67,7 @@ public class AccountDataController {
     }
 	
 	@RequestMapping(value = "/data", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('ROLE_USER')")
     public String validateForm(
         @ModelAttribute("accountDataInput")
         @Valid AccountDataInput form,

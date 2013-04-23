@@ -114,8 +114,9 @@ public class RouteAddController {
         
         return "redirect:addCommit";
     }
-
+	
 	@RequestMapping(value = "/addCommit", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_USER')")
     public String commitAction(
 		@ModelAttribute("routeAddInput")
         RouteAddInput form,

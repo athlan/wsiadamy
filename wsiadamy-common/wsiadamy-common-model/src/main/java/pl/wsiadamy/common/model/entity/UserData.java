@@ -18,7 +18,7 @@ import pl.wsiadamy.common.model.common.AbstractEntity;
 public class UserData extends AbstractEntity<Integer> {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 	
 	@OneToOne(cascade = CascadeType.ALL)
@@ -34,7 +34,13 @@ public class UserData extends AbstractEntity<Integer> {
 	private Date birthday;
 
 	@Column
+	private String contactEmail;
+	
+	@Column
 	private String contactPhone;
+	
+	@Column
+	private Long facebookId;
 
 	public UserData() {
 	}
@@ -80,12 +86,28 @@ public class UserData extends AbstractEntity<Integer> {
 		this.birthday = birthday;
 	}
 
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
 	public String getContactPhone() {
 		return contactPhone;
 	}
 
 	public void setContactPhone(String contactPhone) {
 		this.contactPhone = contactPhone;
+	}
+	
+	public Long getFacebookId() {
+		return facebookId;
+	}
+
+	public void setFacebookId(Long facebookId) {
+		this.facebookId = facebookId;
 	}
 	
 	@Override

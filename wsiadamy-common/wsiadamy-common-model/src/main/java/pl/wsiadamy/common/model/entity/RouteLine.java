@@ -21,7 +21,7 @@ import com.vividsolutions.jts.geom.Point;
 public class RouteLine extends AbstractEntity<Integer> {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 	
 	@OneToOne(cascade = CascadeType.ALL)

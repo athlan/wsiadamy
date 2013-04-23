@@ -16,6 +16,7 @@
     <link href="${pageContext.request.contextPath}/static/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/static/jquery-ui/css/ui-lightness/jquery-ui-1.10.2.custom.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/static/css/common.css" rel="stylesheet">
     <jsp:invoke fragment="cssFragment"/>
     
     <script src="${pageContext.request.contextPath}/static/js/jquery-1.9.1.min.js"></script>
@@ -37,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="<c:url value="/" />">Project name</a>
+          <a class="brand" href="<c:url value="/" />">wsiadamy.pl</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
 <sec:authorize access="isAuthenticated()">
@@ -50,9 +51,13 @@
             <ul class="nav">
 <sec:authorize access="!isAuthenticated()">
               <li><a href="<c:url value="/" />">Znajdź przejazd</a></li>
+              <li><a href="<c:url value="/route/add" />">Dodaj przejazd</a>
+              <li><a href="<c:url value="/account/routes" />">Przejazdy</a></li>
+              <li><a href="<c:url value="/account/data" />">Profil</a></li>
 </sec:authorize>
 <sec:authorize access="isAuthenticated()">
               <li><a href="<c:url value="/" />">Znajdź przejazd</a></li>
+              <li><a href="<c:url value="/route/add" />">Dodaj przejazd</a>
               <li><a href="<c:url value="/account/routes" />">Przejazdy</a></li>
               <li><a href="<c:url value="/account/data" />">Profil</a></li>
 </sec:authorize>

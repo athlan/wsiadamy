@@ -18,11 +18,14 @@ import pl.wsiadamy.common.model.common.PasswordCryptography;
 public class User extends AbstractEntity<Integer> {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 
 	@Column(length = 255)
 	private String username;
+
+	@Column
+	private UserAccountScope accountScope;
 
 	@Column(length = 32)
 	private String password;
@@ -52,6 +55,14 @@ public class User extends AbstractEntity<Integer> {
 		this.username = username;
 	}
 	
+	public UserAccountScope getAccountScope() {
+		return accountScope;
+	}
+
+	public void setAccountScope(UserAccountScope accountScope) {
+		this.accountScope = accountScope;
+	}
+
 	public String getPassword() {
 		return password;
 	}
