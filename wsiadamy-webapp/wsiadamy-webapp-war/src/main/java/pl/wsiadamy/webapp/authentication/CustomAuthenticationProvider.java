@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import pl.wsiadamy.common.model.bo.UserBO;
 import pl.wsiadamy.common.model.entity.User;
+import pl.wsiadamy.common.model.entity.UserLogin;
 
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 	
@@ -30,12 +31,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		String username = String.valueOf(auth.getPrincipal());
 		String password = String.valueOf(auth.getCredentials());
 		
-		User user = userBO.getByUsername(username);
-
-		if(null == user)
+		UserLogin userLogin = userBO.getByUsername(username);
+		
+		if(null == userLogin)
 			throw new BadCredentialsException("Wrong username or password");
-
-		if(!userBO.authenticateUser(user, password))
+		
+		User user = userLogin.getUser();
+		
+		if(!userBO.authenticateUser(userLogin, password))
 			throw new BadCredentialsException("Wrong username or password");
 		
 		return createToken(user);

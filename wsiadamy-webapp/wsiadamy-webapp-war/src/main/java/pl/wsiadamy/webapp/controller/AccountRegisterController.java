@@ -48,11 +48,7 @@ public class AccountRegisterController {
             return "account/register";
         }
         
-        User user = new User();
-        user.setUsername(form.getEmail());
-        user.setPassword(form.getPassword());
-        
-        userBO.save(user);
+        User user = userBO.createUser(form.getEmail(), form.getPassword());
         
         CustomAuthenticationProvider.authenticateUser(user);
         

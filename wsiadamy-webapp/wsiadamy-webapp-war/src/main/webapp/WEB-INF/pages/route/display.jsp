@@ -21,7 +21,21 @@
 			<a href="<c:url value="/route/participate/${route.id}" />" class="btn btn-primary">Wsiadaj!</a>
 </c:if>
 <c:if test="${not empty routeParticipanse and route.owner.id != pageContext.request.userPrincipal.principal.id}">
-			<a href="<c:url value="/route/participateCancel/${route.id}" />" class="btn">Rezygnuj</a>
+  <c:if test="${routeParticipanse.rspvStatus == 'PENDING'}">
+      <div class="btn-group">
+        <a class="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">
+          <i class="icon-envelope icon-white"></i> Zaproszenie
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="<c:url value='/route/participateAccept/${routeParticipanse.id}' />">Zaakceptuj</a></li>
+          <li><a href="<c:url value='/route/participateReject/${routeParticipanse.id}' />">Odrzuć</a></li>
+        </ul>
+      </div>
+  </c:if>
+  <c:if test="${routeParticipanse.rspvStatus == 'APPROVED'}">
+			<a href="<c:url value="/route/participateCancel/${routeParticipanse.id}" />" class="btn">Rezygnuj</a>
+  </c:if>
 </c:if>
 <c:if test="${route.owner.id == pageContext.request.userPrincipal.principal.id}">
 			<a href="<c:url value="/route/remove/${route.id}" />" class="btn btn-danger btn-mini">Usuń trasę</a>

@@ -1,10 +1,7 @@
 package pl.wsiadamy.common.model.bo;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +15,7 @@ import pl.wsiadamy.common.model.input.RouteAddDetailsInput;
 import pl.wsiadamy.common.model.input.RouteAddInput;
 import pl.wsiadamy.common.model.input.RouteSearchSimpleInput;
 import pl.wsiadamy.common.model.util.GeometryPointFactory;
+import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
 
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -28,7 +26,7 @@ public class RouteBOImpl implements RouteBO {
 	RouteDao routeDao;
 
 	@Override
-	public List<Route> listRoutes(Map<String, Object> params, int limit, int offset) {
+	public List<RouteParticipanseWrapper> listRoutes(Map<String, Object> params, int limit, int offset) {
 		return routeDao.listRoutes(params, limit, offset);
 	}
 	
@@ -119,37 +117,5 @@ public class RouteBOImpl implements RouteBO {
 	@Override
 	public Route getById(Integer id) {
 		return routeDao.get(id);
-	}
-
-	@Override
-	public Participanse getParticipation(User participant, Route route) {
-		return routeDao.getParticipation(participant, route);
-	}
-
-	@Override
-	public boolean participateRoute(User participant, Route route) {
-		Participanse participanse = new Participanse(participant, route);
-		
-		if(false == route.addParticipanse(participanse))
-			return false;
-		
-		routeDao.update(route);
-		
-		return true;
-	}
-	
-	@Override
-	public boolean participateRouteCancel(User participant, Route route) {
-		Participanse participanse = getParticipation(participant, route);
-		
-		if(null == participanse)
-			return false;
-		
-		if(false == route.removeParticipanse(participanse))
-			return false;
-		
-		routeDao.update(route);
-		
-		return true;
 	}
 }

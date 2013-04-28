@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import pl.wsiadamy.common.model.bo.RouteBO;
 import pl.wsiadamy.common.model.bo.UserBO;
+import pl.wsiadamy.common.model.bo.ParticipanseBO;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
+import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
 import pl.wsiadamy.common.security.util.AthenticationUtil;
 import pl.wsiadamy.webapp.controller.util.Paginator;
 
@@ -31,6 +33,9 @@ public class RouteController {
 
 	@Autowired
 	RouteBO routeBO;
+	
+	@Autowired
+	ParticipanseBO participanseBO;
 	
 	@RequestMapping(value = "/route/get/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission(#id, 'RouteView')")
@@ -46,47 +51,13 @@ public class RouteController {
 		// get participanse
 		User user = AthenticationUtil.getUser();
 		if(null != user) {
-			Participanse routeParticipanse = routeBO.getParticipation(user, route);
+			Participanse routeParticipanse = participanseBO.getByUserRoute(user, route);
 			model.addAttribute("routeParticipanse", routeParticipanse);
 		}
 		
         return "route/display";
     }
 	
-	@RequestMapping(value = "/route/participate/{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteParticipate')")
-    public String participateRoute(@PathVariable("id") Integer id, ModelMap model) {
-		
-		Route route = routeBO.getById(id);
-		
-		if(null == route)
-			return "forward:/errors/404";
-		
-		User user = AthenticationUtil.getUser();
-		routeBO.participateRoute(user, route);
-		
-		model.addAttribute("route", route);
-
-        return "redirect:/route/get/" + id;
-    }
-
-	@RequestMapping(value = "/route/participateCancel/{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteParticipateCancel')")
-    public String participateRouteCancel(@PathVariable("id") Integer id, ModelMap model) {
-		
-		Route route = routeBO.getById(id);
-		
-		if(null == route)
-			return "forward:/errors/404";
-		
-		User user = AthenticationUtil.getUser();
-		routeBO.participateRouteCancel(user, route);
-		
-		model.addAttribute("route", route);
-		
-        return "redirect:/route/get/" + id;
-    }
-
 	@RequestMapping(value = "/route/remove/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteRemove')")
     public String removeRouteConfirmation(@PathVariable("id") Integer id, ModelMap model) {
@@ -128,6 +99,7 @@ public class RouteController {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("ownerId", user.getId());
+		params.put("loggedUserId", user.getId());
 		
 		Long itemsCount = routeBO.listRoutesCount(params);
 		int itemsPage = 1;
@@ -137,7 +109,7 @@ public class RouteController {
 		
 		Paginator paginator = new Paginator(5, itemsCount.intValue(), itemsPage);
 		
-		List<Route> result = routeBO.listRoutes(params, paginator.getLimit(), paginator.getOffset());
+		List<RouteParticipanseWrapper> result = routeBO.listRoutes(params, paginator.getLimit(), paginator.getOffset());
 		model.addAttribute("routes", result);
 		
         return "route/listing";
@@ -150,6 +122,7 @@ public class RouteController {
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("participantId", user.getId());
+		params.put("loggedUserId", user.getId());
 		
 		Long itemsCount = routeBO.listRoutesCount(params);
 		int itemsPage = 1;
@@ -159,7 +132,7 @@ public class RouteController {
 		
 		Paginator paginator = new Paginator(5, itemsCount.intValue(), itemsPage);
 		
-		List<Route> result = routeBO.listRoutes(params, paginator.getLimit(), paginator.getOffset());
+		List<RouteParticipanseWrapper> result = routeBO.listRoutes(params, paginator.getLimit(), paginator.getOffset());
 		model.addAttribute("routes", result);
 		
         return "route/listing";

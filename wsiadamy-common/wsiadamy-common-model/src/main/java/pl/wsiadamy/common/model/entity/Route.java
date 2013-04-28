@@ -57,7 +57,7 @@ public class Route extends AbstractEntity<Integer> {
 	@Column
 	private int seatsAvailable;
 	
-	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Participanse> participances;
 	
 	public Route() {

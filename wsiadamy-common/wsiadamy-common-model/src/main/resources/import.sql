@@ -1,11 +1,18 @@
-INSERT INTO "public"."users" ("id", "accountscope", "password", "password_salt", "username") VALUES ('1', '0', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'athlan@vgroup.pl');
-INSERT INTO "public"."users_data" VALUES ('1', '1991-04-21', '660011034', '100000302544693', 'Piotr', 'Pelczar', '1');
+-- user 1
+INSERT INTO "public"."users" ("id", "password", "password_salt") VALUES ('1', null, null);
+INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('1', '0', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'athlan@vgroup.pl', '1');
+INSERT INTO "public"."users_data" VALUES ('1', '1991-04-21', 'athlan@vgroup.pl', '660011034', null, 'Piotr', 'Pelczar', '1');
 UPDATE "public"."users" SET userdata_id = '1' WHERE id = '1';
+-- user 2
+INSERT INTO "public"."users" ("id", "password", "password_salt") VALUES ('2', null, null);
+INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('2', '1', null, null, '100000302544693', '2');
+INSERT INTO "public"."users_data" VALUES ('2', '1991-04-21', 'me@athlan.pl', '660011034', '100000302544693', 'Piotr', 'Pelczar', '2');
+UPDATE "public"."users" SET userdata_id = '2' WHERE id = '2';
 
 -- ----------------------------
 -- Records of route
 -- ----------------------------
-INSERT INTO "public"."route" VALUES ('1', '2013-04-15 00:00:00', '2', '0', '1', '1', null, null, null, null);
+INSERT INTO "public"."route" VALUES ('1', NOW() + '+2 days'::interval, '2', '0', '1', '1', null, null, null, null);
 
 -- ----------------------------
 -- Records of route_details
@@ -26,5 +33,7 @@ INSERT INTO "public"."route_waypoint" VALUES ('3', 'Krzyżanowice, Polska', '010
 
 UPDATE "public"."route" SET waypointsource_id = '1', waypointdestination_id = '1', routeline_id = '1', routedetails_id = '1' WHERE id = '1';
 
-INSERT INTO "public"."participanse" VALUES ('1', '2013-04-15 00:00:00', '2013-04-15 00:00:00', '1', '1', '1');
+INSERT INTO "public"."participanse" VALUES ('1', NOW(), NOW() - '1 minute'::interval, '1', '1', '1');
+
+INSERT INTO "public"."participanse" VALUES ('2', NOW(), NOW() - '1 minute'::interval, '0', '1', '2');
 

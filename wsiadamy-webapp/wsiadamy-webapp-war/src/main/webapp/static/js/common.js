@@ -4,5 +4,6 @@ $(function() {
 		$(this).addClass('disabled').attr('disabled', true);
 		$(this).parents('form').submit();
 	});
-	
+  
+	$('.dropdown-toggle').dropdown();
 });

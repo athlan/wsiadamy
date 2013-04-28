@@ -12,7 +12,7 @@ import pl.wsiadamy.common.security.Permission;
 import pl.wsiadamy.common.security.util.AthenticationUtil;
 
 @Component
-public class RouteParticipateCancelPermission implements Permission {
+public class RouteParticipateAcceptPermission implements Permission {
 
 	@Autowired
 	private ParticipanseBO participanseBO;
@@ -23,22 +23,14 @@ public class RouteParticipateCancelPermission implements Permission {
 		Participanse participanse = getTargetDomain(targetDomainObject);
 		User user = AthenticationUtil.getUser();
 		
-		if(participanse == null || user == null)
-			return false;
-		
-		if(!participanse.getUser().equals(user))
-			return false;
-		
-		// he owner cannot cancel participanse
-		User routeOwner = participanse.getRoute().getOwner();
-		if(routeOwner.equals(user))
+		if(participanse == null || user == null || !participanse.getUser().equals(user))
 			return false;
 		
 		// already on list?
 		boolean result = false;
 		
 		if(participanse.getUser().equals(user)) {
-			if(participanse.getRspvStatus() == ParticipanseRSPV.APPROVED)
+			if(participanse.getRspvStatus() == ParticipanseRSPV.PENDING)
 				result = true;
 		}
 		

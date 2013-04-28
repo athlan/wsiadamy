@@ -35,6 +35,8 @@
                 <beans:entry key="RouteRemove" value-ref="routeRemovePermission" />
                 <beans:entry key="RouteParticipate" value-ref="routeParticipatePermission" />
                 <beans:entry key="RouteParticipateCancel" value-ref="routeParticipateCancelPermission" />
+                <beans:entry key="RouteParticipateAccept" value-ref="routeParticipateAcceptPermission" />
+                <beans:entry key="RouteParticipateReject" value-ref="routeParticipateRejectPermission" />
             </beans:map>
         </beans:constructor-arg>
     </beans:bean>
@@ -42,6 +44,8 @@
     <beans:bean id="routeRemovePermission" class="pl.wsiadamy.common.security.permission.RouteRemovePermission" />
     <beans:bean id="routeParticipatePermission" class="pl.wsiadamy.common.security.permission.RouteParticipatePermission" />
     <beans:bean id="routeParticipateCancelPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateCancelPermission" />
+    <beans:bean id="RouteParticipateAcceptPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateAcceptPermission" />
+    <beans:bean id="RouteParticipateRejectPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateRejectPermission" />
     
 	<http auto-config="true" use-expressions="true" authentication-manager-ref="authenticationManager">
 		<!-- <intercept-url pattern="/register" access="!hasRole('ROLE_USER')" />

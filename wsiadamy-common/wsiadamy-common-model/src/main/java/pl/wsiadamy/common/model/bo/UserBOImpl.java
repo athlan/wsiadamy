@@ -8,6 +8,7 @@ import pl.wsiadamy.common.model.dao.UserDao;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.entity.UserAccountScope;
 import pl.wsiadamy.common.model.entity.UserData;
+import pl.wsiadamy.common.model.entity.UserLogin;
 
 @Service("userBO")
 public class UserBOImpl implements UserBO {
@@ -17,8 +18,13 @@ public class UserBOImpl implements UserBO {
 	public User createUser(String username, String password) {
 		User user = new User();
 		UserData userData = new UserData(user);
+		UserLogin userLogin = new UserLogin(user);
 		
-		user.setUsername(username);
+		userLogin.setAccountScope(UserAccountScope.NATIVE);
+		userLogin.setUsername(username);
+		userLogin.setPassword(password);
+		user.addLogin(userLogin);
+		
 		userData.setContactEmail(username);
 		
 		userDao.create(user);
@@ -30,9 +36,12 @@ public class UserBOImpl implements UserBO {
 	public User createUserFacebook(Long facebookId, String email, String firstname, String lastname) {
 		User user = new User();
 		UserData userData = new UserData(user);
+		UserLogin userLogin = new UserLogin(user);
 		
-		user.setAccountScope(UserAccountScope.FACEBOOK);
-		user.setUsername(facebookId.toString());
+		userLogin.setAccountScope(UserAccountScope.FACEBOOK);
+		userLogin.setUsername(facebookId.toString());
+		
+		user.addLogin(userLogin);
 		
 		userData.setFacebookId(facebookId);
 		userData.setContactEmail(email);
@@ -69,20 +78,30 @@ public class UserBOImpl implements UserBO {
 	}
 
 	@Override
-	public User getByUsername(String username) {
+	public UserLogin getByUsername(String username) {
 		return this.getByUsername(username, UserAccountScope.NATIVE);
 	}
 	
 	@Override
-	public User getByUsername(String username, UserAccountScope scope) {
+	public UserLogin getByUsername(String username, UserAccountScope scope) {
 		return userDao.getByUsername(username, scope);
+	}
+
+	@Override
+	public User getUserByUsername(String username) {
+		return this.getUserByUsername(username, UserAccountScope.NATIVE);
 	}
 	
 	@Override
-	public boolean authenticateUser(User user, String password) {
-		if(null == user)
+	public User getUserByUsername(String username, UserAccountScope scope) {
+		return userDao.getUserByUsername(username, scope);
+	}
+	
+	@Override
+	public boolean authenticateUser(UserLogin userLogin, String password) {
+		if(null == userLogin)
 			return false;
 		
-		return PasswordCryptography.compare(user.getPassword(), password, user.getPasswordSalt());
+		return PasswordCryptography.compare(userLogin.getPassword(), password, userLogin.getPasswordSalt());
 	}
 }

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.wsiadamy.common.model.bo.UserBO;
 import pl.wsiadamy.common.model.entity.User;
+import pl.wsiadamy.common.model.entity.UserLogin;
 import pl.wsiadamy.common.model.entity.UserAccountScope;
 import pl.wsiadamy.webapp.authentication.CustomAuthenticationProvider;
 
@@ -74,10 +75,14 @@ public class AuthenticationFacebookController {
 		
 //		nameee.get
 		
-		User user = userBO.getByUsername(facebookProfile.getId(), UserAccountScope.FACEBOOK);
+		UserLogin userLogin = userBO.getByUsername(facebookProfile.getId(), UserAccountScope.FACEBOOK);
+		User user = null;
 		
-		if(null == user) {
+		if(null == userLogin) {
 			user = userBO.createUserFacebook(Long.valueOf(facebookProfile.getId()), facebookProfile.getEmail(), facebookProfile.getFirstName(), facebookProfile.getLastName());
+		}
+		else {
+			user = userLogin.getUser();
 		}
 		
 		if(null != user) {

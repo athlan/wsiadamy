@@ -19,6 +19,7 @@ import pl.wsiadamy.common.model.common.AbstractDaoImpl;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
+import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
 
 import com.vividsolutions.jts.geom.Point;
 
@@ -30,16 +31,22 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 	}
 	
 	@Override
-	public List<Route> listRoutes(Map<String, Object> params, int limit, int offset) {
+	public List<RouteParticipanseWrapper> listRoutes(Map<String, Object> params, int limit, int offset) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		
-		CriteriaQuery<Route> q = cb.createQuery(Route.class);
+		CriteriaQuery<RouteParticipanseWrapper> q = cb.createQuery(RouteParticipanseWrapper.class);
 		Root<Route> from = q.from(Route.class);
-		q.select(from);
+		
+		Join<Route, Participanse> rootLoggedUserParticipation = from.joinList("participances", JoinType.LEFT);
+		
+		q.multiselect(from, rootLoggedUserParticipation);
 		
 		// predicates
 		List<Predicate> predicates = new ArrayList<Predicate>();
 //		getEntityManager().createQuery(q);
+		
+		predicates.add(cb.equal(rootLoggedUserParticipation.get("user"), params.get("loggedUserId")));
+		
 		if(null != params) {
 			if(params.containsKey("ownerId")) {
 				predicates.add(cb.equal(from.get("owner"), params.get("ownerId")));
@@ -54,11 +61,11 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 		if(predicates.size() > 0)
 			q.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
 		
-		TypedQuery<Route> tq = getEntityManager().createQuery(q);
+		TypedQuery<RouteParticipanseWrapper> tq = getEntityManager().createQuery(q);
 		
 		tq.setMaxResults(limit);
 		tq.setFirstResult(offset);
-		List<Route> aaaa = tq.getResultList();
+		List<RouteParticipanseWrapper> aaa = tq.getResultList();
 		return tq.getResultList();
 	}
 	
@@ -164,23 +171,5 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 		tq.setFirstResult(0);
 		
 		return tq.getResultList();
-	}
-
-	@Override
-	public Participanse getParticipation(User participant, Route route) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Participanse> q = cb.createQuery(Participanse.class);
-		Root<Participanse> root = q.from(Participanse.class);
-
-		List<Predicate> predicates = new ArrayList<Predicate>();
-		
-		predicates.add(cb.equal(root.get("user"), participant.getId()));
-		predicates.add(cb.equal(root.get("route"), route.getId()));
-		
-		if(predicates.size() > 0)
-			q.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
-		
-		TypedQuery<Participanse> tq = getEntityManager().createQuery(q);
-		return tq.getSingleResult();
 	}
 }

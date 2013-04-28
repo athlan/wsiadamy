@@ -1,44 +1,45 @@
 package pl.wsiadamy.common.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import pl.wsiadamy.common.model.common.AbstractEntity;
 import pl.wsiadamy.common.model.common.PasswordCryptography;
 
 @Entity
-@Table(name = "users")
-public class User extends AbstractEntity<Integer> {
+@Table(name = "users_logins")
+public class UserLogin extends AbstractEntity<Integer> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 	
-	@OneToMany(mappedBy = "userOwner", cascade = CascadeType.ALL)
-	private List<UserLogin> logins;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private User userOwner;
 	
+	@Column(length = 255)
+	private String username;
+
+	@Column
+	private UserAccountScope accountScope;
+
 	@Column(length = 32)
 	private String password;
 	
 	@Column(length = 32)
 	private String password_salt;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private UserData userData;
-	
-	public User() {
-		logins = new ArrayList<UserLogin>();
+	public UserLogin() {
+	}
+
+	public UserLogin(User user) {
+		setUser(user);
 	}
 
 	public Integer getId() {
@@ -48,40 +49,31 @@ public class User extends AbstractEntity<Integer> {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
+	public User getUser() {
+		return userOwner;
+	}
+
+	public void setUser(User user) {
+		this.userOwner = user;
+	}
+
 	public String getUsername() {
-		if(null == userData)
-			return "";
-		
-		if(null != userData.getFirstname() && null != userData.getLastname())
-			return userData.getFirstname() + " " + userData.getLastname();
-		
-		if(null != userData.getContactEmail())
-			return userData.getContactEmail();
-		
-		return "";
+		return username;
 	}
 
 	public void setUsername(String username) {
-		throw new RuntimeException("Cannot ser username. Try to user.getLogins().");
+		this.username = username;
 	}
 	
-	public List<UserLogin> getLogins() {
-		return logins;
+	public UserAccountScope getAccountScope() {
+		return accountScope;
 	}
 
-	public void addLogin(UserLogin login) {
-		this.logins.add(login);
+	public void setAccountScope(UserAccountScope accountScope) {
+		this.accountScope = accountScope;
 	}
 
-	public void removeLogin(UserLogin login) {
-		this.logins.remove(login);
-	}
-
-	public void clearLogin() {
-		this.logins.clear();
-	}
-	
 	public String getPassword() {
 		return password;
 	}
@@ -101,29 +93,21 @@ public class User extends AbstractEntity<Integer> {
 		this.password_salt = passwordSalt;
 	}
 
-	public UserData getUserData() {
-		return userData;
-	}
-
-	public void setUserData(UserData userData) {
-		this.userData = userData;
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == this)
 			return true;
 		
-		if(!(obj instanceof User))
+		if(!(obj instanceof UserLogin))
 			return false;
 		
-		User objCast = (User) obj;
+		UserLogin objCast = (UserLogin) obj;
 		
 		return objCast.getId().equals(this.getId());
 	}
 	
 	@Override
 	public String toString() {
-		return "User [id=" + id + "]";
+		return "UserLogin [id=" + id + "]";
 	}
 }
