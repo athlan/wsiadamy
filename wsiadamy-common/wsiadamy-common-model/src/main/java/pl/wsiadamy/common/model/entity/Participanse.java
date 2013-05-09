@@ -2,12 +2,15 @@ package pl.wsiadamy.common.model.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import pl.wsiadamy.common.model.common.AbstractEntity;
@@ -19,13 +22,16 @@ public class Participanse extends AbstractEntity<Integer> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
-	
+
 	@OneToOne
 	private User user;
+
+	@OneToOne
+	private User userSender;
 	
 	@OneToOne
 	private Route route;
-
+	
 	@Column
 	private Date rspvDateSent;
 
@@ -40,6 +46,13 @@ public class Participanse extends AbstractEntity<Integer> {
 
 	public Participanse(User user, Route route) {
 		setUser(user);
+		setUserSender(user);
+		setRoute(route);
+	}
+
+	public Participanse(User user, User userSender, Route route) {
+		setUser(user);
+		setUserSender(userSender);
 		setRoute(route);
 	}
 	
@@ -57,6 +70,14 @@ public class Participanse extends AbstractEntity<Integer> {
 
 	private void setUser(User user) {
 		this.user = user;
+	}
+
+	public User getUserSender() {
+		return userSender;
+	}
+
+	public void setUserSender(User userSender) {
+		this.userSender = userSender;
 	}
 
 	public Route getRoute() {
@@ -89,6 +110,12 @@ public class Participanse extends AbstractEntity<Integer> {
 	
 	public void setRspvStatus(ParticipanseRSPV rspvStatus) {
 		this.rspvStatus = rspvStatus;
+	}
+	
+	@PrePersist
+	@PreUpdate
+	public void recalculateRouteSeatsAvailable() {
+		getRoute().recalculateSeatsAvailable();
 	}
 	
 	@Override

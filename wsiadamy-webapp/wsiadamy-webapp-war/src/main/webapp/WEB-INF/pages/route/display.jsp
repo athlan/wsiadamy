@@ -17,35 +17,34 @@
 </c:if>
       </ul>
       
-<c:if test="${empty routeParticipanse}">
-			<a href="<c:url value="/route/participate/${route.id}" />" class="btn btn-primary">Wsiadaj!</a>
-</c:if>
-<c:if test="${not empty routeParticipanse and route.owner.id != pageContext.request.userPrincipal.principal.id}">
-  <c:if test="${routeParticipanse.rspvStatus == 'PENDING'}">
-      <div class="btn-group">
-        <a class="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">
-          <i class="icon-envelope icon-white"></i> Zaproszenie
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="<c:url value='/route/participateAccept/${routeParticipanse.id}' />">Zaakceptuj</a></li>
-          <li><a href="<c:url value='/route/participateReject/${routeParticipanse.id}' />">Odrzuć</a></li>
-        </ul>
-      </div>
-  </c:if>
-  <c:if test="${routeParticipanse.rspvStatus == 'APPROVED'}">
-			<a href="<c:url value="/route/participateCancel/${routeParticipanse.id}" />" class="btn">Rezygnuj</a>
-  </c:if>
-</c:if>
-<c:if test="${route.owner.id == pageContext.request.userPrincipal.principal.id}">
-			<a href="<c:url value="/route/remove/${route.id}" />" class="btn btn-danger btn-mini">Usuń trasę</a>
-</c:if>
-<!--<sec:authorize access="hasPermission(#route, 'RouteRemove')">
-			<a href="<c:url value="/route/remove/${route.id}" />" class="btn btn-danger btn-mini">Usuń1</a>
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteParticipateAdd')">
+	<a href="<c:url value="/route/participate/${route.id}" />" class="btn btn-primary">Wsiadaj!</a>
 </sec:authorize>
-<sec:authorize url="/route/remove/${route.id}">
-			<a href="<c:url value="/route/remove/${route.id}" />" class="btn btn-danger btn-mini">Usuń2</a>
-</sec:authorize>-->
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateResignation')">
+	<a href="<c:url value="/route/participateResignation/${routeParticipanse.id}" />" class="btn">Rezygnuj z przejazdu</a>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateReviewJoin')">
+    <div class="btn-group">
+      <a class="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">
+        <i class="icon-envelope icon-white"></i> Zaproszenie
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateAccept')">
+        <li><a href="<c:url value='/route/participateAccept/${routeParticipanse.id}' />">Zaakceptuj</a></li>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateReject')">
+        <li><a href="<c:url value='/route/participateReject/${routeParticipanse.id}' />">Odrzuć</a></li>
+</sec:authorize>
+      </ul>
+    </div>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateCancel')">
+	<a href="<c:url value="/route/participateCancel/${routeParticipanse.id}" />" class="btn">Anuluj zaproszenie</a>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteRemove')">
+  <a href="<c:url value="/route/remove/${route.id}" />" class="btn btn-danger btn-mini">Usuń trasę</a>
+</sec:authorize>
 		</div>
 		<div class="span8">
 			Test route

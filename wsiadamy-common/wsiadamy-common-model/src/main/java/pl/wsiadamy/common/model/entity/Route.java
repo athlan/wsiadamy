@@ -53,9 +53,12 @@ public class Route extends AbstractEntity<Integer> {
 
 	@Column
 	private int seats;
-	
+
 	@Column
 	private int seatsAvailable;
+	
+	@Column
+	private boolean participanseModeration;
 	
 	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Participanse> participances;
@@ -194,10 +197,29 @@ public class Route extends AbstractEntity<Integer> {
 		this.seatsAvailable = seatsAvailable;
 	}
 	
+	public boolean isParticipanseModeration() {
+		return participanseModeration;
+	}
+
+	public void setParticipanseModeration(boolean participanseModeration) {
+		this.participanseModeration = participanseModeration;
+	}
+
 	@PrePersist
 	@PreUpdate
-	private void recalculateSeatsAvailable() {
-		this.seatsAvailable = this.seats - this.participances.size();
+	public void recalculateSeatsAvailable() {
+		int seatsBooked = 0;
+		
+		// count all approved participances
+		// except onwer.
+		for (Participanse participanse : participances) {
+			if (participanse.getRspvStatus() == ParticipanseRSPV.APPROVED
+				&& !participanse.getUser().equals(this.getOwner())) {
+				++seatsBooked;
+			}
+		}
+		
+		this.seatsAvailable = this.seats - seatsBooked;
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import pl.wsiadamy.common.model.common.AbstractDaoImpl;
 import pl.wsiadamy.common.model.entity.Participanse;
+import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
@@ -55,6 +56,7 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 			if(params.containsKey("participantId")) {
 				Join<Route, Participanse> rootParticipances = from.joinList("participances", JoinType.INNER);
 				predicates.add(cb.equal(rootParticipances.get("user"), params.get("participantId")));
+				predicates.add(cb.notEqual(rootParticipances.get("rspvStatus"), ParticipanseRSPV.REJECTED));
 			}
 		}
 		

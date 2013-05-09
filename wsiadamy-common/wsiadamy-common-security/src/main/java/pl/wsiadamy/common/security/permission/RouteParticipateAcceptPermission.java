@@ -26,15 +26,13 @@ public class RouteParticipateAcceptPermission implements Permission {
 		if(participanse == null || user == null || !participanse.getUser().equals(user))
 			return false;
 		
-		// already on list?
-		boolean result = false;
+		if(participanse.getRspvStatus() != ParticipanseRSPV.PENDING)
+			return false;
+
+		if(participanse.getUserSender() != null && participanse.getUserSender().equals(user))
+			return false;
 		
-		if(participanse.getUser().equals(user)) {
-			if(participanse.getRspvStatus() == ParticipanseRSPV.PENDING)
-				result = true;
-		}
-		
-		return result;
+		return true;
 	}
 	
 	protected Participanse getTargetDomain(Object targetDomainObject) {

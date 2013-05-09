@@ -18,17 +18,27 @@ public class RouteRemovePermission implements Permission {
 	
 	@Override
 	public boolean isAllowed(Authentication authentication, Object targetDomainObject) {
-		if(!(targetDomainObject instanceof Integer))
-			return false;
-		
-		Route route = routeBO.getById((Integer) targetDomainObject);
-		
-		if(route == null)
-			return false;
-		
+		Route route = getTargetDomain(targetDomainObject);
 		User user = AthenticationUtil.getUser();
 		
-		return null != user && user.equals(route.getOwner());
+		if(route == null || user == null)
+			return false;
+		
+		if(!route.getOwner().equals(user))
+			return false;
+		
+		return true;
 	}
 
+	protected Route getTargetDomain(Object targetDomainObject) {
+		if(targetDomainObject instanceof Route) {
+			return (Route) targetDomainObject;
+		}
+		
+		if(targetDomainObject instanceof Integer) {
+			return routeBO.getById((Integer) targetDomainObject);
+		}
+		
+		return null;
+	}
 }

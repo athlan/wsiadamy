@@ -14,6 +14,10 @@
 <c:set var="route" value="${routeWrapper.route}" />
 <c:set var="routeParticipanse" value="${routeWrapper.participanse}" />
   <c:if test="${routeParticipanse.rspvStatus == 'PENDING'}">
+	  <c:if test="${routeParticipanse.userSender.id == pageContext.request.userPrincipal.principal.id}">
+	  	<a href="<c:url value="/route/participateCancel/${routeParticipanse.id}" />" class="btn btn-mini btn-danger"><i class="icon-envelope icon-white"></i> Anuluj zaproszenie</a>
+	  </c:if>
+	  <c:if test="${routeParticipanse.userSender.id != pageContext.request.userPrincipal.principal.id}">
       <div class="btn-group">
         <a class="btn dropdown-toggle btn-mini btn-info" data-toggle="dropdown" href="#">
           <i class="icon-envelope icon-white"></i> Zaproszenie
@@ -24,6 +28,7 @@
           <li><a href="<c:url value='/route/participateReject/${routeParticipanse.id}' />">Odrzuć</a></li>
         </ul>
       </div>
+    </c:if>
   </c:if>
   <c:if test="${route.owner.id == pageContext.request.userPrincipal.principal.id}">
       <span class="label label-info">Kierowca</span>

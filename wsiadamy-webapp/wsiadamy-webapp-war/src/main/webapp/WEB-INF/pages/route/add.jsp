@@ -78,7 +78,7 @@
     
     google.maps.event.addListener(autocompleteFieldLocation, 'place_changed', function() {
       var place = autocompleteFieldLocation.getPlace();
-      inputObject.next('.locationAutocompleteCoords').val(place.geometry.location.jb + " " + place.geometry.location.kb);
+      inputObject.next('.locationAutocompleteCoords').val(place.geometry.location.lb + " " + place.geometry.location.kb);
       calcRoute();
     });
   }
@@ -164,13 +164,15 @@
       });
     });
     
+    var coordsOrigin = $('#fieldLocationSourceCoords').val().split(' ');
+    var coordsDestination = $('#fieldLocationDestinationCoords').val().split(' ');
+    
 		var request = {
-		    origin: $('#fieldLocationSourceCoords').val(),
-		    destination: $('#fieldLocationDestinationCoords').val(),
+		    origin: new google.maps.LatLng(coordsOrigin[0], coordsOrigin[1]),
+		    destination: new google.maps.LatLng(coordsDestination[0], coordsDestination[1]),
 		    waypoints: requestWaypoints,
 		    travelMode: google.maps.DirectionsTravelMode.DRIVING
 		};
-		
 		directionsService.route(request, function(response, status) {
 			if (status == google.maps.DirectionsStatus.OK) {
 				directionsDisplay.setDirections(response);

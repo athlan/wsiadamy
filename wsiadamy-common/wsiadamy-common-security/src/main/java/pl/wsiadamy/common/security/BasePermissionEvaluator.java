@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class BasePermissionEvaluator implements PermissionEvaluator {
+public class BasePermissionEvaluator implements PermissionEvaluator, Serializable {
 	private Map<String, Permission> permissionNameToPermissionMap;
 	
 	private BasePermissionEvaluator() {

@@ -1,5 +1,7 @@
 package pl.wsiadamy.webapp.controller;
  
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import pl.wsiadamy.common.model.bo.RouteBO;
 import pl.wsiadamy.common.model.bo.UserBO;
 import pl.wsiadamy.common.model.bo.ParticipanseBO;
 import pl.wsiadamy.common.model.entity.Participanse;
+import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.security.util.AthenticationUtil;
@@ -30,7 +33,7 @@ public class RouteParticipationController {
 	ParticipanseBO participanseBO;
 	
 	@RequestMapping(value = "/route/participate/{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteParticipate')")
+	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteParticipateAdd')")
     public String participateRoute(@PathVariable("id") Integer id, ModelMap model) {
 		
 		Route route = routeBO.getById(id);
@@ -39,7 +42,16 @@ public class RouteParticipationController {
 			return "forward:/errors/404";
 		
 		User user = AthenticationUtil.getUser();
-		participanseBO.participateRoute(user, route);
+		
+		Participanse participanse = participanseBO.getByUserRoute(user, route);
+		
+		if(null == participanse) {
+			participanseBO.participateRoute(user, route);
+		}
+		else {
+			participanse.setRspvStatus(ParticipanseRSPV.APPROVED);
+			participanseBO.update(participanse);
+		}
 		
 		model.addAttribute("route", route);
 
@@ -55,7 +67,7 @@ public class RouteParticipationController {
 		if(null == participanse)
 			return "forward:/errors/404";
 		
-		User user = AthenticationUtil.getUser();
+//		User user = AthenticationUtil.getUser();
 		participanseBO.participateRouteCancel(participanse);
 		
         return "redirect:/route/get/" + participanse.getRoute().getId();
@@ -70,6 +82,10 @@ public class RouteParticipationController {
 		if(null == participanse)
 			return "forward:/errors/404";
 		
+		participanse.setRspvStatus(ParticipanseRSPV.APPROVED);
+		participanse.setRspvDateAccepted(new Date());
+		participanseBO.update(participanse);
+		
         return "redirect:/route/get/" + participanse.getRoute().getId();
     }
 	
@@ -81,8 +97,27 @@ public class RouteParticipationController {
 		
 		if(null == participanse)
 			return "forward:/errors/404";
+
+		participanse.setRspvStatus(ParticipanseRSPV.REJECTED);
+		participanse.setRspvDateAccepted(new Date());
+		participanseBO.update(participanse);
 		
         return "redirect:/route/get/" + participanse.getRoute().getId();
     }
-
+	
+	@RequestMapping(value = "/route/participateResignation/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteParticipateResignation')")
+    public String participateRouteResignation(@PathVariable("id") Integer id, ModelMap model) {
+		
+		Participanse participanse = participanseBO.getById(id);
+		
+		if(null == participanse)
+			return "forward:/errors/404";
+		
+//		User user = AthenticationUtil.getUser();
+		participanseBO.participateRouteCancel(participanse);
+		
+        return "redirect:/route/get/" + participanse.getRoute().getId();
+    }
+	
 }

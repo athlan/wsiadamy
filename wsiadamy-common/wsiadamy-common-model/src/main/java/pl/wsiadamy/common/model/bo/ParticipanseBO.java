@@ -12,8 +12,10 @@ public interface ParticipanseBO {
 	Participanse getById(Integer id);
 
 	Participanse getByUserRoute(User participant, Route route);
-	
+
 	boolean participateRoute(User participant, Route route);
+
+	boolean participateRouteInvite(User invitator, User participant, Route route);
 	
 	boolean participateRouteCancel(Participanse participanse);
 }

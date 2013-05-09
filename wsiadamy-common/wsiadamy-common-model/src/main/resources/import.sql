@@ -6,13 +6,14 @@ UPDATE "public"."users" SET userdata_id = '1' WHERE id = '1';
 -- user 2
 INSERT INTO "public"."users" ("id", "password", "password_salt") VALUES ('2', null, null);
 INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('2', '1', null, null, '100000302544693', '2');
+INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('3', '0', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'me@athlan.pl', '2');
 INSERT INTO "public"."users_data" VALUES ('2', '1991-04-21', 'me@athlan.pl', '660011034', '100000302544693', 'Piotr', 'Pelczar', '2');
 UPDATE "public"."users" SET userdata_id = '2' WHERE id = '2';
 
 -- ----------------------------
 -- Records of route
 -- ----------------------------
-INSERT INTO "public"."route" VALUES ('1', NOW() + '+2 days'::interval, '2', '0', '1', '1', null, null, null, null);
+INSERT INTO "public"."route" VALUES ('1', NOW() + '+2 days'::interval, true, '3', '3', '1', '1', null, null, null, null);
 
 -- ----------------------------
 -- Records of route_details

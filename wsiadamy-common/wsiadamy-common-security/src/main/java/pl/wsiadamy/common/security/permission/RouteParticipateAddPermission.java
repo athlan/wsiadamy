@@ -5,14 +5,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import pl.wsiadamy.common.model.bo.ParticipanseBO;
+import pl.wsiadamy.common.model.bo.RouteBO;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
+import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.security.Permission;
 import pl.wsiadamy.common.security.util.AthenticationUtil;
 
 @Component
-public class RouteParticipateCancelPermission implements Permission {
+public class RouteParticipateAddPermission implements Permission {
+
+	@Autowired
+	private RouteBO routeBO;
 
 	@Autowired
 	private ParticipanseBO participanseBO;
@@ -20,29 +25,35 @@ public class RouteParticipateCancelPermission implements Permission {
 	@Override
 	public boolean isAllowed(Authentication authentication, Object targetDomainObject) {
 
-		Participanse participanse = getTargetDomain(targetDomainObject);
+		Route route = getTargetDomain(targetDomainObject);
 		User user = AthenticationUtil.getUser();
-
-		if(participanse == null || user == null)
+		
+		if(route == null || user == null)
 			return false;
 		
-		// cannot cancel not owning
-		if(participanse.getUserSender() == null || !participanse.getUserSender().equals(user))
+		Participanse participanse = participanseBO.getByUserRoute(user, route);
+		
+		if(null != participanse) {
+			if(participanse.getRspvStatus() != ParticipanseRSPV.REJECTED)
+				return false;
+		}
+		
+		if(route.getSeatsAvailable() == 0)
 			return false;
 		
-		if(participanse.getRspvStatus() != ParticipanseRSPV.PENDING)
+		if(route.getOwner().equals(user))
 			return false;
 		
 		return true;
 	}
 	
-	protected Participanse getTargetDomain(Object targetDomainObject) {
-		if(targetDomainObject instanceof Participanse) {
-			return (Participanse) targetDomainObject;
+	protected Route getTargetDomain(Object targetDomainObject) {
+		if(targetDomainObject instanceof Route) {
+			return (Route) targetDomainObject;
 		}
 		
 		if(targetDomainObject instanceof Integer) {
-			return participanseBO.getById((Integer) targetDomainObject);
+			return routeBO.getById((Integer) targetDomainObject);
 		}
 		
 		return null;

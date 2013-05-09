@@ -1,11 +1,14 @@
 package pl.wsiadamy.common.model.bo;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.wsiadamy.common.model.dao.ParticipanseDao;
 import pl.wsiadamy.common.model.dao.RouteDao;
 import pl.wsiadamy.common.model.entity.Participanse;
+import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 
@@ -45,6 +48,30 @@ public class ParticipanseBOImpl implements ParticipanseBO {
 	@Override
 	public boolean participateRoute(User participant, Route route) {
 		Participanse participanse = new Participanse(participant, route);
+		participanse.setUserSender(participant);
+		participanse.setRspvDateSent(new Date());
+
+		if(route.isParticipanseModeration()) {
+			participanse.setRspvStatus(ParticipanseRSPV.PENDING);
+		}
+		else {
+			participanse.setRspvStatus(ParticipanseRSPV.APPROVED);
+			participanse.setRspvDateAccepted(new Date());
+		}
+		
+		if(false == route.addParticipanse(participanse))
+			return false;
+		
+		routeDao.update(route);
+		
+		return true;
+	}
+
+	@Override
+	public boolean participateRouteInvite(User invitator, User participant, Route route) {
+		Participanse participanse = new Participanse(participant, invitator, route);
+		participanse.setRspvStatus(ParticipanseRSPV.PENDING);
+		participanse.setRspvDateSent(new Date());
 		
 		if(false == route.addParticipanse(participanse))
 			return false;
