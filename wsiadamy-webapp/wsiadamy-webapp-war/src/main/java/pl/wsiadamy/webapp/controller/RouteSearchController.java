@@ -18,6 +18,7 @@ import pl.wsiadamy.common.model.bo.UserBO;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.input.RouteAddInput;
 import pl.wsiadamy.common.model.input.RouteSearchSimpleInput;
+import pl.wsiadamy.common.model.wrapper.RouteSearchResultWrapper;
 
 @Controller
 @RequestMapping("/route")
@@ -59,7 +60,7 @@ public class RouteSearchController {
             return "route/search";
         }
         
-        List<Route> results = routeBO.findRoutes(form);
+        List<RouteSearchResultWrapper> results = routeBO.findRoutes(form);
         
         model.addAttribute("routes", results);
         

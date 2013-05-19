@@ -85,7 +85,8 @@ $(function() {
 		<c:when test="${not empty routes}">
 			<div class="">
 			<h1>Przejazdy:</h1>
-		<c:forEach items="${routes}" var="route">
+		<c:forEach items="${routes}" var="routeWrapper">
+<c:set var="route" value="${routeWrapper.route}" />
       <div class="route">
       <a href="<c:url value='/route/get/${route.id}' />">
         Przejazd #<c:out value="${route.id}" />
@@ -93,6 +94,11 @@ $(function() {
         do <c:out value="${route.waypointDestination.name}" />
       </a>
       w dniu <fmt:formatDate value="${route.dateDeparture}" pattern="dd.MM.yyyy" />
+      <br />
+      Distance source <c:out value="${routeWrapper.distanceSource}" /><br />
+      Position source <c:out value="${routeWrapper.positionSource}" /><br />
+      Distance destination <c:out value="${routeWrapper.distanceDestination}" /><br />
+      Position destination <c:out value="${routeWrapper.positionDestination}" /><br />
       </div>
 		</c:forEach>
 			</div>

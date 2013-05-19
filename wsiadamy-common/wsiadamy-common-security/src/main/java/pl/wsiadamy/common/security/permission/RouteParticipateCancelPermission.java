@@ -26,11 +26,11 @@ public class RouteParticipateCancelPermission implements Permission {
 		if(participanse == null || user == null)
 			return false;
 		
+		if(participanse.getRspvStatus() != ParticipanseRSPV.PENDING)
+			return false;
+
 		// cannot cancel not owning
 		if(participanse.getUserSender() == null || !participanse.getUserSender().equals(user))
-			return false;
-		
-		if(participanse.getRspvStatus() != ParticipanseRSPV.PENDING)
 			return false;
 		
 		return true;

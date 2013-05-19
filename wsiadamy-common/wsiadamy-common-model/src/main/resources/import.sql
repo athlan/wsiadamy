@@ -32,7 +32,7 @@ INSERT INTO "public"."route_waypoint" VALUES ('1', 'Gliwice, Polska', '010100000
 INSERT INTO "public"."route_waypoint" VALUES ('2', 'Racibórz, Polska', '0101000000C0599F724C383240CCE8EC09B70B4940', '1');
 INSERT INTO "public"."route_waypoint" VALUES ('3', 'Krzyżanowice, Polska', '0101000000C03E8ADFB9443240068B1E53D2FD4840', '1');
 
-UPDATE "public"."route" SET waypointsource_id = '1', waypointdestination_id = '1', routeline_id = '1', routedetails_id = '1' WHERE id = '1';
+UPDATE "public"."route" SET waypointsource_id = '2', waypointdestination_id = '1', routeline_id = '1', routedetails_id = '1' WHERE id = '1';
 
 INSERT INTO "public"."participanse" VALUES ('1', NOW(), NOW() - '1 minute'::interval, '1', '1', '1');
 

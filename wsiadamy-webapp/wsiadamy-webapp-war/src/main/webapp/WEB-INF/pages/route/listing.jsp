@@ -13,23 +13,27 @@
 	<c:forEach items="${routes}" var="routeWrapper">
 <c:set var="route" value="${routeWrapper.route}" />
 <c:set var="routeParticipanse" value="${routeWrapper.participanse}" />
-  <c:if test="${routeParticipanse.rspvStatus == 'PENDING'}">
-	  <c:if test="${routeParticipanse.userSender.id == pageContext.request.userPrincipal.principal.id}">
+
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateCancel')">
 	  	<a href="<c:url value="/route/participateCancel/${routeParticipanse.id}" />" class="btn btn-mini btn-danger"><i class="icon-envelope icon-white"></i> Anuluj zaproszenie</a>
-	  </c:if>
-	  <c:if test="${routeParticipanse.userSender.id != pageContext.request.userPrincipal.principal.id}">
-      <div class="btn-group">
-        <a class="btn dropdown-toggle btn-mini btn-info" data-toggle="dropdown" href="#">
-          <i class="icon-envelope icon-white"></i> Zaproszenie
-          <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="<c:url value='/route/participateAccept/${routeParticipanse.id}' />">Zaakceptuj</a></li>
-          <li><a href="<c:url value='/route/participateReject/${routeParticipanse.id}' />">Odrzuć</a></li>
-        </ul>
-      </div>
-    </c:if>
-  </c:if>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateReviewJoin')">
+    <div class="btn-group">
+      <a class="btn dropdown-toggle btn-mini btn-info" data-toggle="dropdown" href="#">
+        <i class="icon-envelope icon-white"></i> Zaproszenie
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateAccept')">
+        <li><a href="<c:url value='/route/participateAccept/${routeParticipanse.id}' />">Zaakceptuj</a></li>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateReject')">
+        <li><a href="<c:url value='/route/participateReject/${routeParticipanse.id}' />">Odrzuć</a></li>
+</sec:authorize>
+      </ul>
+    </div>
+</sec:authorize>
+
   <c:if test="${route.owner.id == pageContext.request.userPrincipal.principal.id}">
       <span class="label label-info">Kierowca</span>
   </c:if>

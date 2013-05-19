@@ -9,6 +9,7 @@ import pl.wsiadamy.common.model.input.RouteAddDetailsInput;
 import pl.wsiadamy.common.model.input.RouteAddInput;
 import pl.wsiadamy.common.model.input.RouteSearchSimpleInput;
 import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
+import pl.wsiadamy.common.model.wrapper.RouteSearchResultWrapper;
 
 public interface RouteBO {
 	void save(Route route);
@@ -21,7 +22,7 @@ public interface RouteBO {
 
 	Route createRoute(User owner, RouteAddInput input, RouteAddDetailsInput inputDetails);
 	
-	List<Route> findRoutes(RouteSearchSimpleInput input);
+	List<RouteSearchResultWrapper> findRoutes(RouteSearchSimpleInput input);
 	
 	List<RouteParticipanseWrapper> listRoutes(Map<String, Object> params, int limit, int offset);
 	

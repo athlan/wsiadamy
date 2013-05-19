@@ -78,7 +78,7 @@
     
     google.maps.event.addListener(autocompleteFieldLocation, 'place_changed', function() {
       var place = autocompleteFieldLocation.getPlace();
-      inputObject.next('.locationAutocompleteCoords').val(place.geometry.location.lb + " " + place.geometry.location.kb);
+      inputObject.next('.locationAutocompleteCoords').val(place.geometry.location.jb + " " + place.geometry.location.kb);
       calcRoute();
     });
   }
@@ -86,6 +86,7 @@
 	$(function() {
     $(document).on('click', '.waypoints .waypoint .delete', function() {
       $(this).parents('div.waypoint:first').remove();
+      calcRoute();
       return false;
     });
     

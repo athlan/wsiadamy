@@ -110,7 +110,7 @@
     
     google.maps.event.addListener(autocompleteFieldLocation, 'place_changed', function() {
       var place = autocompleteFieldLocation.getPlace();
-      inputObject.next('.locationAutocompleteCoords').val(place.geometry.location.lb + " " + place.geometry.location.kb);
+      inputObject.next('.locationAutocompleteCoords').val(place.geometry.location.jb + " " + place.geometry.location.kb);
       
       calcRoute();
     });

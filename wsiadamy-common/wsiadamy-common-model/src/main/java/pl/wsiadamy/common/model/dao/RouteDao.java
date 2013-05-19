@@ -8,6 +8,7 @@ import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
+import pl.wsiadamy.common.model.wrapper.RouteSearchResultWrapper;
 
 import com.vividsolutions.jts.geom.Point;
 
@@ -17,9 +18,9 @@ public interface RouteDao extends AbstractDao<Route, Integer> {
 	
 	Long listRoutesCount(Map<String, Object> params);
 	
-	List<Route> findRoutes(Point pointSource, Point pointDestinaton, float pointSourceDistanceRange, float pointDestinationDistanceRange, Map<String, Object> params);
+	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointSourceDistanceRange, float pointDestinationDistanceRange, Map<String, Object> params);
 	
-	List<Route> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, Map<String, Object> params);
+	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, Map<String, Object> params);
 	
-	List<Route> findRoutes(Point pointSource, Point pointDestinaton, float pointRange);
+	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange);
 }

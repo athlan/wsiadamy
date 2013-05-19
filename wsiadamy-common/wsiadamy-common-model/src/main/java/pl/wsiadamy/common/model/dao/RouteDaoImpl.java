@@ -21,6 +21,7 @@ import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
+import pl.wsiadamy.common.model.wrapper.RouteSearchResultWrapper;
 
 import com.vividsolutions.jts.geom.Point;
 
@@ -98,17 +99,17 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 	}
 	
 	@Override
-	public List<Route> findRoutes(Point pointSource, Point pointDestinaton, float pointRange) {
+	public List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange) {
 		return findRoutes(pointSource, pointDestinaton, pointRange, pointRange, null);
 	}
 	
 	@Override
-	public List<Route> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, Map<String, Object> params) {
+	public List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, Map<String, Object> params) {
 		return findRoutes(pointSource, pointDestinaton, pointRange, pointRange, params);
 	}
 	
 	@Override
-	public List<Route> findRoutes(Point pointSource, Point pointDestinaton, float pointSourceDistanceRange, float pointDestinationDistanceRange, Map<String, Object> params) {
+	public List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointSourceDistanceRange, float pointDestinationDistanceRange, Map<String, Object> params) {
 		
 		String sqlDistancePointSource = "ST_Distance_Spheroid(route_line.lineString, ST_GeomFromText('POINT(" + pointSource.getX() + " " + pointSource.getY() + ")'), 'SPHEROID[\"WGS 84\",6378137,298.257223563]')";
 		String sqlDistancePointDestination = "ST_Distance_Spheroid(route_line.lineString, ST_GeomFromText('POINT(" + pointDestinaton.getX() + " " + pointDestinaton.getY() + ")'), 'SPHEROID[\"WGS 84\",6378137,298.257223563]')";
@@ -116,6 +117,8 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 		String sql =
 			"SELECT " +
 			"route.id, " + 
+			"ST_Line_Locate_Point(route_line.lineString, ST_GeomFromText('POINT(" + pointSource.getX() + " " + pointSource.getY() + ")')) AS position_point_source, " +
+			"ST_Line_Locate_Point(route_line.lineString, ST_GeomFromText('POINT(" + pointDestinaton.getX() + " " + pointDestinaton.getY() + ")')) AS position_point_destination, " +
 			sqlDistancePointSource + " AS distance_point_source, " +
 			sqlDistancePointDestination + " AS distance_point_destination " +
 			"FROM route_line AS route_line " +
@@ -149,7 +152,7 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 		
 		// no routes found
 		if(routeIds.length == 0)
-			return new ArrayList<Route>();
+			return new ArrayList<RouteSearchResultWrapper>();
 		
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Route> q = cb.createQuery(Route.class);
@@ -172,6 +175,25 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 		tq.setMaxResults(limit);
 		tq.setFirstResult(0);
 		
-		return tq.getResultList();
+		List<Route> resultRoutes = tq.getResultList();
+		List<RouteSearchResultWrapper> result = new ArrayList<RouteSearchResultWrapper>();
+		
+		i = 0;
+		for (Route route : resultRoutes) {
+			RouteSearchResultWrapper row = new RouteSearchResultWrapper(route, null);
+			
+			Object[] statsRow = aa.get(i);
+			row.setDistanceSource((Double) statsRow[3]);
+			row.setDistanceDestination((Double) statsRow[4]);
+			
+			row.setPositionSource((Double) statsRow[1]);
+			row.setPositionDestination((Double) statsRow[2]);
+			
+			result.add(row);
+			
+			++i;
+		}
+		
+		return result;
 	}
 }

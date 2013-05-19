@@ -16,6 +16,7 @@ import pl.wsiadamy.common.model.input.RouteAddInput;
 import pl.wsiadamy.common.model.input.RouteSearchSimpleInput;
 import pl.wsiadamy.common.model.util.GeometryPointFactory;
 import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
+import pl.wsiadamy.common.model.wrapper.RouteSearchResultWrapper;
 
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -87,7 +88,7 @@ public class RouteBOImpl implements RouteBO {
 	}
 	
 	@Override
-	public List<Route> findRoutes(RouteSearchSimpleInput input) {
+	public List<RouteSearchResultWrapper> findRoutes(RouteSearchSimpleInput input) {
 
 		Point waypointStartPoint = GeometryPointFactory.createPointFromString(input.getLocationSourceCoords());
 		Point waypointStopPoint = GeometryPointFactory.createPointFromString(input.getLocationDestinationCoords());
