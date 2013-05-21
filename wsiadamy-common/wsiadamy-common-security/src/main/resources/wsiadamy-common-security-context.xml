@@ -13,19 +13,7 @@
 	<context:spring-configured />
 	
 	<!-- Auto scan the components -->
-	<context:component-scan base-package="pl.wsiadamy.common.model" />
-	
-	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
-	
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-	</bean>
-	
-	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
- 		 <property name="persistenceUnitName" value="wsiadamy"/>
-	</bean>
-	
-    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+	<context:component-scan base-package="pl.wsiadamy.common.security" />
 	
 	<!-- <bean id="userDao" class="pl.wsiadamy.common.model.dao.UserDaoImpl"></bean> -->
 </beans>

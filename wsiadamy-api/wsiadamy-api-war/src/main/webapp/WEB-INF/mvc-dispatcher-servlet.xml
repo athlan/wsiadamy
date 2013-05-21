@@ -2,62 +2,26 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans     
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
         http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
  
-	<context:component-scan base-package="pl.wsiadamy.api.controller" />
+	<context:component-scan base-package="pl.wsiadamy.common.model, pl.wsiadamy.webapi.controller" />
+	
  	<mvc:annotation-driven />
- 	
-	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-	  <property name="order" value="1" />
-	  <property name="mediaTypes">
-		<map>
-		   <entry key="json" value="application/json" />
-		</map>
-	  </property>
- 	  <property name="defaultContentType" value="application/json" />
- 	  
-	  <property name="defaultViews">
-		<list>
-		  <!-- JSON View -->
-		  <bean
-			class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
-			<!-- <property name="objectMapper" ref="jacksonJsonObjectMapper" /> -->
-		  </bean>
-		 </list>
-	  </property>
-	  <property name="ignoreAcceptHeader" value="true" />
-	</bean>
-	<!-- 
-	<bean id="jacksonJsonObjectMapper" class="pl.wsiadamy.api.CustomObjectMapper">
-		<property name="customSerializerFactory" ref="jacksonJsonCustomSerializerFactory" />
-	</bean>
 	
-	<bean id="jacksonJsonCustomSerializerFactory"
-	 class="nl.hajari.wha.service.json.CustomSerializerFactoryRegistry">
-	<property name="serializers">
-		<map>
-			<entry key="nl.hajari.wha.domain.Customer" value-ref="customerSerializer" />
-		</map>
-	</property>
-	</bean>
- 
-<bean id="customerSerializer" class="nl.hajari.wha.service.json.CustomerSerializer" />
- 	 -->
- 	 
-	<bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix">
-			<value>/WEB-INF/pages/</value>
-		</property>
-		<property name="suffix">
-			<value>.jsp</value>
-		</property>
-	</bean>
-	
+	<!-- <bean name="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+	    <property name="validationMessageSource">
+	        <ref bean="messageSource" />
+	    </property>
+	</bean> -->
+    
 </beans>
