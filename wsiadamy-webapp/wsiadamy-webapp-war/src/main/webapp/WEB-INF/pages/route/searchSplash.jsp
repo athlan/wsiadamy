@@ -5,7 +5,10 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <t:wrapper>
-  
+  <jsp:attribute name="cssFragment">
+    <link href="${pageContext.request.contextPath}/static/css/pages/searchSplash.css" rel="stylesheet">
+  </jsp:attribute>
+  <jsp:body>
   <div class="map" id="map_canvas"></div>
   
   <form:form method="get" action="" commandName="routeSearchSimpleInput" class="form-search-route">
@@ -14,13 +17,13 @@
     
     <div class="row">
       <div class="span3">
-        <form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="input-block-level locationAutocomplete locationSoure" />
+        <form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="input-block-level location locationSoure locationAutocomplete" />
         <form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" class="locationAutocompleteCoords" />
         <form:errors path="locationSource" />
       </div>
       
       <div class="span3">
-        <form:input path="locationDestination" id="fieldLocationDestination" placeholder="Jadę do..." class="input-block-level locationAutocomplete locationDestination" />
+        <form:input path="locationDestination" id="fieldLocationDestination" placeholder="Jadę do..." class="input-block-level location locationDestination locationAutocomplete" />
         <form:input path="locationDestinationCoords" type="hidden" id="fieldLocationDestinationCoords" class="locationAutocompleteCoords" />
         <form:errors path="locationDestination" />
       </div>
@@ -39,62 +42,6 @@
     </div>
   </form:form>
   
-<style>
-.locationSoure {
-	background: url(${pageContext.request.contextPath}/static/img/pin-red-mini.png) no-repeat center left;
-}
-.locationDestination {
-	background: url(${pageContext.request.contextPath}/static/img/pin-red-mini.png) no-repeat center left;
-}
-.map {
-  background: #eaeaea;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-.routeAdd {
-  float: right;
-  margin-top: 16px;
-}
-.routeSearch {
-  float: right;
-}
-.form-search-route {
-  max-width: 600px;
-  padding: 19px 29px 29px;
-  /*margin: 0 auto 20px;
-  float: none;*/
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
-  -webkit-box-shadow: 0 0 40px rgba(0,0,0,.3);
-     -moz-box-shadow: 0 0 40px rgba(0,0,0,.3);
-          box-shadow: 0 0 40px rgba(0,0,0,.3);
-}
-
-.form-search-route {
-  height: 200px;
-  position: absolute;
-  left: 50%;
-  top: 50%; 
-  margin-left: -300px;
-  margin-top: -100px;
-}
-
-.form-search-route .form-signin-heading,
-.form-search-route .checkbox {
-  margin-bottom: 10px;
-}
-.form-search-route input[type="text"] {
-  font-size: 16px;
-  height: auto;
-  padding: 7px 9px;
-}
-</style>
 <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
 <script type="text/javascript">
   function initLocationService(inputObject) {
@@ -138,6 +85,7 @@
 		directionsDisplay.setMap(map);
     
     calcRoute();
+    initStartLocation();
 	}
 	
 	google.maps.event.addDomListener(window, 'load', initialize);
@@ -159,6 +107,42 @@
 			}
 		});
 	}
+  
+  function initStartLocation() {
+    if (navigator.geolocation) {
+      $('#fieldLocationSource').addClass('loading');
+      
+      navigator.geolocation.getCurrentPosition(function(position) {
+        console.log(position);
+        
+        $('#fieldLocationSourceCoords').val(position.coords.latitude + '' + position.coords.longitude);
+        //$('#fieldLocationSource').val(position.coords.latitude + '' + position.coords.longitude);
+        
+        var placeSearch = new google.maps.Geocoder(map);
+        var placeSearchRequest = {
+          location: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+          //types: ['(cities)'],
+        };
+        placeSearch.geocode(placeSearchRequest, function(geocoderResult, geocoderStatus) {
+          $('#fieldLocationSource').removeClass('loading');
+          
+          if(geocoderStatus == google.maps.GeocoderStatus.OK) {
+            for(var i = 0; i < geocoderResult.length; ++i) {
+              var item = geocoderResult[i];
+              
+              if(item.address_components[0].types[0] == 'administrative_area_level_3') {
+                $('#fieldLocationSource').val(item.formatted_address);
+                console.log(item.formatted_address);
+              }
+            }
+          }
+        });
+      }, function(errorMessage) {
+        $('#fieldLocationSource').removeClass('loading');
+        console.log(errorMessage);
+      });
+    }
+  }
 </script>
 <script>
 $(function() {
@@ -169,6 +153,8 @@ $(function() {
     
     return false;
   });
+  
 });
 </script>
+  </jsp:body>
 </t:wrapper>

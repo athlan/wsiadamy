@@ -1,5 +1,9 @@
 package pl.wsiadamy.webapi.controller;
  
+import java.util.Properties;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +20,15 @@ public class RouteController {
 	
 	@Autowired
 	RouteBO routeBO;
-	
+
+	@Resource
+	Properties applicationSettings;
+
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)
-	public @ResponseBody Route getItem(@PathVariable String id) {
-		return routeBO.getById(Integer.valueOf(id));
+//	public @ResponseBody Route getItem(@PathVariable String id) {
+//		return routeBO.getById(Integer.valueOf(id));
+//	}
+	public @ResponseBody Properties getItem(@PathVariable String id) {
+		return applicationSettings;
 	}
 }

@@ -84,6 +84,8 @@ public class RouteBOImpl implements RouteBO {
 		
 		routeDao.create(route);
 		
+		routeDao.synchronizeWaypointsRoutePositions(route);
+		
 		return route;
 	}
 	

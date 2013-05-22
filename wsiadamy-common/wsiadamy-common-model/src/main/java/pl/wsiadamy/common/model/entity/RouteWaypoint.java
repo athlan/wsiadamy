@@ -29,9 +29,12 @@ public class RouteWaypoint extends AbstractEntity<Integer> {
 	@Column(nullable = true)
 	@Type(type="org.hibernatespatial.GeometryUserType")
 	Point point;
-	
+
 	@Column
 	private String name;
+
+	@Column
+	private Double routePosition = 0.0;
 	
 	public RouteWaypoint() {
 	}
@@ -63,6 +66,14 @@ public class RouteWaypoint extends AbstractEntity<Integer> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Double getRoutePosition() {
+		return routePosition;
+	}
+
+	public void setRoutePosition(Double routePosition) {
+		this.routePosition = routePosition;
 	}
 
 	@Override

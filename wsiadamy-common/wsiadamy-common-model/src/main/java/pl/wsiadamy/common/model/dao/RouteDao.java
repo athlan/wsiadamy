@@ -23,4 +23,6 @@ public interface RouteDao extends AbstractDao<Route, Integer> {
 	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, Map<String, Object> params);
 	
 	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange);
+	
+	void synchronizeWaypointsRoutePositions(Route route);
 }

@@ -14,11 +14,14 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import pl.wsiadamy.common.model.common.AbstractDaoImpl;
+import pl.wsiadamy.common.model.common.AbstractDaoJpaImpl;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
+import pl.wsiadamy.common.model.entity.RouteWaypoint;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
 import pl.wsiadamy.common.model.wrapper.RouteSearchResultWrapper;
@@ -26,7 +29,7 @@ import pl.wsiadamy.common.model.wrapper.RouteSearchResultWrapper;
 import com.vividsolutions.jts.geom.Point;
 
 @Component
-public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements RouteDao {
+public class RouteDaoImpl extends AbstractDaoJpaImpl<Route, Integer> implements RouteDao {
 
 	public RouteDaoImpl() {
 		super(Route.class);
@@ -195,5 +198,38 @@ public class RouteDaoImpl extends AbstractDaoImpl<Route, Integer> implements Rou
 		}
 		
 		return result;
+	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void synchronizeWaypointsRoutePositions(Route route) {
+		String sql =
+			"SELECT " +
+			"waypoint.id, " + 
+			"ST_Line_Locate_Point(route_line.lineString, waypoint.point) AS point_position " +
+			"FROM route_waypoint AS waypoint " +
+			"INNER JOIN route AS route ON(waypoint.route_id = route.id) " +
+			"INNER JOIN route_line AS route_line ON(route.routeline_id = route_line.id) " +
+			"WHERE waypoint.route_id = " + route.getId();
+		
+		Query query = getEntityManager().createNativeQuery(sql);
+		List<Object[]> result = query.getResultList();
+		
+		for (Object[] row : result) {
+			Integer waypointId = (Integer) row[0];
+			
+			for (RouteWaypoint routeWaypoint : route.getWaypoints()) {
+				if(!routeWaypoint.getId().equals(waypointId))
+					continue;
+				
+				Double waypointPosition = (Double) row[1];
+				routeWaypoint.setRoutePosition(waypointPosition);
+				break;
+			}
+		}
+		
+		update(route);
+		
+		return;
 	}
 }

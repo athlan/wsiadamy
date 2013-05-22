@@ -6,13 +6,13 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Component;
 
-import pl.wsiadamy.common.model.common.AbstractDaoImpl;
+import pl.wsiadamy.common.model.common.AbstractDaoJpaImpl;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.entity.UserAccountScope;
 import pl.wsiadamy.common.model.entity.UserLogin;
 
 @Component
-public class UserDaoImpl extends AbstractDaoImpl<User, Integer> implements UserDao {
+public class UserDaoImpl extends AbstractDaoJpaImpl<User, Integer> implements UserDao {
 
 	public UserDaoImpl() {
 		super(User.class);

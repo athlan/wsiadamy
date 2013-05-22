@@ -11,13 +11,13 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Component;
 
-import pl.wsiadamy.common.model.common.AbstractDaoImpl;
+import pl.wsiadamy.common.model.common.AbstractDaoJpaImpl;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 
 @Component
-public class ParticipanseDaoImpl extends AbstractDaoImpl<Participanse, Integer> implements ParticipanseDao {
+public class ParticipanseDaoImpl extends AbstractDaoJpaImpl<Participanse, Integer> implements ParticipanseDao {
 
 	public ParticipanseDaoImpl() {
 		super(Participanse.class);

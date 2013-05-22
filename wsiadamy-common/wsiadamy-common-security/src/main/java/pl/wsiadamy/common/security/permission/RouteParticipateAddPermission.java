@@ -28,7 +28,11 @@ public class RouteParticipateAddPermission implements Permission {
 		Route route = getTargetDomain(targetDomainObject);
 		User user = AthenticationUtil.getUser();
 		
-		if(route == null || user == null)
+		if(user == null)
+			return true;
+		
+//		if(route == null || user == null)
+		if(route == null)
 			return false;
 		
 		Participanse participanse = participanseBO.getByUserRoute(user, route);

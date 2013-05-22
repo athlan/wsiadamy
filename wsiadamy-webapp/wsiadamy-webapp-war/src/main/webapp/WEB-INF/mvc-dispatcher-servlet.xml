@@ -16,7 +16,7 @@
 		http://www.springframework.org/schema/security
 		http://www.springframework.org/schema/security/spring-security-3.1.xsd">
  
-	<context:component-scan base-package="pl.wsiadamy.webapp.controller" />
+	<context:component-scan base-package="pl.wsiadamy.webapp.controller, pl.wsiadamy.webapp.view" />
 	
  	<mvc:annotation-driven />
 	<mvc:resources mapping="/static/**" location="/static/" />
@@ -48,11 +48,11 @@
 	    <property name="defaultEncoding" value="UTF-8" />
 	</bean>
 	
-	<!-- <bean name="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+	<bean name="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
 	    <property name="validationMessageSource">
 	        <ref bean="messageSource" />
 	    </property>
-	</bean> -->
+	</bean>
 	
 	<!-- i18n -->
 	<bean id="localeChangeInterceptor"
@@ -64,10 +64,14 @@
 	        <ref bean="localeChangeInterceptor" />
 	    </property>
 	</bean>
-	<bean id="localeResolver"
+	<!-- <bean id="localeResolver"
 	    class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 	    <property name="defaultLocale" value="en"/>
+	</bean>-->
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
+	    <property name="defaultLocale" value="en" />
 	</bean>
+	
     <mvc:interceptors>
 	    <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 	        <property name="paramName" value="language" />

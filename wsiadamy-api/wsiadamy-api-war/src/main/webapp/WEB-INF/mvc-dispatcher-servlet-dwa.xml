@@ -33,12 +33,12 @@
 	  </property>
 	  <property name="ignoreAcceptHeader" value="true" />
 	</bean>
-	<!-- 
+	
 	<bean id="jacksonJsonObjectMapper" class="pl.wsiadamy.api.CustomObjectMapper">
-		<property name="customSerializerFactory" ref="jacksonJsonCustomSerializerFactory" />
+		<!-- <property name="customSerializerFactory" ref="jacksonJsonCustomSerializerFactory" /> -->
 	</bean>
 	
-	<bean id="jacksonJsonCustomSerializerFactory"
+	<!-- <bean id="jacksonJsonCustomSerializerFactory"
 	 class="nl.hajari.wha.service.json.CustomSerializerFactoryRegistry">
 	<property name="serializers">
 		<map>
@@ -47,8 +47,8 @@
 	</property>
 	</bean>
  
-<bean id="customerSerializer" class="nl.hajari.wha.service.json.CustomerSerializer" />
- 	 -->
+	<bean id="customerSerializer" class="nl.hajari.wha.service.json.CustomerSerializer" />
+ 	  -->
  	 
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">

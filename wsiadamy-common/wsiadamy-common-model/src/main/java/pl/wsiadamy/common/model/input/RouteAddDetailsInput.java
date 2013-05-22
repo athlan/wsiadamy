@@ -12,15 +12,15 @@ public class RouteAddDetailsInput {
 	private float routeLength;
 	
 	@NotNull
-	@Range(min = 1)
+	@Range(min = 1, message="{javax.validation.constraints.required}")
 	private float carCombustion;
 	
 	@NotNull
-	@Range(min = 1)
+	@Range(min = 1, message="{javax.validation.constraints.required}")
 	private float fuelPrice;
 	
 	@NotNull
-	@Range(min = 1)
+	@Range(min = 1, message="{javax.validation.constraints.required}")
 	private float totalPrice;
 	
     public RouteAddDetailsInput() {

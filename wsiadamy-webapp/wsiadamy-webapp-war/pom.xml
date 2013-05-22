@@ -108,6 +108,12 @@
 			<artifactId>spring-social-facebook</artifactId>
 			<version>1.0.2.RELEASE</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>14.0.1</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

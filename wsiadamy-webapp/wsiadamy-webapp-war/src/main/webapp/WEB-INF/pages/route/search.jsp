@@ -2,6 +2,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <t:wrapper>
@@ -11,13 +12,13 @@
     
     <div class="row">
       <div class="span3">
-        <form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="input-block-level locationAutocomplete" />
+        <form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="input-block-level location locationSoure locationAutocomplete" />
         <form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" class="locationAutocompleteCoords" />
         <form:errors path="locationSource" />
       </div>
       
       <div class="span3">
-        <form:input path="locationDestination" id="fieldLocationDestination" placeholder="Jadę do..." class="input-block-level locationAutocomplete" />
+        <form:input path="locationDestination" id="fieldLocationDestination" placeholder="Jadę do..." class="input-block-level location locationDestination locationAutocomplete" />
         <form:input path="locationDestinationCoords" type="hidden" id="fieldLocationDestinationCoords" class="locationAutocompleteCoords" />
         <form:errors path="locationDestination" />
       </div>
@@ -87,7 +88,17 @@ $(function() {
 			<h1>Przejazdy:</h1>
 		<c:forEach items="${routes}" var="routeWrapper">
 <c:set var="route" value="${routeWrapper.route}" />
+<c:set var="routeParticipanse" value="${routeWrapper.participanse}" />
       <div class="route">
+      
+      <div class="routeDescription">
+      	${routeWaypointsViewHelper.displayResultLine(routeWrapper, routeSearchSimpleInput)}
+      </div>
+      
+      <div class="details">
+      	 Dojazd do punktu początkowego: ${routeWrapper.distanceSource}km, dojazd do punktu końcowego: ${routeWrapper.distanceDestination}.
+      </div>
+      
       <a href="<c:url value='/route/get/${route.id}' />">
         Przejazd #<c:out value="${route.id}" />
         z <c:out value="${route.waypointSource.name}" />
@@ -95,7 +106,38 @@ $(function() {
       </a>
       w dniu <fmt:formatDate value="${route.dateDeparture}" pattern="dd.MM.yyyy" />
       <br />
-      Distance source <c:out value="${routeWrapper.distanceSource}" /><br />
+      
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteParticipateAdd')">
+	<a href="<c:url value="/route/participate/${route.id}" />" class="btn btn-primary">Wsiadaj!</a>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateResignation')">
+	<a href="<c:url value="/route/participateResignation/${routeParticipanse.id}" />" class="btn">Rezygnuj z przejazdu</a>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateReviewJoin')">
+    <div class="btn-group">
+      <a class="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">
+        <i class="icon-envelope icon-white"></i> Zaproszenie
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateAccept')">
+        <li><a href="<c:url value='/route/participateAccept/${routeParticipanse.id}' />">Zaakceptuj</a></li>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateReject')">
+        <li><a href="<c:url value='/route/participateReject/${routeParticipanse.id}' />">Odrzuć</a></li>
+</sec:authorize>
+      </ul>
+    </div>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateCancel')">
+	<a href="<c:url value="/route/participateCancel/${routeParticipanse.id}" />" class="btn">Anuluj zaproszenie</a>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteRemove')">
+  <a href="<c:url value="/route/remove/${route.id}" />" class="btn btn-danger btn-mini">Usuń trasę</a>
+</sec:authorize>
+      
+      <br />
+      Distance source <c:out value="" /><br />
       Position source <c:out value="${routeWrapper.positionSource}" /><br />
       Distance destination <c:out value="${routeWrapper.distanceDestination}" /><br />
       Position destination <c:out value="${routeWrapper.positionDestination}" /><br />

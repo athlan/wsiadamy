@@ -1,3 +1,18 @@
+.locationSoure {
+	background: url(../img/pin-red-mini.png) no-repeat 5px center;
+	padding-left: 30px !important;
+}
+.locationDestination {
+	background: url(../img/pin-green-mini.png) no-repeat 5px center;
+	padding-left: 30px !important;
+}
+.locationWaypoint {
+	background: url(../img/pin-yellow-mini.png) no-repeat 5px center;
+	padding-left: 30px !important;
+}
+.location.loading {
+	background: url(../img/pin-loading.gif) no-repeat 5px center;
+}
 
 .btn-facebook {
   background-color: hsl(218, 43%, 36%) !important;

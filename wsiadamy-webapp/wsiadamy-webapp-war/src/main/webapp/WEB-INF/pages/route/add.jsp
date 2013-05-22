@@ -9,13 +9,13 @@
 		<div class="span5">
 		<form:form method="post" action="" commandName="routeAddInput">
 			<div>
-				<form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="locationAutocomplete" />
+				<form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="location locationSoure locationAutocomplete" />
 				<form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" class="locationAutocompleteCoords" />
 				<form:errors path="locationSource" cssClass="error" />
 		    </div>
 		    
 		    <div>
-				<form:input path="locationDestination" id="fieldLocationDestination" placeholder="Jadę do..." class="locationAutocomplete" />
+				<form:input path="locationDestination" id="fieldLocationDestination" placeholder="Jadę do..." class="location locationDestination locationAutocomplete" />
 				<form:input path="locationDestinationCoords" type="hidden" id="fieldLocationDestinationCoords" class="locationAutocompleteCoords" />
 				<form:errors path="locationDestination" cssClass="error" />
 			</div>
@@ -23,13 +23,13 @@
       <div class="waypoints">
 <c:forEach items="${routeAddInput.waypoints}" var="waypoint">
 				<div class="waypoint">
-          <input name="waypoints['${waypoint.key}']" type="text" value="${waypoint.value}"  placeholder="Przez..." class="locationAutocomplete" />
+          <input name="waypoints['${waypoint.key}']" type="text" value="${waypoint.value}"  placeholder="Przez..." class="location locationWaypoint locationAutocomplete" />
           <input name="waypointsCoords['${waypoint.key}']" type="hidden" value="${routeAddInput.waypointsCoords[waypoint.key]}" class="locationAutocompleteCoords" />
           <a href="" class="delete close">&times;</a>
         </div>
 </c:forEach>
         <div class="pattern">
-					<input name="pattern_waypoints['__index__']" type="text" value=""  placeholder="Przez..." class="locationAutocomplete" />
+					<input name="pattern_waypoints['__index__']" type="text" value=""  placeholder="Przez..." class="location locationWaypoint locationAutocomplete" />
 					<input name="pattern_waypointsCoords['__index__']" type="hidden" value="" class="locationAutocompleteCoords" />
           <a href="" class="delete close">&times;</a>
 				</div>

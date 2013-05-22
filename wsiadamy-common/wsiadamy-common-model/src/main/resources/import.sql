@@ -28,9 +28,9 @@ INSERT INTO "public"."route_line" VALUES ('1', '010200000046000000D5B2B5BE483832
 -- ----------------------------
 -- Records of route_waypoint
 -- ----------------------------
-INSERT INTO "public"."route_waypoint" VALUES ('1', 'Gliwice, Polska', '0101000000802EA292DFAB32403EB676ECB1254940', '1');
-INSERT INTO "public"."route_waypoint" VALUES ('2', 'Racibórz, Polska', '0101000000C0599F724C383240CCE8EC09B70B4940', '1');
-INSERT INTO "public"."route_waypoint" VALUES ('3', 'Krzyżanowice, Polska', '0101000000C03E8ADFB9443240068B1E53D2FD4840', '1');
+INSERT INTO "public"."route_waypoint" VALUES ('1', 'Gliwice, Polska', '0101000000802EA292DFAB32403EB676ECB1254940', '1', '1');
+INSERT INTO "public"."route_waypoint" VALUES ('2', 'Racibórz, Polska', '0101000000C0599F724C383240CCE8EC09B70B4940', '0', '1');
+INSERT INTO "public"."route_waypoint" VALUES ('3', 'Krzyżanowice, Polska', '0101000000C03E8ADFB9443240068B1E53D2FD4840', '0.178669294728502', '1');
 
 UPDATE "public"."route" SET waypointsource_id = '2', waypointdestination_id = '1', routeline_id = '1', routedetails_id = '1' WHERE id = '1';
 

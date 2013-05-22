@@ -11,11 +11,11 @@ import org.hibernate.validator.constraints.Length;
 public class AccountDataInput {
 	
 	@NotNull
-	@Length(min=3)
+	@Length(min=3, message="{javax.validation.constraints.required}")
 	private String firstname;
 	
 	@NotNull
-	@Length(min=3)
+	@Length(min=3, message="{javax.validation.constraints.required}")
 	private String lastname;
 	
 	private Calendar birthday;

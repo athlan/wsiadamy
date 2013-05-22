@@ -8,12 +8,12 @@ import org.hibernate.validator.constraints.Length;
 public class RouteSimpleInput {
 	
 	@NotNull
-	@Length(min=1)
+	@Length(min=1, message="{javax.validation.constraints.required}")
 	//@Size(min=1)
 	private String locationSource;
 	
 	@NotNull
-	@Size(min=1)
+	@Size(min=1, message="{javax.validation.constraints.required}")
 	private String locationDestination;
 	
     public RouteSimpleInput() {

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pl.wsiadamy.common.model.bo.RouteBO;
 import pl.wsiadamy.common.model.bo.UserBO;
 import pl.wsiadamy.common.model.bo.ParticipanseBO;
+import pl.wsiadamy.common.model.dao.RouteDao;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
@@ -33,6 +34,9 @@ public class RouteController {
 
 	@Autowired
 	RouteBO routeBO;
+
+	@Autowired
+	RouteDao routeDao;
 	
 	@Autowired
 	ParticipanseBO participanseBO;
@@ -40,7 +44,6 @@ public class RouteController {
 	@RequestMapping(value = "/route/get/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission(#id, 'RouteView')")
     public String showRoute(@PathVariable("id") Integer id, ModelMap model) {
-		
 		Route route = routeBO.getById(id);
 		
 		if(null == route)
@@ -54,6 +57,8 @@ public class RouteController {
 			Participanse routeParticipanse = participanseBO.getByUserRoute(user, route);
 			model.addAttribute("routeParticipanse", routeParticipanse);
 		}
+		
+		routeDao.synchronizeWaypointsRoutePositions(route);
 		
         return "route/display";
     }

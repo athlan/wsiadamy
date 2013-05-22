@@ -19,6 +19,7 @@ import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.input.RouteAddInput;
 import pl.wsiadamy.common.model.input.RouteSearchSimpleInput;
 import pl.wsiadamy.common.model.wrapper.RouteSearchResultWrapper;
+import pl.wsiadamy.webapp.view.RouteWaypointsViewHelper;
 
 @Controller
 @RequestMapping("/route")
@@ -40,7 +41,7 @@ public class RouteSearchController {
 //        return "route/search";
 //    }
 
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/search", method = { RequestMethod.GET, RequestMethod.POST })
     public String searchFormDisplay(
         @ModelAttribute("routeSearchSimpleInput")
         RouteSearchSimpleInput form,
@@ -49,6 +50,9 @@ public class RouteSearchController {
         return "route/searchSplash";
  
     }
+	
+	@Autowired
+	RouteWaypointsViewHelper routeWaypointsViewHelper;
 	
 	@RequestMapping(value = "/search", method = RequestMethod.GET, params={"locationDestination"})
     public String searchFormProcess(
@@ -62,6 +66,7 @@ public class RouteSearchController {
         
         List<RouteSearchResultWrapper> results = routeBO.findRoutes(form);
         
+        model.addAttribute("routeWaypointsViewHelper", routeWaypointsViewHelper);
         model.addAttribute("routes", results);
         
         return "route/search";

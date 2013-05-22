@@ -14,10 +14,37 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
  
-	<context:component-scan base-package="pl.wsiadamy.common.model, pl.wsiadamy.webapi.controller" />
-	
+	<context:component-scan base-package="pl.wsiadamy.webapi.controller" />
  	<mvc:annotation-driven />
 	
+	<bean id="applicationSettings" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	    <property name="locations">
+	        <list>
+	            <value>/WEB-INF/wsiadamy-application.properties</value>
+	        </list>
+	    </property>
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+	  <property name="order" value="1" />
+	  <property name="mediaTypes">
+		<map>
+		   <entry key="json" value="application/json" />
+		</map>
+	  </property>
+ 	  <property name="defaultContentType" value="application/json" />
+ 	  
+	  <property name="defaultViews">
+		<list>
+		  <!-- JSON View -->
+		  <bean
+			class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+			<!-- <property name="objectMapper" ref="jacksonJsonObjectMapper" /> -->
+		  </bean>
+		 </list>
+	  </property>
+	  <property name="ignoreAcceptHeader" value="true" />
+	</bean>
 	<!-- <bean name="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
 	    <property name="validationMessageSource">
 	        <ref bean="messageSource" />

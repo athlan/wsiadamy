@@ -13,12 +13,11 @@ public class AccountRegisterInput {
 	private String email;
 
 	@NotNull
-	@Length(min=1)
+	@Length(min=1, message="{javax.validation.constraints.required}")
 	private String password;
 
 	@NotNull
-	@Length(min=1)
-	
+	@Length(min=1, message="{javax.validation.constraints.required}")
 	private String passwordConfirmation;
 	
 	@AssertTrue(message="passwords must match")
