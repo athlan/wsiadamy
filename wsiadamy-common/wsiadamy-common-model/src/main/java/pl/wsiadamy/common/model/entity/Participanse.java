@@ -115,7 +115,7 @@ public class Participanse extends AbstractEntity<Integer> {
 	@PrePersist
 	@PreUpdate
 	public void recalculateRouteSeatsAvailable() {
-		getRoute().recalculateSeatsAvailable();
+		getRoute().prePersistRecalculateSeatsAvailable();
 	}
 	
 	@Override

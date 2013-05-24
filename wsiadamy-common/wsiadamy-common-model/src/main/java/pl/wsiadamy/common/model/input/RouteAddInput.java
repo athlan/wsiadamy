@@ -37,8 +37,7 @@ public class RouteAddInput {
 	private HashMap<String, String> waypointsCoords;
 	
 	private Calendar dateDeparture;
-	
-	private SimpleDateFormat dateArrivalFormat = new SimpleDateFormat("dd.MM.yyyy");
+	private SimpleDateFormat dateArrivalFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 	
 	@NotNull
 	@Min(1)

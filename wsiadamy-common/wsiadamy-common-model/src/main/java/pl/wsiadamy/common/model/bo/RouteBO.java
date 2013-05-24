@@ -22,7 +22,9 @@ public interface RouteBO {
 
 	Route createRoute(User owner, RouteAddInput input, RouteAddDetailsInput inputDetails);
 	
-	List<RouteSearchResultWrapper> findRoutes(RouteSearchSimpleInput input);
+	List<RouteSearchResultWrapper> findRoutes(RouteSearchSimpleInput input, int limit);
+	
+	List<RouteSearchResultWrapper> findRoutes(Map<String, Object> params, RouteSearchSimpleInput input, int limit);
 	
 	List<RouteParticipanseWrapper> listRoutes(Map<String, Object> params, int limit, int offset);
 	

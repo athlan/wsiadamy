@@ -44,7 +44,7 @@ public class Route extends AbstractEntity<Integer> {
 	
 	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<RouteWaypoint> waypoints;
-	
+
 	@Column
 	private Date dateDeparture;
 
@@ -59,6 +59,9 @@ public class Route extends AbstractEntity<Integer> {
 	
 	@Column
 	private boolean participanseModeration;
+
+	@Column
+	private Date dateLastModified;
 	
 	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Participanse> participances;
@@ -71,6 +74,8 @@ public class Route extends AbstractEntity<Integer> {
 		routeDetails = new RouteDetails(this);
 		
 		participances = new ArrayList<Participanse>();
+		
+		dateLastModified = new Date();
 	}
 	
 	public Integer getId() {
@@ -142,7 +147,7 @@ public class Route extends AbstractEntity<Integer> {
 		boolean result = this.participances.add(participance);
 		
 		if(true == result)
-			recalculateSeatsAvailable();
+			prePersistRecalculateSeatsAvailable();
 		
 		return result;
 	}
@@ -151,7 +156,7 @@ public class Route extends AbstractEntity<Integer> {
 		boolean result = this.participances.remove(participance);
 		
 		if(true == result)
-			recalculateSeatsAvailable();
+			prePersistRecalculateSeatsAvailable();
 		
 		return result;
 	}
@@ -205,9 +210,17 @@ public class Route extends AbstractEntity<Integer> {
 		this.participanseModeration = participanseModeration;
 	}
 
+	public Date getDateLastModified() {
+		return dateLastModified;
+	}
+
+	public void setDateLastModified(Date dateLastModified) {
+		this.dateLastModified = dateLastModified;
+	}
+
 	@PrePersist
 	@PreUpdate
-	public void recalculateSeatsAvailable() {
+	public void prePersistRecalculateSeatsAvailable() {
 		int seatsBooked = 0;
 		
 		// count all approved participances
@@ -221,7 +234,7 @@ public class Route extends AbstractEntity<Integer> {
 		
 		this.seatsAvailable = this.seats - seatsBooked;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == this)

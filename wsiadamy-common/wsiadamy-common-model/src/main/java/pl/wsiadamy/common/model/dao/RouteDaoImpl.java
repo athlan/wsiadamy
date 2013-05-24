@@ -1,6 +1,8 @@
 package pl.wsiadamy.common.model.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -102,17 +104,17 @@ public class RouteDaoImpl extends AbstractDaoJpaImpl<Route, Integer> implements 
 	}
 	
 	@Override
-	public List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange) {
-		return findRoutes(pointSource, pointDestinaton, pointRange, pointRange, null);
+	public List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, int limit) {
+		return findRoutes(pointSource, pointDestinaton, pointRange, pointRange, limit, null);
 	}
 	
 	@Override
-	public List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, Map<String, Object> params) {
-		return findRoutes(pointSource, pointDestinaton, pointRange, pointRange, params);
+	public List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, int limit, Map<String, Object> params) {
+		return findRoutes(pointSource, pointDestinaton, pointRange, pointRange, limit, params);
 	}
 	
 	@Override
-	public List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointSourceDistanceRange, float pointDestinationDistanceRange, Map<String, Object> params) {
+	public List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointSourceDistanceRange, float pointDestinationDistanceRange, int limit, Map<String, Object> params) {
 		
 		String sqlDistancePointSource = "ST_Distance_Spheroid(route_line.lineString, ST_GeomFromText('POINT(" + pointSource.getX() + " " + pointSource.getY() + ")'), 'SPHEROID[\"WGS 84\",6378137,298.257223563]')";
 		String sqlDistancePointDestination = "ST_Distance_Spheroid(route_line.lineString, ST_GeomFromText('POINT(" + pointDestinaton.getX() + " " + pointDestinaton.getY() + ")'), 'SPHEROID[\"WGS 84\",6378137,298.257223563]')";
@@ -129,20 +131,37 @@ public class RouteDaoImpl extends AbstractDaoJpaImpl<Route, Integer> implements 
 			"WHERE ";
 		
 		String sqlWhere = "";
+
+		if(null != params && params.containsKey("dateDepartureAfter")) {
+			sqlWhere += "route.datedeparture >= :dateDepartureAfter AND ";
+		}
 		
-		if(null != params && params.containsKey("offsetId")) {
-			sqlWhere += "route.id < " + params.containsKey("offsetId") + " AND ";
+		if(null != params && params.containsKey("dateTokenAfter")) {
+			sqlWhere += "route.datelastmodified > :dateTokenAfter AND ";
 		}
 		
 		sqlWhere +=
 			sqlDistancePointSource + " <= " + pointSourceDistanceRange + " AND " + 
 			sqlDistancePointDestination + " <= " + pointDestinationDistanceRange + " " +
 			"AND St_Line_Locate_Point(route_line.lineString, ST_GeomFromText('POINT(" + pointSource.getX() + " " + pointSource.getY() + ")')) < " +
-			"St_Line_Locate_Point(route_line.lineString, ST_GeomFromText('POINT(" + pointDestinaton.getX() + " " + pointDestinaton.getY() + ")'))";
+			"St_Line_Locate_Point(route_line.lineString, ST_GeomFromText('POINT(" + pointDestinaton.getX() + " " + pointDestinaton.getY() + ")')) ";
 		
 		sql += sqlWhere;
 		
+		sql += "ORDER BY datedeparture ASC, datelastmodified ASC ";
+		sql += "LIMIT " + limit;
+		
 		Query qq = getEntityManager().createNativeQuery(sql);
+		
+		if(null != params && params.containsKey("dateDepartureAfter")) {
+			Date dateDepartureAfter = (Date) params.get("dateDepartureAfter");
+			qq.setParameter("dateDepartureAfter", dateDepartureAfter);
+		}
+		
+		if(null != params && params.containsKey("dateTokenAfter")) {
+			Date dateTokenAfter = (Date) params.get("dateTokenAfter");
+			qq.setParameter("dateTokenAfter", dateTokenAfter);
+		}
 		
 		List<Object[]> aa = qq.getResultList();
 		Integer[] routeIds = new Integer[aa.size()];
@@ -170,10 +189,10 @@ public class RouteDaoImpl extends AbstractDaoJpaImpl<Route, Integer> implements 
 		
 		TypedQuery<Route> tq = getEntityManager().createQuery(q);
 		
-		Integer limit = 10;
-		
-		if(null != params && params.containsKey("limit"))
-			limit = (Integer) params.get("limit");
+//		Integer limit = 10;
+//		
+//		if(null != params && params.containsKey("limit"))
+//			limit = (Integer) params.get("limit");
 		
 		tq.setMaxResults(limit);
 		tq.setFirstResult(0);

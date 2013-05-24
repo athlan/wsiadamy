@@ -16,6 +16,7 @@
   </div>
 </c:if>
   
+  <input type="hidden" name="spring-security-redirect" value="<c:out value="${param.r}" />">
   <input type="text" name="j_username" class="input-block-level" id="fieldUsername" value="${SPRING_SECURITY_LAST_USERNAME}" placeholder="Email address">
   <input type="password" name="j_password" class="input-block-level" id="fieldPassword" value="" placeholder="Password">
   <!--

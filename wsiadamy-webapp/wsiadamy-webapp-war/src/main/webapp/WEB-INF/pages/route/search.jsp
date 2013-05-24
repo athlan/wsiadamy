@@ -6,7 +6,10 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <t:wrapper>
-  
+  <jsp:attribute name="scriptsFragment">
+    <script src="${pageContext.request.contextPath}/static/js/pages/routeSearch.js" type="text/javascript"></script>
+  </jsp:attribute>
+  <jsp:body>
   <form:form method="get" action="" commandName="routeSearchSimpleInput" class="form-search-route">
     <h2>Szukaj przejazdu</h2>
     
@@ -26,6 +29,12 @@
     
     <div class="row">
       <div class="span3">
+        <div>
+          <label for="fieldSeats">Data wyjazdu:</label>
+          <form:input path="dateDeparture" id="fieldDateDeparture" />
+          <form:errors path="dateDeparture" cssClass="error" />
+        </div>
+        
         <div class="btn-group perspective">
           <button class="btn active" data-field-check="">Pasażer</button>
           <button class="btn" data-field-check="">Kierowca</button>
@@ -72,6 +81,14 @@
 </script>
 <script>
 $(function() {
+  $("#fieldDateDeparture").datetimepicker({
+    controlType: 'select',
+    timeFormat: 'HH:mm',
+      stepMinute: 5,
+      dateFormat: 'dd.mm.yy'/*,
+      minDate: new Date()*/
+  });
+  
   $('.perspective .btn').click(function() {
     var o = $(this);
     $('.btn', o.parents('.btn-group')).removeClass('active');
@@ -79,17 +96,19 @@ $(function() {
     
     return false;
   });
+  
+  
 });
 </script>
 	
 	<c:choose>
 		<c:when test="${not empty routes}">
-			<div class="">
+			<div class="results">
 			<h1>Przejazdy:</h1>
 		<c:forEach items="${routes}" var="routeWrapper">
 <c:set var="route" value="${routeWrapper.route}" />
 <c:set var="routeParticipanse" value="${routeWrapper.participanse}" />
-      <div class="route">
+      <div class="route" data-date-token="<fmt:formatDate value="${route.dateLastModified}" pattern="dd.MM.yyyy HH:mm" />" data-date-next="<fmt:formatDate value="${route.dateDeparture}" pattern="dd.MM.yyyy HH:mm" />">
       
       <div class="routeDescription">
       	${routeWaypointsViewHelper.displayResultLine(routeWrapper, routeSearchSimpleInput)}
@@ -104,7 +123,7 @@ $(function() {
         z <c:out value="${route.waypointSource.name}" />
         do <c:out value="${route.waypointDestination.name}" />
       </a>
-      w dniu <fmt:formatDate value="${route.dateDeparture}" pattern="dd.MM.yyyy" />
+      w dniu <fmt:formatDate value="${route.dateDeparture}" pattern="dd.MM.yyyy HH:mm" />
       <br />
       
 <sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteParticipateAdd')">
@@ -142,12 +161,21 @@ $(function() {
       Distance destination <c:out value="${routeWrapper.distanceDestination}" /><br />
       Position destination <c:out value="${routeWrapper.positionDestination}" /><br />
       </div>
+      
+      <hr />
+      Pager:
+      
+<c:if test="${not empty pagerNextPage}">
+      <a href="${pagerNextPage}" class="nextPage">next page</a>
+</c:if>
+      
 		</c:forEach>
-			</div>
+			</div><!-- .results //-->
 		</c:when>
 		<c:otherwise>
-			ssdcsdc
+			<div class="searchNoRoutes">Nie znaleziono żadnych tras</div>
 		</c:otherwise>
 	</c:choose>
-  
+  	
+  </jsp:body>
 </t:wrapper>

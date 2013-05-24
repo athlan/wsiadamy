@@ -93,12 +93,15 @@
     $('.locationAutocomplete').each(function() {
       initLocationService($(this));
     });
-		
-    $("#fieldDateDeparture").datepicker({
-      dateFormat: 'dd.mm.yy'/*,
-      minDate: new Date()*/
+	
+    $("#fieldDateDeparture").datetimepicker({
+    	controlType: 'select',
+    	timeFormat: 'HH:mm',
+      	stepMinute: 5,
+      	dateFormat: 'dd.mm.yy'/*,
+      	minDate: new Date()*/
     });
-    
+	
     $(".waypoints .pattern input").bind('focus', function() {
       var pattern = $(this).parents('.pattern').clone();
       pattern.unbind('focus').bind('keypress', function(e) {

@@ -1,7 +1,9 @@
 package pl.wsiadamy.common.model.bo;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,7 @@ public class RouteBOImpl implements RouteBO {
 		Route route = new Route();
 		
 		route.setOwner(owner);
+		route.setDateLastModified(new Date());
 		
 		// set source and destination
 		Point waypointStartPoint = GeometryPointFactory.createPointFromString(input.getLocationSourceCoords());
@@ -89,13 +92,29 @@ public class RouteBOImpl implements RouteBO {
 		return route;
 	}
 	
-	@Override
-	public List<RouteSearchResultWrapper> findRoutes(RouteSearchSimpleInput input) {
 
+	@Override
+	public List<RouteSearchResultWrapper> findRoutes(Map<String, Object> params, RouteSearchSimpleInput input, int limit) {
 		Point waypointStartPoint = GeometryPointFactory.createPointFromString(input.getLocationSourceCoords());
 		Point waypointStopPoint = GeometryPointFactory.createPointFromString(input.getLocationDestinationCoords());
 		
-		return routeDao.findRoutes(waypointStartPoint, waypointStopPoint, 5000);
+		if(null == params)
+			params = new HashMap<String, Object>();
+		
+		if(null != input.getDateDepartureOffset())
+			params.put("dateDepartureAfter", input.getDateDepartureOffsetObject());
+		else if(null != input.getDateDeparture())
+			params.put("dateDepartureAfter", input.getDateDepartureObject());
+		
+		if(null != input.getDateToken())
+			params.put("dateTokenAfter", input.getDateTokenObject());
+		
+		return routeDao.findRoutes(waypointStartPoint, waypointStopPoint, 5000, limit, params);
+	}
+	
+	@Override
+	public List<RouteSearchResultWrapper> findRoutes(RouteSearchSimpleInput input, int limit) {
+		return findRoutes(null, input, limit);
 	}
 	
 	public void setUserDao(RouteDao routeDao) {

@@ -21,6 +21,7 @@
     
     <script src="${pageContext.request.contextPath}/static/js/jquery-1.9.1.min.js"></script>
     <script src="${pageContext.request.contextPath}/static/jquery-ui/js/jquery-ui-1.10.2.custom.min.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/jquery-ui-timepicker-addon.js"></script>
     <script src="${pageContext.request.contextPath}/static/bootstrap/js/bootstrap.min.js"></script>
     <jsp:invoke fragment="scriptsFragment"/>
 	

@@ -31,6 +31,12 @@
     
     <div class="row">
       <div class="span3">
+        <div>
+          <label for="fieldSeats">Data wyjazdu:</label>
+          <form:input path="dateDeparture" id="fieldDateDeparture" />
+          <form:errors path="dateDeparture" cssClass="error" />
+        </div>
+        
         <div class="btn-group perspective">
           <button class="btn active" data-field-check="">Pasażer</button>
           <button class="btn" data-field-check="">Kierowca</button>
@@ -69,8 +75,8 @@
 	    });
 	});
   
-  var map;
-  
+  	var map;
+  	
 	function initialize() {
 		directionsDisplay = new google.maps.DirectionsRenderer();
 		var centerPoint = new google.maps.LatLng(52.160455, 19.050293);
@@ -83,9 +89,11 @@
 		}
 		map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 		directionsDisplay.setMap(map);
-    
-    calcRoute();
-    initStartLocation();
+    	
+	    calcRoute();
+	    
+	    if(!$('#fieldLocationSource').val())
+	    	initStartLocation();
 	}
 	
 	google.maps.event.addDomListener(window, 'load', initialize);
@@ -115,7 +123,7 @@
       navigator.geolocation.getCurrentPosition(function(position) {
         console.log(position);
         
-        $('#fieldLocationSourceCoords').val(position.coords.latitude + '' + position.coords.longitude);
+        $('#fieldLocationSourceCoords').val(position.coords.latitude + ' ' + position.coords.longitude);
         //$('#fieldLocationSource').val(position.coords.latitude + '' + position.coords.longitude);
         
         var placeSearch = new google.maps.Geocoder(map);
@@ -131,6 +139,8 @@
               var item = geocoderResult[i];
               
               if(item.address_components[0].types[0] == 'administrative_area_level_3') {
+                document.getElementById('fieldLocationDestination').focus();
+                
                 $('#fieldLocationSource').val(item.formatted_address);
                 console.log(item.formatted_address);
               }
@@ -146,14 +156,24 @@
 </script>
 <script>
 $(function() {
-  $('.perspective .btn').click(function() {
-    var o = $(this);
-    $('.btn', o.parents('.btn-group')).removeClass('active');
-    o.addClass('active');
-    
-    return false;
+
+  $("#fieldDateDeparture").datetimepicker({
+    controlType: 'select',
+    timeFormat: 'HH:mm',
+      stepMinute: 5,
+      dateFormat: 'dd.mm.yy'/*,
+      minDate: new Date()*/
   });
+
+	$('.perspective .btn').click(function() {
+		var o = $(this);
+		$('.btn', o.parents('.btn-group')).removeClass('active');
+		o.addClass('active');
+		
+		return false;
+	});
   
+  document.getElementById('fieldLocationSource').focus();
 });
 </script>
   </jsp:body>

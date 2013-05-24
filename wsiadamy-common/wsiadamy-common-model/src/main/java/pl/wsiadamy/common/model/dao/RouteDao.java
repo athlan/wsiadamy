@@ -18,11 +18,11 @@ public interface RouteDao extends AbstractDao<Route, Integer> {
 	
 	Long listRoutesCount(Map<String, Object> params);
 	
-	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointSourceDistanceRange, float pointDestinationDistanceRange, Map<String, Object> params);
+	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointSourceDistanceRange, float pointDestinationDistanceRange, int limit, Map<String, Object> params);
 	
-	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, Map<String, Object> params);
+	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, int limit, Map<String, Object> params);
 	
-	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange);
+	List<RouteSearchResultWrapper> findRoutes(Point pointSource, Point pointDestinaton, float pointRange, int limit);
 	
 	void synchronizeWaypointsRoutePositions(Route route);
 }

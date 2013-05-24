@@ -57,8 +57,16 @@
 		<intercept-url pattern="/route/addCommit" access="hasRole('ROLE_USER')" /> -->
 		
 		<logout logout-url="/logout" />
-		<form-login login-page="/login" authentication-failure-url="/login?authfailed=1" />
+		<form-login login-page="/login" authentication-failure-url="/login?authfailed=1" authentication-success-handler-ref="simpleUrlAuthenticationSuccessHandler" />
 		<expression-handler ref="webExpressionHandler"/>
 	</http>
+	
+	<!-- Emulates the functionality of spring security 3.0.x by specifying the targetUrlParameter to be the value it
+    defaulted to in 3.0.x. As of 3.1.x this is null by default with no option to specify in <form-login> -->
+	<beans:bean id="simpleUrlAuthenticationSuccessHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
+	    <!-- <beans:property name="useReferer" value="true"/> -->
+	    <beans:property name="defaultTargetUrl" value="/account"/>
+	    <beans:property name="targetUrlParameter" value="spring-security-redirect"/>
+	</beans:bean>
 	
 </beans:beans>
