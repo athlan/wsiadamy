@@ -3,6 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <t:account>
   
@@ -16,6 +17,9 @@
 
 <sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateCancel')">
 	  	<a href="<c:url value="/route/participateCancel/${routeParticipanse.id}" />" class="btn btn-mini btn-danger"><i class="icon-envelope icon-white"></i> Anuluj zaproszenie</a>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteEdit')">
+ 		<a href="<c:url value="/route/editDetails/${route.id}" />" class="btn btn-mini btn-primary">Edytuj trasę</a>
 </sec:authorize>
 <sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateReviewJoin')">
     <div class="btn-group">

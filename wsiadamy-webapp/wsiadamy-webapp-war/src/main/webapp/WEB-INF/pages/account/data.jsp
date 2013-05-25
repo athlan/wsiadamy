@@ -26,6 +26,15 @@
 			<form:input path="contactPhone" id="fieldContactPhone" placeholder="" autocomplete="off" />
 			<form:errors path="contactPhone" cssClass="error" />
 	    </div>
+	    <div class="control-group">
+			<label class="control-label" for="">Facebook:</label>
+<c:if test="${empty userData.facebookId}">
+			<a href="<c:url value="/account/data/joinFacebook" />" class="btn btn-facebook btnLocker" type="submit"><i class="icon-facebook-sign icon-white"></i> Połącz konto z Facebook</a>
+</c:if>
+<c:if test="${not empty userData.facebookId}">
+			<a href="<c:url value="/account/data/joinFacebookRemove" />" class="btn btn-danger btn-mini btnLocker" type="submit">Usuń połączenie konta z facebook</a>
+</c:if>
+	    </div>
 	    
 	    <div class="form-actions">
 	   		<button class="btn btn-primary btnLocker">Zapisz dane</button>

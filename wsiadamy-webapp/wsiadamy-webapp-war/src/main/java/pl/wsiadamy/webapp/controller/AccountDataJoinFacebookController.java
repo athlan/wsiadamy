@@ -7,8 +7,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.FacebookProfile;
@@ -26,20 +24,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.wsiadamy.common.model.bo.UserBO;
 import pl.wsiadamy.common.model.entity.User;
-import pl.wsiadamy.common.model.entity.UserLogin;
-import pl.wsiadamy.common.model.entity.UserAccountScope;
-import pl.wsiadamy.webapp.authentication.CustomAuthenticationProvider;
+import pl.wsiadamy.common.model.entity.UserData;
+import pl.wsiadamy.common.security.util.AthenticationUtil;
 
 @Controller
-@RequestMapping("/")
-public class AuthenticationFacebookController {
+@RequestMapping("/account/data")
+public class AccountDataJoinFacebookController {
 	@Autowired
 	UserBO userBO;
 
 	@Resource
 	Properties applicationSettings;
 
-	@RequestMapping(value="/loginFacebook", method = RequestMethod.GET)
+	@RequestMapping(value="/joinFacebookRemove", method = RequestMethod.GET)
+	public String joinRemove(ModelMap model, HttpServletResponse response) throws IOException {
+		User user = userBO.getById(AthenticationUtil.getUser().getId());
+		UserData userData = user.getUserData();
+		
+		if(null != userData.getFacebookId()) {
+			userData.setFacebookId(null);
+			userBO.update(user);
+		}
+		
+		return "redirect:/account/data";
+	}
+	
+	@RequestMapping(value="/joinFacebook", method = RequestMethod.GET)
 	public void login(ModelMap model, HttpServletResponse response) throws IOException {
 		
 		String appId = applicationSettings.getProperty("facebook.app.id");
@@ -50,17 +60,17 @@ public class AuthenticationFacebookController {
 		OAuth2Operations oauthOperations = connectionFactory.getOAuthOperations();
 		OAuth2Parameters params = new OAuth2Parameters();
 		params.setScope(appScope);
-		params.setRedirectUri("http://wsiadamy.pl:8080/wsiadamy-webapp-war/loginFacebookCallback");
+		params.setRedirectUri("http://wsiadamy.pl:8080/wsiadamy-webapp-war/account/data/joinFacebookCallback");
 		String authorizeUrl = oauthOperations.buildAuthorizeUrl(GrantType.IMPLICIT_GRANT, params);
 		response.sendRedirect(authorizeUrl);
 	}
 	
-	@RequestMapping(value="/loginFacebookCallback", method = RequestMethod.GET)
+	@RequestMapping(value="/joinFacebookCallback", method = RequestMethod.GET)
 	public String loginCallback() {
 		return "auth/facebookCallback";
 	}
 	
-	@RequestMapping(value="/loginFacebookCallback", method = RequestMethod.GET, params = {"access_token"})
+	@RequestMapping(value="/joinFacebookCallback", method = RequestMethod.GET, params = {"access_token"})
 	public String loginCallback(ModelMap model, @RequestParam("access_token") String token) {
 		
 		String appId = applicationSettings.getProperty("facebook.app.id");
@@ -75,22 +85,16 @@ public class AuthenticationFacebookController {
 		FacebookTemplate facebook = new FacebookTemplate(token);
 		FacebookProfile facebookProfile = facebook.userOperations().getUserProfile();
 		
-//		nameee.get
+		User user2 = AthenticationUtil.getUser();
 		
-		UserLogin userLogin = userBO.getByUsername(facebookProfile.getId(), UserAccountScope.FACEBOOK);
-		User user = null;
-		
-		if(null == userLogin) {
-			user = userBO.createUserFacebook(Long.valueOf(facebookProfile.getId()), facebookProfile.getEmail(), facebookProfile.getFirstName(), facebookProfile.getLastName());
-		}
-		else {
-			user = userLogin.getUser();
+		if(null != user2) {
+			Long userFacebookId = user2.getUserData().getFacebookId();
+			
+			if(null == userFacebookId) {
+				userBO.createUserFacebookJoinAccount(user2, Long.valueOf(facebookProfile.getId()), facebookProfile.getEmail(), facebookProfile.getFirstName(), facebookProfile.getLastName());
+			}
 		}
 		
-		if(null != user) {
-			CustomAuthenticationProvider.authenticateUser(user);
-		}
-		
-		return "redirect:/";
+		return "redirect:/account/data";
 	}
 }

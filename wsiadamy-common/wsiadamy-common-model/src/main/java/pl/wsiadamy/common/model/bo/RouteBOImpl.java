@@ -1,9 +1,9 @@
 package pl.wsiadamy.common.model.bo;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,7 @@ import pl.wsiadamy.common.model.input.RouteSearchSimpleInput;
 import pl.wsiadamy.common.model.util.GeometryPointFactory;
 import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
 import pl.wsiadamy.common.model.wrapper.RouteSearchResultWrapper;
+import pl.wsiadamy.common.model.wrapper.RouteUserStatsWrapper;
 
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -37,53 +38,17 @@ public class RouteBOImpl implements RouteBO {
 	public Long listRoutesCount(Map<String, Object> params) {
 		return routeDao.listRoutesCount(params);
 	}
-	
+
+	@Override
 	public Route createRoute(User owner, RouteAddInput input, RouteAddDetailsInput inputDetails) {
 		Route route = new Route();
 		
 		route.setOwner(owner);
 		route.setDateLastModified(new Date());
 		
-		// set source and destination
-		Point waypointStartPoint = GeometryPointFactory.createPointFromString(input.getLocationSourceCoords());
-		RouteWaypoint waypointStart = new RouteWaypoint(route, waypointStartPoint);
-		waypointStart.setName(input.getLocationSource());
-		
-		route.setWaypointSource(waypointStart);
-		
-		Point waypointStopPoint = GeometryPointFactory.createPointFromString(input.getLocationDestinationCoords());
-		RouteWaypoint waypointStop = new RouteWaypoint(route, waypointStopPoint);
-		waypointStop.setName(input.getLocationDestination());
-		
-		route.setWaypointDestination(waypointStop);
-		
-		// set waypoints
-		for(Map.Entry<String, String> entry : input.getWaypoints().entrySet()) {
-			if(!entry.getValue().equals("")
-				&& input.getWaypointsCoords().containsKey(entry.getKey())
-				&& !input.getWaypointsCoords().get(entry.getKey()).equals("")) {
-				Point waypointPoint = GeometryPointFactory.createPointFromString(input.getWaypointsCoords().get(entry.getKey()));
-				
-				RouteWaypoint waypoint = new RouteWaypoint(route, waypointPoint);
-				waypoint.setName(entry.getValue());
-				route.addWaypoint(waypoint);
-			}
-		}
-		
-		// set linestring
-		LineString lineString = GeometryPointFactory.createLineStringFromString(input.getRouteLine());
-		route.getRouteLine().setLineString(lineString);
-		
-		// set date and details
-		route.setDateDeparture(input.getDateDepartureObject());
-		route.setSeats(input.getSeats() + 1);
+		fillRoute(route, input, inputDetails);
+
 		route.addParticipanse(new Participanse(owner, route));
-		
-		route.setTotalPrice(inputDetails.getTotalPrice());
-		
-		route.getRouteDetails().setRouteLength(inputDetails.getRouteLength());
-		route.getRouteDetails().setFuelPrice(inputDetails.getFuelPrice());
-		route.getRouteDetails().setCarCombustion(inputDetails.getCarCombustion());
 		
 		routeDao.create(route);
 		
@@ -91,8 +56,71 @@ public class RouteBOImpl implements RouteBO {
 		
 		return route;
 	}
-	
 
+	@Override
+	public Route editRoute(Integer id, RouteAddInput input, RouteAddDetailsInput inputDetails) {
+		Route route = routeDao.get(id);
+		
+		if(null == route)
+			return null;
+		
+		route.setDateLastModified(new Date());
+		
+		fillRoute(route, input, inputDetails);
+		
+		routeDao.update(route);
+		
+		return route;
+	}
+
+	private void fillRoute(Route route, RouteAddInput input, RouteAddDetailsInput inputDetails) {
+		if(null != input)
+		{
+			// set source and destination
+			Point waypointStartPoint = GeometryPointFactory.createPointFromString(input.getLocationSourceCoords());
+			RouteWaypoint waypointStart = new RouteWaypoint(route, waypointStartPoint);
+			waypointStart.setName(input.getLocationSource());
+			
+			route.setWaypointSource(waypointStart);
+			
+			Point waypointStopPoint = GeometryPointFactory.createPointFromString(input.getLocationDestinationCoords());
+			RouteWaypoint waypointStop = new RouteWaypoint(route, waypointStopPoint);
+			waypointStop.setName(input.getLocationDestination());
+			
+			route.setWaypointDestination(waypointStop);
+			
+			// set waypoints
+			for(Map.Entry<String, String> entry : input.getWaypoints().entrySet()) {
+				if(!entry.getValue().equals("")
+					&& input.getWaypointsCoords().containsKey(entry.getKey())
+					&& !input.getWaypointsCoords().get(entry.getKey()).equals("")) {
+					Point waypointPoint = GeometryPointFactory.createPointFromString(input.getWaypointsCoords().get(entry.getKey()));
+					
+					RouteWaypoint waypoint = new RouteWaypoint(route, waypointPoint);
+					waypoint.setName(entry.getValue());
+					route.addWaypoint(waypoint);
+				}
+			}
+			
+			// set linestring
+			LineString lineString = GeometryPointFactory.createLineStringFromString(input.getRouteLine());
+			route.getRouteLine().setLineString(lineString);
+			
+			// set date and details
+			route.setDateDeparture(input.getDateDepartureObject());
+			route.setSeats(input.getSeats() + 1);
+		}
+		
+		if(null != inputDetails)
+		{
+			route.setTotalPrice(inputDetails.getTotalPrice());
+			
+			route.getRouteDetails().setRouteLength(inputDetails.getRouteLength());
+			route.getRouteDetails().setFuelPrice(inputDetails.getFuelPrice());
+			route.getRouteDetails().setCarCombustion(inputDetails.getCarCombustion());
+		}
+	}
+	
 	@Override
 	public List<RouteSearchResultWrapper> findRoutes(Map<String, Object> params, RouteSearchSimpleInput input, int limit) {
 		Point waypointStartPoint = GeometryPointFactory.createPointFromString(input.getLocationSourceCoords());
@@ -139,5 +167,10 @@ public class RouteBOImpl implements RouteBO {
 	@Override
 	public Route getById(Integer id) {
 		return routeDao.get(id);
+	}
+
+	@Override
+	public RouteUserStatsWrapper getUserStats(User user) {
+		return routeDao.getUserStats(user.getId());
 	}
 }

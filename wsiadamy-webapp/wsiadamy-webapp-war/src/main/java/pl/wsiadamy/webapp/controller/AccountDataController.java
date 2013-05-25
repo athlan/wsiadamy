@@ -44,6 +44,8 @@ public class AccountDataController {
         ModelMap model) {
 		User user = userBO.getById(AthenticationUtil.getUser().getId());
 		UserData userData = user.getUserData();
+
+		model.addAttribute("userData", userData);
 		
 		if(null != userData) {
 			if(null != userData.getFirstname())
@@ -51,7 +53,7 @@ public class AccountDataController {
 
 			if(null != userData.getLastname())
 				form.setLastname(userData.getLastname());
-
+			
 			if(null != userData.getContactPhone())
 				form.setContactPhone(userData.getContactPhone());
 
@@ -73,14 +75,16 @@ public class AccountDataController {
         @Valid AccountDataInput form,
         BindingResult result, ModelMap model) {
 		
+		User user = userBO.getById(AthenticationUtil.getUser().getId());
+		UserData userData = user.getUserData();
+		
+		model.addAttribute("userData", userData);
+		
 		accountDataValidator.validate(form, result);
 		
         if (result.hasErrors()) {
             return "account/data";
         }
-        
-        User user = userBO.getById(AthenticationUtil.getUser().getId());
-		UserData userData = user.getUserData();
         
 		if(null == userData)
 			userData = new UserData(user);

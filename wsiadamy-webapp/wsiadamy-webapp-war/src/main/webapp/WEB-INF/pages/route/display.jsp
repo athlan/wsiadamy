@@ -2,7 +2,8 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <t:wrapper>
 	<h2>Trasa</h2>
 
@@ -44,6 +45,9 @@
 </sec:authorize>
 <sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteRemove')">
   <a href="<c:url value="/route/remove/${route.id}" />" class="btn btn-danger btn-mini">Usuń trasę</a>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteEdit')">
+  <a href="<c:url value="/route/editDetails/${route.id}" />" class="btn btn-primary">Edytuj trasę</a>
 </sec:authorize>
 		</div>
 		<div class="span8">

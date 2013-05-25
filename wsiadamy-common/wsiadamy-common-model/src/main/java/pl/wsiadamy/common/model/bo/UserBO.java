@@ -19,6 +19,7 @@ public interface UserBO {
 	
 	User createUser(String username, String password);
 	User createUserFacebook(Long facebookId, String email, String firstname, String lastname);
+	User createUserFacebookJoinAccount(User user, Long facebookId, String email, String firstname, String lastname);
 	
 	boolean authenticateUser(UserLogin userLogin, String password);
 }

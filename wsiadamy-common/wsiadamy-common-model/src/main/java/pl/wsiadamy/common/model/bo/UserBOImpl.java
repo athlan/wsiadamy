@@ -52,6 +52,26 @@ public class UserBOImpl implements UserBO {
 		
 		return user;
 	}
+
+	@Override
+	public User createUserFacebookJoinAccount(User user2, Long facebookId, String email, String firstname, String lastname) {
+		
+		User user = userDao.get(user2.getId());
+		
+		UserData userData = user.getUserData();
+		UserLogin userLogin = new UserLogin(user);
+		
+		userLogin.setAccountScope(UserAccountScope.FACEBOOK);
+		userLogin.setUsername(facebookId.toString());
+		
+		user.addLogin(userLogin);
+		
+		userData.setFacebookId(facebookId);
+		
+		userDao.update(user);
+		
+		return user;
+	}
 	
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;

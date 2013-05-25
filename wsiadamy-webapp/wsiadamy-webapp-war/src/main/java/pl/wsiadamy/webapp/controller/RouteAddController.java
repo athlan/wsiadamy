@@ -40,7 +40,7 @@ public class RouteAddController {
     public RouteAddInput getFormAddRoute() {
         return new RouteAddInput();
     }
-
+	
 	@ModelAttribute("routeAddDetailsInput")
     public RouteAddDetailsInput getFormAddDetailsRoute() {
         return new RouteAddDetailsInput();
@@ -141,5 +141,4 @@ public class RouteAddController {
     	
         return "redirect:/route/get/" + route.getId();
     }
-
 }

@@ -1,6 +1,5 @@
 package pl.wsiadamy.common.model.dao;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,9 +23,9 @@ import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.RouteWaypoint;
-import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
 import pl.wsiadamy.common.model.wrapper.RouteSearchResultWrapper;
+import pl.wsiadamy.common.model.wrapper.RouteUserStatsWrapper;
 
 import com.vividsolutions.jts.geom.Point;
 
@@ -250,5 +249,47 @@ public class RouteDaoImpl extends AbstractDaoJpaImpl<Route, Integer> implements 
 		update(route);
 		
 		return;
+	}
+
+	@Override
+	public RouteUserStatsWrapper getUserStats(Integer userId) {
+		String dql = "SELECT " +
+				"COUNT(item.id) AS stats_routes_count, " +
+				"SUM(item.totalPrice) AS stats_routes_totalprice, " +
+				"SUM(itemDetails.routeLength) AS stats_routes_totaldistance, " +
+				"AVG(item.totalPrice) AS stats_routes_averageprice, " +
+				"SUM(CASE WHEN ((item.seats+1-item.seatsAvailable) > 0) THEN (item.totalPrice/(item.seats+1 - item.seatsAvailable)) ELSE 0 END) AS stats_routes_totalprice_saved " +
+				"FROM Participanse itemParticipanse " +
+				"JOIN itemParticipanse.route item " +
+				"JOIN item.routeDetails itemDetails " +
+				"JOIN itemParticipanse.user itemParticipanseUser " +
+				"WHERE itemParticipanseUser.id = :userId " +
+				"GROUP BY item.id";
+//		String dql = "SELECT " +
+//				"COUNT(r.id) AS stats_routes_count " +
+//				"FROM Route r ";
+		
+		Query query = getEntityManager().createQuery(dql);
+		
+		query.setParameter("userId", userId);
+		
+		RouteUserStatsWrapper result = new RouteUserStatsWrapper();;
+		Object[] resultQuery;
+		
+		try {
+			resultQuery = (Object[]) query.getSingleResult();
+			
+			result.setCount((Long) resultQuery[0]);
+			result.setTotalPrice((Double) resultQuery[1]);
+			result.setTotalDistance((Double) resultQuery[2]);
+			result.setAveragePrice((Double) resultQuery[3]);
+			result.setTotalPriceSaved((Double) resultQuery[4]);
+			
+		}
+		catch(Exception e) {
+			return null;
+		}
+		
+		return result;
 	}
 }

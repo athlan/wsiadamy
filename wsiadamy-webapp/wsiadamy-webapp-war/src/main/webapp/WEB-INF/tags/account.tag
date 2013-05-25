@@ -9,6 +9,7 @@
 	  <li><a href="<c:url value='/account/routes' />">Przejazdy</a></li>
 	  <li><a href="<c:url value='/account/routesCreated' />">Moje dodane</a></li>
 	  <li><a href="<c:url value='/account/data' />">Edytuj profil <span class="label label-important">Important</span></a></li>
+	  <li><a href="<c:url value='/account/stats' />">Statystyka</a></li>
 	</ul>
 	
 	<jsp:doBody />

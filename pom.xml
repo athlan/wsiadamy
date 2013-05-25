@@ -18,7 +18,7 @@
 	<modules>
     <module>wsiadamy-common</module>
 		<module>wsiadamy-webapp</module>
-		<module>wsiadamy-api</module>
+		<!--<module>wsiadamy-api</module>-->
   </modules>
   	
   	

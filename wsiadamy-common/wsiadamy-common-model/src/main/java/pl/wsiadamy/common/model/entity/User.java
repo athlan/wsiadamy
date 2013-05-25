@@ -14,6 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import pl.wsiadamy.common.model.common.AbstractEntity;
 import pl.wsiadamy.common.model.common.PasswordCryptography;
 
@@ -25,6 +28,7 @@ public class User extends AbstractEntity<Integer> {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 	
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy = "userOwner", cascade = CascadeType.ALL)
 	private List<UserLogin> logins;
 	

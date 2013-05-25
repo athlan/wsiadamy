@@ -32,6 +32,7 @@
             <beans:map key-type="java.lang.String"
                  value-type="pl.wsiadamy.common.security.Permission">
                 <beans:entry key="RouteView" value-ref="routeViewPermission" />
+                <beans:entry key="RouteEdit" value-ref="routeEditPermission" />
                 <beans:entry key="RouteRemove" value-ref="routeRemovePermission" />
                 <beans:entry key="RouteParticipateAdd" value-ref="routeParticipateAddPermission" />
                 <beans:entry key="RouteParticipateReviewJoin" value-ref="routeParticipateReviewJoinPermission" />
@@ -43,6 +44,7 @@
         </beans:constructor-arg>
     </beans:bean>
     <beans:bean id="routeViewPermission" class="pl.wsiadamy.common.security.permission.RouteViewPermission" />
+    <beans:bean id="routeEditPermission" class="pl.wsiadamy.common.security.permission.RouteEditPermission" />
     <beans:bean id="routeRemovePermission" class="pl.wsiadamy.common.security.permission.RouteRemovePermission" />
     <beans:bean id="routeParticipateAddPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateAddPermission" />
     <beans:bean id="routeParticipateReviewJoinPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateReviewJoinPermission" />
@@ -51,20 +53,25 @@
     <beans:bean id="routeParticipateRejectPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateRejectPermission" />
     <beans:bean id="routeParticipateResignationPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateResignationPermission" />
     
-	<http auto-config="true" use-expressions="true" authentication-manager-ref="authenticationManager">
+	<http auto-config="true" use-expressions="true" authentication-manager-ref="authenticationManager" entry-point-ref="customAuthenticationEntryPoint">
 		<!-- <intercept-url pattern="/register" access="!hasRole('ROLE_USER')" />
 		<intercept-url pattern="/account/*" access="hasRole('ROLE_USER')" />
 		<intercept-url pattern="/route/addCommit" access="hasRole('ROLE_USER')" /> -->
-		
 		<logout logout-url="/logout" />
-		<form-login login-page="/login" authentication-failure-url="/login?authfailed=1" authentication-success-handler-ref="simpleUrlAuthenticationSuccessHandler" />
+		<form-login login-page="/login" authentication-failure-url="/login?authfailed=1" authentication-success-handler-ref="simpleUrlAuthenticationSuccessHandler"  />
 		<expression-handler ref="webExpressionHandler"/>
 	</http>
+	
+	<beans:bean id="customAuthenticationEntryPoint" class="pl.wsiadamy.webapp.controller.util.CustomAuthenticationEntryPoint">
+		<beans:property name="loginPageUrl" value="/login" />
+		<beans:property name="returnParameterEnabled" value="true" />
+		<beans:property name="returnParameterName" value="r" />
+	</beans:bean>
 	
 	<!-- Emulates the functionality of spring security 3.0.x by specifying the targetUrlParameter to be the value it
     defaulted to in 3.0.x. As of 3.1.x this is null by default with no option to specify in <form-login> -->
 	<beans:bean id="simpleUrlAuthenticationSuccessHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
-	    <!-- <beans:property name="useReferer" value="true"/> -->
+	    <!-- <beans:property name="useReferer" value="true"/>-->
 	    <beans:property name="defaultTargetUrl" value="/account"/>
 	    <beans:property name="targetUrlParameter" value="spring-security-redirect"/>
 	</beans:bean>
