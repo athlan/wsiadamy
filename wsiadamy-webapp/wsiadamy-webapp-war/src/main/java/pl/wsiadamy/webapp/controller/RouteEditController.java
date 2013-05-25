@@ -52,6 +52,7 @@ public class RouteEditController {
 		formDetails.setFuelPrice(route.getRouteDetails().getFuelPrice());
 		formDetails.setRouteLength(route.getRouteDetails().getRouteLength());
 		formDetails.setTotalPrice(route.getTotalPrice());
+		formDetails.setParticipansModeration(route.isParticipanseModeration());
 		
         return "route/editDetails";
     }

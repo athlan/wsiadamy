@@ -28,6 +28,12 @@
 				<form:input path="totalPrice" id="fieldTotalPrice" />
 				<form:errors path="totalPrice" cssClass="error" />
 			</div>
+			<div>
+				<label for="fieldParticipansModeration">Ustawienia dołączania:</label>
+				<label><form:radiobutton path="participansModeration" value="0" id="fieldParticipansModeration" /> Pozwól dołączać każdemu</label>
+				<label><form:radiobutton path="participansModeration" value="1" id="fieldParticipansModeration" /> Chcę zdecydować, kogo wybiorę do podróży spośród chętnych uczestników</label>
+				<form:errors path="participansModeration" cssClass="error" />
+			</div>
 			
 			<div>
 				<input type="submit" value="Dodaj" class="btn btn-primary" >

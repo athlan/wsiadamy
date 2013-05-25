@@ -118,6 +118,8 @@ public class RouteBOImpl implements RouteBO {
 			route.getRouteDetails().setRouteLength(inputDetails.getRouteLength());
 			route.getRouteDetails().setFuelPrice(inputDetails.getFuelPrice());
 			route.getRouteDetails().setCarCombustion(inputDetails.getCarCombustion());
+			
+			route.setParticipanseModeration(inputDetails.isParticipansModeration());
 		}
 	}
 	

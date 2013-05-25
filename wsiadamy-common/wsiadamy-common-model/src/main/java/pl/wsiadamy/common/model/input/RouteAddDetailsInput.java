@@ -23,6 +23,9 @@ public class RouteAddDetailsInput {
 	@Range(min = 1, message="{javax.validation.constraints.required}")
 	private float totalPrice;
 	
+	@NotNull
+	private boolean participansModeration;
+	
     public RouteAddDetailsInput() {
     	
     }
@@ -57,5 +60,13 @@ public class RouteAddDetailsInput {
 
 	public void setTotalPrice(float totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public boolean isParticipansModeration() {
+		return participansModeration;
+	}
+
+	public void setParticipansModeration(boolean participansModeration) {
+		this.participansModeration = participansModeration;
 	}
 }
