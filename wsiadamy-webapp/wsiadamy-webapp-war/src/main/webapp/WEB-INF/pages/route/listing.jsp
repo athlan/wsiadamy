@@ -6,10 +6,18 @@
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <t:account>
+
+<c:if test="${ feedbackToGiveCount gt 0 }">
+	<div>
+		Masz ${ feedbackToGiveCount } tras do ocenienia.
+		<a href="<c:url value='/account/routesToFeedback' />">Pokaż</a>
+	</div>
+</c:if>
   
+  <h1>Przejazdy:</h1>
 <c:choose>
 	<c:when test="${not empty routes}">
-		<h1>Przejazdy:</h1>
+  
 	<c:forEach items="${routes}" var="routeWrapper">
 		<div class="">
 <c:set var="route" value="${routeWrapper.route}" />

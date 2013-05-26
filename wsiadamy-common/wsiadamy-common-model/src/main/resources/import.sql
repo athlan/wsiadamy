@@ -21,10 +21,10 @@ INSERT INTO "public"."route" ("id", "datedeparture", "datelastmodified", "partic
 -- ----------------------------
 -- Records of route_details
 -- ----------------------------
-INSERT INTO "public"."route_details" ("id", "carcombustion", "fuelprice", "routelength", "route_id", "feedbackcountdriver", "feedbackcountparticipants") VALUES ('1', '1', '1', '86.31', '1', null, null);
-INSERT INTO "public"."route_details" ("id", "carcombustion", "fuelprice", "routelength", "route_id", "feedbackcountdriver", "feedbackcountparticipants") VALUES ('2', '1', '1', '86.31', '2', null, null);
-INSERT INTO "public"."route_details" ("id", "carcombustion", "fuelprice", "routelength", "route_id", "feedbackcountdriver", "feedbackcountparticipants") VALUES ('3', '1', '1', '86.31', '3', null, null);
-INSERT INTO "public"."route_details" ("id", "carcombustion", "fuelprice", "routelength", "route_id", "feedbackcountdriver", "feedbackcountparticipants") VALUES ('4', '1', '1', '86.31', '4', null, null);
+INSERT INTO "public"."route_details" ("id", "carcombustion", "fuelprice", "routelength", "route_id", "feedbackcountdriver", "feedbackcountparticipants") VALUES ('1', '1', '1', '86.31', '1', 0, 0);
+INSERT INTO "public"."route_details" ("id", "carcombustion", "fuelprice", "routelength", "route_id", "feedbackcountdriver", "feedbackcountparticipants") VALUES ('2', '1', '1', '86.31', '2', 0, 0);
+INSERT INTO "public"."route_details" ("id", "carcombustion", "fuelprice", "routelength", "route_id", "feedbackcountdriver", "feedbackcountparticipants") VALUES ('3', '1', '1', '86.31', '3', 0, 0);
+INSERT INTO "public"."route_details" ("id", "carcombustion", "fuelprice", "routelength", "route_id", "feedbackcountdriver", "feedbackcountparticipants") VALUES ('4', '1', '1', '86.31', '4', 0, 0);
 
 -- ----------------------------
 -- Records of route_line

@@ -41,12 +41,6 @@ public class Feedback extends AbstractEntity<Integer> {
 	public Feedback() {
 	}
 
-	public Feedback(User user, Route route) {
-		setUser(user);
-		setUserSender(user);
-		setRoute(route);
-	}
-
 	public Feedback(User user, User userSender, Route route, Integer vote) {
 		setUser(user);
 		setUserSender(userSender);

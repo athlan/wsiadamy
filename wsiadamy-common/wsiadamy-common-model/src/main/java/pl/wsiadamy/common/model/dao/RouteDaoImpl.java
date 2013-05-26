@@ -80,7 +80,7 @@ public class RouteDaoImpl extends AbstractDaoJpaImpl<Route, Integer> implements 
 		
 		tq.setMaxResults(limit);
 		tq.setFirstResult(offset);
-		List<RouteParticipanseWrapper> aaa = tq.getResultList();
+		
 		return tq.getResultList();
 	}
 	
@@ -179,6 +179,7 @@ public class RouteDaoImpl extends AbstractDaoJpaImpl<Route, Integer> implements 
 			qq.setParameter("dateTokenAfter", dateTokenAfter);
 		}
 		
+		@SuppressWarnings("unchecked")
 		List<Object[]> aa = qq.getResultList();
 		Integer[] routeIds = new Integer[aa.size()];
 		

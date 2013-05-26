@@ -2,6 +2,7 @@ package pl.wsiadamy.common.model.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class Participanse extends AbstractEntity<Integer> {
 	@OneToOne
 	private User userSender;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Route route;
 	
 	@Column
@@ -39,11 +40,11 @@ public class Participanse extends AbstractEntity<Integer> {
 	
 	@Column
 	private ParticipanseRSPV rspvStatus;
-
-	@OneToOne
+	
+	@OneToOne(cascade = CascadeType.ALL)
 	private Feedback feedbackParticipant;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Feedback feedbackDriver;
 	
 	public Participanse() {
@@ -135,8 +136,9 @@ public class Participanse extends AbstractEntity<Integer> {
 
 	@PrePersist
 	@PreUpdate
-	public void recalculateRouteSeatsAvailable() {
+	public void prePersist() {
 		getRoute().prePersistRecalculateSeatsAvailable();
+		getRoute().recalculateFeedbacks();
 	}
 	
 	@Override

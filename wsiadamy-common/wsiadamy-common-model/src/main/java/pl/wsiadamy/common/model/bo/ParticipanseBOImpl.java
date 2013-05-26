@@ -84,11 +84,11 @@ public class ParticipanseBOImpl implements ParticipanseBO {
 	@Override
 	public boolean participateRouteCancel(Participanse participanse) {
 //		Participanse participanse = routeDao.get(id);
-		
-		Route route = participanse.getRoute();
-		
+
 		if(null == participanse)
 			return false;
+		
+		Route route = participanse.getRoute();
 		
 		if(false == route.removeParticipanse(participanse))
 			return false;

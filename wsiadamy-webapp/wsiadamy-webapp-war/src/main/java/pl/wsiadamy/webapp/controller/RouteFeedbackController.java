@@ -15,11 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pl.wsiadamy.common.model.bo.ParticipanseBO;
 import pl.wsiadamy.common.model.bo.RouteBO;
 import pl.wsiadamy.common.model.bo.UserBO;
-import pl.wsiadamy.common.model.dao.RouteDao;
+import pl.wsiadamy.common.model.bo.FeedbackBO;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
-import pl.wsiadamy.common.model.input.RouteAddInput;
 import pl.wsiadamy.common.security.util.AthenticationUtil;
 
 import pl.wsiadamy.common.model.input.FeedbackInput;
@@ -35,7 +34,7 @@ public class RouteFeedbackController {
 	RouteBO routeBO;
 
 	@Autowired
-	RouteDao routeDao;
+	FeedbackBO feedbackBO;
 	
 	@Autowired
 	ParticipanseBO participanseBO;
@@ -83,8 +82,11 @@ public class RouteFeedbackController {
 	    @Valid FeedbackInput form,
 	    
 	    BindingResult result, ModelMap model) {
-		
+
+		User user = AthenticationUtil.getUser();
 		Participanse participanse = participanseBO.getById(id);
+		
+		feedbackBO.createFeedback(participanse, participanse.getUser(), user, form);
 		
 		return "feedback/add";
 	}

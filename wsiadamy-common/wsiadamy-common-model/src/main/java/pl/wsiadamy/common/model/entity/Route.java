@@ -2,6 +2,7 @@ package pl.wsiadamy.common.model.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -242,6 +243,22 @@ public class Route extends AbstractEntity<Integer> {
 		
 		setSeatsParticipants(seatsBooked);
 		setSeatsAvailable(this.seats - this.seatsParticipants);
+	}
+	
+	public void recalculateFeedbacks() {
+		int feedbackCountDriver = 0;
+		int feedbackCountParticipants = 0;
+		
+		for (Participanse participanse : participances) {
+			if(null != participanse.getFeedbackDriver())
+				++feedbackCountDriver;
+			
+			if(null != participanse.getFeedbackParticipant())
+				++feedbackCountParticipants;
+		}
+		
+		getRouteDetails().setFeedbackCountDriver(feedbackCountDriver);
+		getRouteDetails().setFeedbackCountParticipants(feedbackCountParticipants);
 	}
 	
 	@Override

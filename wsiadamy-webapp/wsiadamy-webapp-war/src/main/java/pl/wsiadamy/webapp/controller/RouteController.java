@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pl.wsiadamy.common.model.bo.RouteBO;
 import pl.wsiadamy.common.model.bo.UserBO;
 import pl.wsiadamy.common.model.bo.ParticipanseBO;
+import pl.wsiadamy.common.model.bo.FeedbackBO;
 import pl.wsiadamy.common.model.dao.RouteDao;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
@@ -41,6 +42,9 @@ public class RouteController {
 	
 	@Autowired
 	ParticipanseBO participanseBO;
+	
+	@Autowired
+	FeedbackBO feedbackBO;
 	
 	@RequestMapping(value = "/route/get/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission(#id, 'RouteView')")
@@ -168,6 +172,38 @@ public class RouteController {
 		model.addAttribute("routes", result);
 		model.addAttribute("paginator", paginator);
 		
+		params = new HashMap<String, Object>();
+		params.put("participantId", user.getId());
+		params.put("dateDepartureBefore", new Date());
+		
+		Long feedbackToGiveCount = feedbackBO.listRoutesToFeedbackCount(params);
+		model.addAttribute("feedbackToGiveCount", feedbackToGiveCount);
+		
         return "route/listing";
     }
+
+	@RequestMapping(value = "/account/routesToFeedback", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_USER')")
+    public String showRoutesToFeedback(ModelMap model, HttpServletRequest request) {
+		User user = AthenticationUtil.getUser();
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("participantId", user.getId());
+		params.put("dateDepartureBefore", new Date());
+		
+		Long itemsCount = feedbackBO.listRoutesToFeedbackCount(params);
+		int itemsPage = 1;
+		
+		if(null != request.getParameter("p"))
+			itemsPage = Integer.valueOf(request.getParameter("p"));
+		
+		Paginator paginator = new Paginator(2, itemsCount.intValue(), itemsPage);
+		
+		List<Route> result = feedbackBO.listRoutesToFeedback(params, paginator.getLimit(), paginator.getOffset());
+		model.addAttribute("routes", result);
+		model.addAttribute("paginator", paginator);
+		
+        return "route/listingRoutesToFeedback";
+    }
+	
 }
