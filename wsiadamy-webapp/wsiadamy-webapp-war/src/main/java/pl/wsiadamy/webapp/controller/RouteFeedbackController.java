@@ -1,5 +1,7 @@
 package pl.wsiadamy.webapp.controller;
  
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,7 @@ public class RouteFeedbackController {
     public FeedbackInput getFormFeedbackAdd() {
         return new FeedbackInput();
     }
-	
+
 	@RequestMapping(value = "/feedback/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission(#id, 'FeedbackAddRoute')")
     public String feedback(@PathVariable("id") Integer id, ModelMap model) {
@@ -53,7 +55,7 @@ public class RouteFeedbackController {
 		model.addAttribute("route", route);
 		
 		if(route.getOwner().equals(user)) {
-			return "redirect:/route/feedbackParticipants";
+			return "redirect:/route/feedbackParticipants/" + route.getId();
 		}
 		
 		Participanse routeParticipanse = participanseBO.getByUserRoute(user, route);
@@ -61,6 +63,21 @@ public class RouteFeedbackController {
 		return "redirect:/route/feedbackParticipanse/" + routeParticipanse.getId();
     }
 
+	@RequestMapping(value = "/feedbackParticipants/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission(#id, 'FeedbackAddRouteParticipants')")
+    public String feedbackParticipants(@PathVariable("id") Integer id, ModelMap model) {
+		Route route = routeBO.getById(id);
+		User user = AthenticationUtil.getUser();
+
+		model.addAttribute("route", route);
+		
+		List<Participanse> participansesToFeedback = feedbackBO.getParticipansesToFeedback(route);
+		
+		model.addAttribute("participansesToFeedback", participansesToFeedback);
+		
+		return "feedback/routeParticipants";
+    }
+	
 	@RequestMapping(value = "/feedbackParticipanse/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission(#id, 'FeedbackAddParticipanse')")
     public String feedbackParticipanse(

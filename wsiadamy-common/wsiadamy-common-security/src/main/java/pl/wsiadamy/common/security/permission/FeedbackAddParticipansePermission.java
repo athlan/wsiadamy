@@ -42,6 +42,9 @@ public class FeedbackAddParticipansePermission implements Permission {
 		if(participanse.getRspvStatus() != ParticipanseRSPV.APPROVED)
 			return false;
 		
+		if(participanse.getUser().equals(user))
+			return false;
+		
 		if(route.getOwner().equals(user)) {
 			if(null != participanse.getFeedbackDriver())
 				return false; // feedback has been already given

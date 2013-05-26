@@ -1,5 +1,6 @@
 package pl.wsiadamy.common.model.bo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import pl.wsiadamy.common.model.dao.FeedbackDao;
 import pl.wsiadamy.common.model.dao.ParticipanseDao;
 import pl.wsiadamy.common.model.entity.Feedback;
 import pl.wsiadamy.common.model.entity.Participanse;
+import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.model.input.FeedbackInput;
@@ -100,6 +102,18 @@ public class FeedbackBOImpl implements FeedbackBO {
 	@Override
 	public Long listRoutesToFeedbackCount(Map<String, Object> params) {
 		return feedbackDao.listRoutesToFeedbackCount(params);
+	}
+
+	@Override
+	public List<Participanse> getParticipansesToFeedback(Route route) {
+		List<Participanse> result = new ArrayList<Participanse>();
+		
+		for (Participanse participanse : route.getParticipanses()) {
+			if(participanse.getRspvStatus() == ParticipanseRSPV.APPROVED && participanse.getFeedbackDriver() == null)
+				result.add(participanse);
+		}
+		
+		return result;
 	}
 
 }
