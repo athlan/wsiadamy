@@ -103,9 +103,26 @@ public class RouteFeedbackController {
 		User user = AthenticationUtil.getUser();
 		Participanse participanse = participanseBO.getById(id);
 		
+		Route route = participanse.getRoute();
+		
 		feedbackBO.createFeedback(participanse, participanse.getUser(), user, form);
 		
-		return "feedback/add";
+		if(user.equals(participanse.getUser())) {
+			return "redirect:/account/routesToFeedback";
+		}
+		else {
+			// if there are items to feedback
+			route = routeBO.getById(route.getId());
+			
+			if(route.getRouteDetails().getFeedbackCountDriver() < route.getSeatsParticipants()) {
+				return "redirect:/route/feedbackParticipants/" + route.getId();
+			}
+			else {
+				return "redirect:/account/routesToFeedback";
+			}
+		}
+		
+//		return "feedback/add";
 	}
 	
 

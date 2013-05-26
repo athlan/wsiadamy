@@ -17,6 +17,7 @@ import pl.wsiadamy.common.model.common.AbstractDaoJpaImpl;
 import pl.wsiadamy.common.model.entity.Feedback;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
+import pl.wsiadamy.common.model.entity.RouteDetails;
 
 @Component
 public class FeedbackDaoImpl extends AbstractDaoJpaImpl<Feedback, Integer> implements FeedbackDao {
@@ -31,8 +32,9 @@ public class FeedbackDaoImpl extends AbstractDaoJpaImpl<Feedback, Integer> imple
 		
 		CriteriaQuery<Route> q = cb.createQuery(Route.class);
 		Root<Participanse> from = q.from(Participanse.class);
-		
+
 		Join<Participanse, Route> joinRoute = from.join("route");
+		Join<Route, RouteDetails> joinRouteDetails = joinRoute.join("routeDetails");
 		
 		q.select(joinRoute);
 		
@@ -44,8 +46,8 @@ public class FeedbackDaoImpl extends AbstractDaoJpaImpl<Feedback, Integer> imple
 				where = cb.and(where, cb.equal(from.get("user"), params.get("participantId")));
 				
 				where = cb.and(where, cb.or(
-					cb.and(cb.equal(joinRoute.get("owner"), from.get("user")), cb.isNull(from.get("feedbackParticipant"))),
-					cb.and(cb.notEqual(joinRoute.get("owner"), from.get("user")), cb.isNull(from.get("feedbackDriver")))
+					cb.and(cb.equal(joinRoute.get("owner"), params.get("participantId")), cb.notEqual(joinRoute.get("seatsParticipants"), joinRouteDetails.get("feedbackCountDriver"))),
+					cb.and(cb.notEqual(joinRoute.get("owner"), params.get("participantId")), cb.isNull(from.get("feedbackParticipant")))
 				));
 			}
 			
@@ -75,6 +77,7 @@ public class FeedbackDaoImpl extends AbstractDaoJpaImpl<Feedback, Integer> imple
 		Root<Participanse> from = q.from(Participanse.class);
 		
 		Join<Participanse, Route> joinRoute = from.join("route");
+		Join<Route, RouteDetails> joinRouteDetails = joinRoute.join("routeDetails");
 		
 		q.select(cb.count(joinRoute));
 		
@@ -83,10 +86,10 @@ public class FeedbackDaoImpl extends AbstractDaoJpaImpl<Feedback, Integer> imple
 		if(null != params) {
 			if(params.containsKey("participantId")) {
 				where = cb.and(where, cb.equal(from.get("user"), params.get("participantId")));
-				
+
 				where = cb.and(where, cb.or(
-					cb.and(cb.equal(joinRoute.get("owner"), from.get("user")), cb.isNull(from.get("feedbackParticipant"))),
-					cb.and(cb.notEqual(joinRoute.get("owner"), from.get("user")), cb.isNull(from.get("feedbackDriver")))
+					cb.and(cb.equal(joinRoute.get("owner"), params.get("participantId")), cb.notEqual(joinRoute.get("seatsParticipants"), joinRouteDetails.get("feedbackCountDriver"))),
+					cb.and(cb.notEqual(joinRoute.get("owner"), params.get("participantId")), cb.isNull(from.get("feedbackParticipant")))
 				));
 			}
 			
