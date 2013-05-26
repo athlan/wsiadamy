@@ -6,7 +6,7 @@
 
 <t:wrapper>
 	<h2>Trasa</h2>
-
+	
 	<div class="row">
 		<div class="span4">
 			User:
@@ -18,6 +18,9 @@
 </c:if>
       </ul>
       
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'FeedbackAddRoute')">
+ 	<a href="<c:url value="/route/feedback/${route.id}" />" class="btn btn-mini btn-primary">Wystaw ocenę</a>
+</sec:authorize>
 <sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteParticipateAdd')">
 	<a href="<c:url value="/route/participate/${route.id}" />" class="btn btn-primary">Wsiadaj!</a>
 </sec:authorize>

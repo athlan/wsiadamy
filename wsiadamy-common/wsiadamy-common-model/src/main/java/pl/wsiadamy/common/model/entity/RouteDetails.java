@@ -31,6 +31,13 @@ public class RouteDetails extends AbstractEntity<Integer> {
 	@Column
 	private float carCombustion;
 	
+	@Column
+	private Integer feedbackCountParticipants = 0;
+	
+	@Column
+	private Integer feedbackCountDriver = 0;
+	
+	
 	public RouteDetails() {
 	}
 
@@ -72,6 +79,22 @@ public class RouteDetails extends AbstractEntity<Integer> {
 
 	public void setCarCombustion(float carCombustion) {
 		this.carCombustion = carCombustion;
+	}
+
+	public Integer getFeedbackCountParticipants() {
+		return feedbackCountParticipants;
+	}
+
+	public void setFeedbackCountParticipants(Integer feedbackCountParticipants) {
+		this.feedbackCountParticipants = feedbackCountParticipants;
+	}
+
+	public Integer getFeedbackCountDriver() {
+		return feedbackCountDriver;
+	}
+
+	public void setFeedbackCountDriver(Integer feedbackCountDriver) {
+		this.feedbackCountDriver = feedbackCountDriver;
 	}
 
 	@Override

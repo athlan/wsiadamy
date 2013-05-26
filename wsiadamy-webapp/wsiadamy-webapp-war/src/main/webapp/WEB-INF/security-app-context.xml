@@ -40,6 +40,8 @@
                 <beans:entry key="RouteParticipateAccept" value-ref="routeParticipateAcceptPermission" />
                 <beans:entry key="RouteParticipateReject" value-ref="routeParticipateRejectPermission" />
                 <beans:entry key="RouteParticipateResignation" value-ref="routeParticipateResignationPermission" />
+                <beans:entry key="FeedbackAddParticipanse" value-ref="feedbackAddParticipansePermission" />
+                <beans:entry key="FeedbackAddRoute" value-ref="feedbackAddRoutePermission" />
             </beans:map>
         </beans:constructor-arg>
     </beans:bean>
@@ -52,6 +54,8 @@
     <beans:bean id="routeParticipateAcceptPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateAcceptPermission" />
     <beans:bean id="routeParticipateRejectPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateRejectPermission" />
     <beans:bean id="routeParticipateResignationPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateResignationPermission" />
+    <beans:bean id="feedbackAddParticipansePermission" class="pl.wsiadamy.common.security.permission.FeedbackAddParticipansePermission" />
+    <beans:bean id="feedbackAddRoutePermission" class="pl.wsiadamy.common.security.permission.FeedbackAddRoutePermission" />
     
 	<http auto-config="true" use-expressions="true" authentication-manager-ref="authenticationManager" entry-point-ref="customAuthenticationEntryPoint">
 		<!-- <intercept-url pattern="/register" access="!hasRole('ROLE_USER')" />

@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import pl.wsiadamy.common.model.bo.ParticipanseBO;
+import pl.wsiadamy.common.model.bo.RouteBO;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
@@ -15,7 +16,10 @@ import pl.wsiadamy.common.security.Permission;
 import pl.wsiadamy.common.security.util.AthenticationUtil;
 
 @Component
-public class RouteParticipateCancelPermission implements Permission {
+public class FeedbackAddParticipansePermission implements Permission {
+
+	@Autowired
+	private RouteBO routeBO;
 
 	@Autowired
 	private ParticipanseBO participanseBO;
@@ -25,21 +29,27 @@ public class RouteParticipateCancelPermission implements Permission {
 
 		Participanse participanse = getTargetDomain(targetDomainObject);
 		User user = AthenticationUtil.getUser();
-
+		
 		if(participanse == null || user == null)
 			return false;
 		
 		Route route = participanse.getRoute();
 		
-		if(route.getDateDeparture().before(new Date()))
+		// route departure have to be in past
+		if(!route.getDateDeparture().before(new Date()))
 			return false;
 		
-		if(participanse.getRspvStatus() != ParticipanseRSPV.PENDING)
+		if(participanse.getRspvStatus() != ParticipanseRSPV.APPROVED)
 			return false;
-
-		// cannot cancel not owning
-		if(participanse.getUserSender() == null || !participanse.getUserSender().equals(user))
-			return false;
+		
+		if(route.getOwner().equals(user)) {
+			if(null != participanse.getFeedbackDriver())
+				return false; // feedback has been already given
+		}
+		else {
+			if(null != participanse.getFeedbackParticipant())
+				return false; // feedback has been already given
+		}
 		
 		return true;
 	}

@@ -37,6 +37,11 @@ public class Paginator {
 		return page;
 	}
 	
+	public int getTotalPages() {
+		int pages = getItemsCount() / getLimit();
+		return (pages > 1) ? pages : 1;
+	}
+	
 	private void setPage(int page) {
 		if(getItemsCount() / getLimit() < page)
 			page = 1;

@@ -48,25 +48,33 @@ public class RouteDaoImpl extends AbstractDaoJpaImpl<Route, Integer> implements 
 		q.multiselect(from, rootLoggedUserParticipation);
 		
 		// predicates
-		List<Predicate> predicates = new ArrayList<Predicate>();
-//		getEntityManager().createQuery(q);
+		Predicate where = cb.conjunction();
 		
-		predicates.add(cb.equal(rootLoggedUserParticipation.get("user"), params.get("loggedUserId")));
+		where = cb.and(where, cb.equal(rootLoggedUserParticipation.get("user"), params.get("loggedUserId")));
 		
 		if(null != params) {
 			if(params.containsKey("ownerId")) {
-				predicates.add(cb.equal(from.get("owner"), params.get("ownerId")));
+				where = cb.and(where, cb.equal(from.get("owner"), params.get("ownerId")));
 			}
 			
 			if(params.containsKey("participantId")) {
 				Join<Route, Participanse> rootParticipances = from.joinList("participances", JoinType.INNER);
-				predicates.add(cb.equal(rootParticipances.get("user"), params.get("participantId")));
-				predicates.add(cb.notEqual(rootParticipances.get("rspvStatus"), ParticipanseRSPV.REJECTED));
+				where = cb.and(where, cb.equal(rootParticipances.get("user"), params.get("participantId")));
+				where = cb.and(where, cb.notEqual(rootParticipances.get("rspvStatus"), ParticipanseRSPV.REJECTED));
+			}
+			
+			if(params.containsKey("dateDepartureBefore")) {
+				where = cb.and(where, cb.lessThanOrEqualTo(from.<Date>get("dateDeparture"), (Date) params.get("dateDepartureBefore")));
+			}
+			
+			if(params.containsKey("dateDepartureAfter")) {
+				where = cb.and(where, cb.greaterThanOrEqualTo(from.<Date>get("dateDeparture"), (Date) params.get("dateDepartureAfter")));
 			}
 		}
 		
-		if(predicates.size() > 0)
-			q.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+		q.where(where);
+		
+		q.orderBy(cb.desc(from.get("dateDeparture")));
 		
 		TypedQuery<RouteParticipanseWrapper> tq = getEntityManager().createQuery(q);
 		
@@ -92,8 +100,17 @@ public class RouteDaoImpl extends AbstractDaoJpaImpl<Route, Integer> implements 
 			}
 			
 			if(params.containsKey("participantId")) {
-				Join<Route, Participanse> rootParticipances = from.join("participances", JoinType.INNER);
+				Join<Route, Participanse> rootParticipances = from.joinList("participances", JoinType.INNER);
 				where = cb.and(where, cb.equal(rootParticipances.get("user"), params.get("participantId")));
+				where = cb.and(where, cb.notEqual(rootParticipances.get("rspvStatus"), ParticipanseRSPV.REJECTED));
+			}
+			
+			if(params.containsKey("dateDepartureBefore")) {
+				where = cb.and(where, cb.lessThanOrEqualTo(from.<Date>get("dateDeparture"), (Date) params.get("dateDepartureBefore")));
+			}
+			
+			if(params.containsKey("dateDepartureAfter")) {
+				where = cb.and(where, cb.greaterThanOrEqualTo(from.<Date>get("dateDeparture"), (Date) params.get("dateDepartureAfter")));
 			}
 		}
 		
@@ -253,27 +270,29 @@ public class RouteDaoImpl extends AbstractDaoJpaImpl<Route, Integer> implements 
 
 	@Override
 	public RouteUserStatsWrapper getUserStats(Integer userId) {
-		String dql = "SELECT " +
+		String dql = 
+			"SELECT " +
 				"COUNT(item.id) AS stats_routes_count, " +
 				"SUM(item.totalPrice) AS stats_routes_totalprice, " +
 				"SUM(itemDetails.routeLength) AS stats_routes_totaldistance, " +
 				"AVG(item.totalPrice) AS stats_routes_averageprice, " +
 				"SUM(CASE WHEN ((item.seats+1-item.seatsAvailable) > 0) THEN (item.totalPrice/(item.seats+1 - item.seatsAvailable)) ELSE 0 END) AS stats_routes_totalprice_saved " +
-				"FROM Participanse itemParticipanse " +
+			"FROM Participanse itemParticipanse " +
 				"JOIN itemParticipanse.route item " +
 				"JOIN item.routeDetails itemDetails " +
 				"JOIN itemParticipanse.user itemParticipanseUser " +
-				"WHERE itemParticipanseUser.id = :userId " +
-				"GROUP BY item.id";
-//		String dql = "SELECT " +
-//				"COUNT(r.id) AS stats_routes_count " +
-//				"FROM Route r ";
+			"WHERE itemParticipanseUser.id = :userId " +
+				"AND item.dateDeparture <= :dateDeparture " +
+				"AND itemParticipanse.rspvStatus = :rspvStatus " +
+			"GROUP BY item.id";
 		
 		Query query = getEntityManager().createQuery(dql);
 		
 		query.setParameter("userId", userId);
+		query.setParameter("dateDeparture", new Date());
+		query.setParameter("rspvStatus", ParticipanseRSPV.APPROVED);
 		
-		RouteUserStatsWrapper result = new RouteUserStatsWrapper();;
+		RouteUserStatsWrapper result = new RouteUserStatsWrapper();
 		Object[] resultQuery;
 		
 		try {

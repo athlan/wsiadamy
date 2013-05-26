@@ -1,5 +1,7 @@
 package pl.wsiadamy.common.security.permission;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,9 @@ public class RouteEditPermission implements Permission {
 			return false;
 		
 		if(!route.getOwner().equals(user))
+			return false;
+		
+		if(route.getDateDeparture().before(new Date()))
 			return false;
 		
 		return true;

@@ -1,5 +1,7 @@
 package pl.wsiadamy.common.security.permission;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Component;
 import pl.wsiadamy.common.model.bo.ParticipanseBO;
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
+import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
 import pl.wsiadamy.common.security.Permission;
 import pl.wsiadamy.common.security.util.AthenticationUtil;
@@ -24,6 +27,11 @@ public class RouteParticipateAcceptPermission implements Permission {
 		User user = AthenticationUtil.getUser();
 		
 		if(participanse == null || user == null || !participanse.getUser().equals(user))
+			return false;
+		
+		Route route = participanse.getRoute();
+		
+		if(route.getDateDeparture().before(new Date()))
 			return false;
 		
 		if(participanse.getRspvStatus() != ParticipanseRSPV.PENDING)

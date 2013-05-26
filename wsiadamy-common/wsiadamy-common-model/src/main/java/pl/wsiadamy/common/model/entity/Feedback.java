@@ -8,15 +8,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import pl.wsiadamy.common.model.common.AbstractEntity;
 
 @Entity
-@Table(name = "participanse")
-public class Participanse extends AbstractEntity<Integer> {
+@Table(name = "feedback")
+public class Feedback extends AbstractEntity<Integer> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -30,35 +28,30 @@ public class Participanse extends AbstractEntity<Integer> {
 	
 	@OneToOne
 	private Route route;
-	
-	@Column
-	private Date rspvDateSent;
 
 	@Column
-	private Date rspvDateAccepted;
+	private Integer vote;
+
+	@Column
+	private String comment;
 	
 	@Column
-	private ParticipanseRSPV rspvStatus;
-
-	@OneToOne
-	private Feedback feedbackParticipant;
+	private Date dateCreated;
 	
-	@OneToOne
-	private Feedback feedbackDriver;
-	
-	public Participanse() {
+	public Feedback() {
 	}
 
-	public Participanse(User user, Route route) {
+	public Feedback(User user, Route route) {
 		setUser(user);
 		setUserSender(user);
 		setRoute(route);
 	}
 
-	public Participanse(User user, User userSender, Route route) {
+	public Feedback(User user, User userSender, Route route, Integer vote) {
 		setUser(user);
 		setUserSender(userSender);
 		setRoute(route);
+		setVote(vote);
 	}
 	
 	public Integer getId() {
@@ -93,61 +86,39 @@ public class Participanse extends AbstractEntity<Integer> {
 		this.route = route;
 	}
 
-	public Date getRspvDateSent() {
-		return rspvDateSent;
+	public Integer getVote() {
+		return vote;
 	}
 
-	public void setRspvDateSent(Date rspvDateSent) {
-		this.rspvDateSent = rspvDateSent;
+	public void setVote(Integer vote) {
+		this.vote = vote;
 	}
 
-	public Date getRspvDateAccepted() {
-		return rspvDateAccepted;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setRspvDateAccepted(Date rspvDateAccepted) {
-		this.rspvDateAccepted = rspvDateAccepted;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
-	public ParticipanseRSPV getRspvStatus() {
-		return rspvStatus;
-	}
-	
-	public void setRspvStatus(ParticipanseRSPV rspvStatus) {
-		this.rspvStatus = rspvStatus;
-	}
-	
-	public Feedback getFeedbackParticipant() {
-		return feedbackParticipant;
+	public Date getDateCreated() {
+		return dateCreated;
 	}
 
-	public void setFeedbackParticipant(Feedback feedbackParticipant) {
-		this.feedbackParticipant = feedbackParticipant;
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
-	public Feedback getFeedbackDriver() {
-		return feedbackDriver;
-	}
-
-	public void setFeedbackDriver(Feedback feedbackDriver) {
-		this.feedbackDriver = feedbackDriver;
-	}
-
-	@PrePersist
-	@PreUpdate
-	public void recalculateRouteSeatsAvailable() {
-		getRoute().prePersistRecalculateSeatsAvailable();
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == this)
 			return true;
 		
-		if(!(obj instanceof Participanse))
+		if(!(obj instanceof Feedback))
 			return false;
 		
-		Participanse objCast = (Participanse) obj;
+		Feedback objCast = (Feedback) obj;
 		
 		return (
 			null != objCast.getUser() && null != this.getUser()
@@ -159,6 +130,6 @@ public class Participanse extends AbstractEntity<Integer> {
 	
 	@Override
 	public String toString() {
-		return "Participanse [id=" + id + "]";
+		return "Feedback [id=" + id + "]";
 	}
 }

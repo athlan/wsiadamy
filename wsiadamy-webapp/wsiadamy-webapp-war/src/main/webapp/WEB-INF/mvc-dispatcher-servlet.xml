@@ -41,6 +41,7 @@
 		<property name="suffix">
 			<value>.jsp</value>
 		</property>
+		<property name="exposeContextBeansAsAttributes" value="true"/>
 	</bean>
 	
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
@@ -77,5 +78,4 @@
 	        <property name="paramName" value="language" />
 	    </bean>
 	</mvc:interceptors>
-    
 </beans>

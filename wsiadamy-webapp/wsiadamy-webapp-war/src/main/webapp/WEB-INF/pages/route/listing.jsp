@@ -9,12 +9,15 @@
   
 <c:choose>
 	<c:when test="${not empty routes}">
-		<div class="">
 		<h1>Przejazdy:</h1>
 	<c:forEach items="${routes}" var="routeWrapper">
+		<div class="">
 <c:set var="route" value="${routeWrapper.route}" />
 <c:set var="routeParticipanse" value="${routeWrapper.participanse}" />
 
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'FeedbackAddRoute')">
+	  	<a href="<c:url value="/route/feedback/${route.id}" />" class="btn btn-mini btn-primary">Wystaw ocenę</a>
+</sec:authorize>
 <sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateCancel')">
 	  	<a href="<c:url value="/route/participateCancel/${routeParticipanse.id}" />" class="btn btn-mini btn-danger"><i class="icon-envelope icon-white"></i> Anuluj zaproszenie</a>
 </sec:authorize>
@@ -49,7 +52,9 @@
      w dniu <fmt:formatDate value="${route.dateDeparture}" pattern="dd.MM.yyyy" />
      </div>
 	</c:forEach>
-		</div>
+		
+${ paginatorViewHelper.display(paginator) }
+
 	</c:when>
 	<c:otherwise>
 		No routes to display

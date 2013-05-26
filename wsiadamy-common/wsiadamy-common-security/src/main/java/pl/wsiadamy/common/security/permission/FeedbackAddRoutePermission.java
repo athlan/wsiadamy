@@ -16,7 +16,7 @@ import pl.wsiadamy.common.security.Permission;
 import pl.wsiadamy.common.security.util.AthenticationUtil;
 
 @Component
-public class RouteParticipateAddPermission implements Permission {
+public class FeedbackAddRoutePermission implements Permission {
 
 	@Autowired
 	private RouteBO routeBO;
@@ -30,28 +30,29 @@ public class RouteParticipateAddPermission implements Permission {
 		Route route = getTargetDomain(targetDomainObject);
 		User user = AthenticationUtil.getUser();
 		
-		if(user == null)
-			return true;
-		
-//		if(route == null || user == null)
-		if(route == null)
+		if(route == null || user == null)
 			return false;
 		
-		if(route.getDateDeparture().before(new Date()))
+		// route departure have to be in past
+		if(!route.getDateDeparture().before(new Date()))
 			return false;
 		
 		Participanse participanse = participanseBO.getByUserRoute(user, route);
 		
-		if(null != participanse) {
-			if(participanse.getRspvStatus() != ParticipanseRSPV.REJECTED)
-				return false;
+		if(null == participanse)
+			return false;
+		
+		if(participanse.getRspvStatus() != ParticipanseRSPV.APPROVED)
+			return false;
+		
+		if(route.getOwner().equals(user)) {
+			if(route.getRouteDetails().getFeedbackCountDriver() >= route.getSeatsParticipants())
+				return false; // all feedbacks has been given
 		}
-		
-		if(route.getSeatsAvailable() == 0)
-			return false;
-		
-		if(route.getOwner().equals(user))
-			return false;
+		else {
+			if(null != participanse.getFeedbackParticipant())
+				return false; // feedback has been already given
+		}
 		
 		return true;
 	}

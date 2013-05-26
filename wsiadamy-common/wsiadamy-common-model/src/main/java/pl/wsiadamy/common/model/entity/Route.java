@@ -44,7 +44,7 @@ public class Route extends AbstractEntity<Integer> {
 	
 	@OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<RouteWaypoint> waypoints;
-
+	
 	@Column
 	private Date dateDeparture;
 
@@ -56,6 +56,9 @@ public class Route extends AbstractEntity<Integer> {
 
 	@Column
 	private int seatsAvailable;
+
+	@Column
+	private int seatsParticipants;
 	
 	@Column
 	private boolean participanseModeration;
@@ -172,7 +175,7 @@ public class Route extends AbstractEntity<Integer> {
 	public void setDateDeparture(Date dateDeparture) {
 		this.dateDeparture = dateDeparture;
 	}
-
+	
 	public float getTotalPrice() {
 		return totalPrice;
 	}
@@ -187,19 +190,24 @@ public class Route extends AbstractEntity<Integer> {
 
 	public void setSeats(int seats) {
 		this.seats = seats;
-		this.setSeatsAvailableRecalculate();
+		
+		this.setSeatsAvailable(getSeats() - getSeatsParticipants());
 	}
 	
-	private void setSeatsAvailableRecalculate() {
-		setSeatsAvailable(getSeatsAvailable());
-	}
-
 	public int getSeatsAvailable() {
 		return seatsAvailable;
 	}
 	
 	private void setSeatsAvailable(int seatsAvailable) {
 		this.seatsAvailable = seatsAvailable;
+	}
+
+	public int getSeatsParticipants() {
+		return seatsParticipants;
+	}
+	
+	private void setSeatsParticipants(int seatsParticipants) {
+		this.seatsParticipants = seatsParticipants;
 	}
 	
 	public boolean isParticipanseModeration() {
@@ -232,7 +240,8 @@ public class Route extends AbstractEntity<Integer> {
 			}
 		}
 		
-		this.seatsAvailable = this.seats - seatsBooked;
+		setSeatsParticipants(seatsBooked);
+		setSeatsAvailable(this.seats - this.seatsParticipants);
 	}
 	
 	@Override

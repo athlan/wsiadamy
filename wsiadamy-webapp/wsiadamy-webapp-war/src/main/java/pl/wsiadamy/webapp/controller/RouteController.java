@@ -1,5 +1,6 @@
 package pl.wsiadamy.webapp.controller;
  
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +59,6 @@ public class RouteController {
 			model.addAttribute("routeParticipanse", routeParticipanse);
 		}
 		
-		routeDao.synchronizeWaypointsRoutePositions(route);
-		
         return "route/display";
     }
 	
@@ -89,14 +88,14 @@ public class RouteController {
 //		return "route/display";
 		return removeRoute(route, model);
     }
-
+	
 //	@PreAuthorize("hasPermission(#route, 'RouteRemove')")
     public String removeRoute(Route route, ModelMap model) {
 		routeBO.delete(route);
 		
         return "redirect:/account/routesCreated";
     }
-
+    
 	@RequestMapping(value = "/account/routesCreated", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('ROLE_USER')")
     public String showCreatedRoutes(ModelMap model, HttpServletRequest request) {
@@ -105,6 +104,7 @@ public class RouteController {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("ownerId", user.getId());
 		params.put("loggedUserId", user.getId());
+//		params.put("dateDepartureAfter", new Date());
 		
 		Long itemsCount = routeBO.listRoutesCount(params);
 		int itemsPage = 1;
@@ -112,10 +112,11 @@ public class RouteController {
 		if(null != request.getParameter("p"))
 			itemsPage = Integer.valueOf(request.getParameter("p"));
 		
-		Paginator paginator = new Paginator(5, itemsCount.intValue(), itemsPage);
+		Paginator paginator = new Paginator(2, itemsCount.intValue(), itemsPage);
 		
 		List<RouteParticipanseWrapper> result = routeBO.listRoutes(params, paginator.getLimit(), paginator.getOffset());
 		model.addAttribute("routes", result);
+		model.addAttribute("paginator", paginator);
 		
         return "route/listing";
     }
@@ -128,6 +129,7 @@ public class RouteController {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("participantId", user.getId());
 		params.put("loggedUserId", user.getId());
+		params.put("dateDepartureAfter", new Date());
 		
 		Long itemsCount = routeBO.listRoutesCount(params);
 		int itemsPage = 1;
@@ -135,10 +137,36 @@ public class RouteController {
 		if(null != request.getParameter("p"))
 			itemsPage = Integer.valueOf(request.getParameter("p"));
 		
-		Paginator paginator = new Paginator(5, itemsCount.intValue(), itemsPage);
+		Paginator paginator = new Paginator(2, itemsCount.intValue(), itemsPage);
 		
 		List<RouteParticipanseWrapper> result = routeBO.listRoutes(params, paginator.getLimit(), paginator.getOffset());
 		model.addAttribute("routes", result);
+		model.addAttribute("paginator", paginator);
+		
+        return "route/listing";
+    }
+	
+	@RequestMapping(value = "/account/routesHistory", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_USER')")
+    public String showParticipatedRoutesHistory(ModelMap model, HttpServletRequest request) {
+		User user = AthenticationUtil.getUser();
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("participantId", user.getId());
+		params.put("loggedUserId", user.getId());
+		params.put("dateDepartureBefore", new Date());
+		
+		Long itemsCount = routeBO.listRoutesCount(params);
+		int itemsPage = 1;
+		
+		if(null != request.getParameter("p"))
+			itemsPage = Integer.valueOf(request.getParameter("p"));
+		
+		Paginator paginator = new Paginator(2, itemsCount.intValue(), itemsPage);
+		
+		List<RouteParticipanseWrapper> result = routeBO.listRoutes(params, paginator.getLimit(), paginator.getOffset());
+		model.addAttribute("routes", result);
+		model.addAttribute("paginator", paginator);
 		
         return "route/listing";
     }
