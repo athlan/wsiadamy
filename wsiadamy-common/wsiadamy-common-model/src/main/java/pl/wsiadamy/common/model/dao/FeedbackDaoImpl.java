@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import pl.wsiadamy.common.model.common.AbstractDaoJpaImpl;
 import pl.wsiadamy.common.model.entity.Feedback;
 import pl.wsiadamy.common.model.entity.Participanse;
+import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.RouteDetails;
 
@@ -55,6 +56,8 @@ public class FeedbackDaoImpl extends AbstractDaoJpaImpl<Feedback, Integer> imple
 				where = cb.and(where, cb.lessThanOrEqualTo(joinRoute.<Date>get("dateDeparture"), (Date) params.get("dateDepartureBefore")));
 			}
 		}
+		
+		where = cb.and(where, cb.equal(from.get("rspvStatus"), ParticipanseRSPV.APPROVED));
 		
 		q.where(where);
 		
@@ -97,6 +100,8 @@ public class FeedbackDaoImpl extends AbstractDaoJpaImpl<Feedback, Integer> imple
 				where = cb.and(where, cb.lessThanOrEqualTo(joinRoute.<Date>get("dateDeparture"), (Date) params.get("dateDepartureBefore")));
 			}
 		}
+
+		where = cb.and(where, cb.equal(from.get("rspvStatus"), ParticipanseRSPV.APPROVED));
 		
 		q.where(where);
 		

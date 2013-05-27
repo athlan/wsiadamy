@@ -97,4 +97,32 @@ public class ParticipanseBOImpl implements ParticipanseBO {
 		
 		return true;
 	}
+
+	@Override
+	public boolean participateRouteApprove(Participanse participanse) {
+		participanse.setRspvStatus(ParticipanseRSPV.APPROVED);
+		participanse.setRspvDateAccepted(new Date());
+		
+		update(participanse);
+		
+		Route route = participanse.getRoute();
+		if(route.getSeatsAvailable() >= route.getSeatsParticipants()) {
+			for (Participanse paticipanseItem : route.getParticipanses()) {
+				if(paticipanseItem.getRspvStatus() == ParticipanseRSPV.PENDING) {
+					participateRouteReject(paticipanseItem);
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	@Override
+	public boolean participateRouteReject(Participanse participanse) {
+		participanse.setRspvStatus(ParticipanseRSPV.REJECTED);
+		update(participanse);
+		
+		return true;
+	}
+
 }

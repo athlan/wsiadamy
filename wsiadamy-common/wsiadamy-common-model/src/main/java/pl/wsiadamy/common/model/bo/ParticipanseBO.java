@@ -16,6 +16,10 @@ public interface ParticipanseBO {
 	boolean participateRoute(User participant, Route route);
 
 	boolean participateRouteInvite(User invitator, User participant, Route route);
-	
+
 	boolean participateRouteCancel(Participanse participanse);
+
+	boolean participateRouteApprove(Participanse participanse);
+	
+	boolean participateRouteReject(Participanse participanse);
 }

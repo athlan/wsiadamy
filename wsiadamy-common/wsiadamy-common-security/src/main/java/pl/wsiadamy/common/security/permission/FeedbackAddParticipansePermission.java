@@ -42,7 +42,7 @@ public class FeedbackAddParticipansePermission implements Permission {
 		if(participanse.getRspvStatus() != ParticipanseRSPV.APPROVED)
 			return false;
 		
-		if(participanse.getUser().equals(user))
+		if(participanse.getUser().equals(user) && route.getOwner().equals(user))
 			return false;
 		
 		if(route.getOwner().equals(user)) {

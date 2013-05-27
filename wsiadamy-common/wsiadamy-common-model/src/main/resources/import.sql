@@ -7,8 +7,13 @@ UPDATE "public"."users" SET userdata_id = '1' WHERE id = '1';
 INSERT INTO "public"."users" ("id", "password", "password_salt") VALUES ('2', null, null);
 INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('2', '1', null, null, '100000302544693', '2');
 INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('3', '0', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'me@athlan.pl', '2');
-INSERT INTO "public"."users_data" VALUES ('2', '1991-04-21', 'me@athlan.pl', '660011034', '100000302544693', 'Piotr', 'Pelczar', '2');
+INSERT INTO "public"."users_data" VALUES ('2', '1991-04-21', 'me@athlan.pl', '660011034', '100000302544693', 'Piotr2', 'Pelczar2', '2');
 UPDATE "public"."users" SET userdata_id = '2' WHERE id = '2';
+-- user 3
+INSERT INTO "public"."users" ("id", "password", "password_salt") VALUES ('3', null, null);
+INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('4', '0', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'athlanster@gmail.com', '3');
+INSERT INTO "public"."users_data" VALUES ('3', '1991-04-21', 'athlanster@gmail.com', '660011034', '100000302544693', 'Piotr3', 'Pelczar3', '3');
+UPDATE "public"."users" SET userdata_id = '3' WHERE id = '3';
 
 -- ----------------------------
 -- Records of route
@@ -63,4 +68,5 @@ INSERT INTO "public"."participanse" ("id", "rspvdateaccepted", "rspvdatesent", "
 INSERT INTO "public"."participanse" ("id", "rspvdateaccepted", "rspvdatesent", "rspvstatus", "route_id", "user_id", "usersender_id", "feedbackdriver_id", "feedbackparticipant_id") VALUES ('4', NOW(), NOW() - '1 minute'::interval, '1', '4', '1', null, null, null);
 
 INSERT INTO "public"."participanse" ("id", "rspvdateaccepted", "rspvdatesent", "rspvstatus", "route_id", "user_id", "usersender_id", "feedbackdriver_id", "feedbackparticipant_id") VALUES ('5', NOW(), NOW() - '1 minute'::interval, '0', '1', '2', null, null, null);
+INSERT INTO "public"."participanse" ("id", "rspvdateaccepted", "rspvdatesent", "rspvstatus", "route_id", "user_id", "usersender_id", "feedbackdriver_id", "feedbackparticipant_id") VALUES ('7', NOW(), NOW() - '1 minute'::interval, '0', '1', '3', null, null, null);
 INSERT INTO "public"."participanse" ("id", "rspvdateaccepted", "rspvdatesent", "rspvstatus", "route_id", "user_id", "usersender_id", "feedbackdriver_id", "feedbackparticipant_id") VALUES ('6', NOW(), NOW() - '1 minute'::interval, '1', '4', '2', null, null, null);

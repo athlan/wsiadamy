@@ -26,7 +26,7 @@ public class RouteParticipateReviewJoinPermission implements Permission {
 		Participanse participanse = getTargetDomain(targetDomainObject);
 		User user = AthenticationUtil.getUser();
 		
-		if(participanse == null || user == null || !participanse.getUser().equals(user))
+		if(participanse == null || user == null)
 			return false;
 		
 		Route route = participanse.getRoute();
@@ -37,8 +37,17 @@ public class RouteParticipateReviewJoinPermission implements Permission {
 		if(participanse.getRspvStatus() != ParticipanseRSPV.PENDING)
 			return false;
 		
-		if(participanse.getUserSender() != null && participanse.getUserSender().equals(user))
-			return false;
+		if(route.getOwner().equals(user)) {
+			if(participanse.getUserSender() != null && participanse.getUserSender().equals(user))
+				return false;
+		}
+		else {
+			if(!participanse.getUser().equals(user))
+				return false;
+			
+			if(participanse.getUserSender() != null && participanse.getUserSender().equals(user))
+				return false;
+		}
 		
 		return true;
 	}

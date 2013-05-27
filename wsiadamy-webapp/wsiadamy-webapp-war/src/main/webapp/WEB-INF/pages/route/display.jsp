@@ -7,6 +7,44 @@
 <t:wrapper>
 	<h2>Trasa</h2>
 	
+<c:if test="${not empty participanses}">
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteParticipateModeration')">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Imię i nazwisko</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+<c:forEach items="${participanses}" var="participanse">
+			<tr>
+				<td>${participanse.user.userData.firstname} ${participanse.user.userData.lastname}</td>
+				<td>
+<sec:authorize access="@permissionHelper.hasPermission(#participanse, 'RouteParticipateReviewJoin')">
+    <div class="btn-group">
+      <a class="btn dropdown-toggle btn-mini btn-info" data-toggle="dropdown" href="#">
+        <i class="icon-envelope icon-white"></i> Zaproszenie
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+<sec:authorize access="@permissionHelper.hasPermission(#participanse, 'RouteParticipateAccept')">
+        <li><a href="<c:url value='/route/participateAccept/${participanse.id}' />">Zaakceptuj</a></li>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#participanse, 'RouteParticipateReject')">
+        <li><a href="<c:url value='/route/participateReject/${participanse.id}' />">Odrzuć</a></li>
+</sec:authorize>
+      </ul>
+    </div>
+</sec:authorize>
+        </td>
+			</tr>
+</c:forEach>
+		</tbody>
+	</table>
+</sec:authorize>
+</c:if>
+	
 	<div class="row">
 		<div class="span4">
 			User:

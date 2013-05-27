@@ -82,9 +82,7 @@ public class RouteParticipationController {
 		if(null == participanse)
 			return "forward:/errors/404";
 		
-		participanse.setRspvStatus(ParticipanseRSPV.APPROVED);
-		participanse.setRspvDateAccepted(new Date());
-		participanseBO.update(participanse);
+		participanseBO.participateRouteApprove(participanse);
 		
         return "redirect:/route/get/" + participanse.getRoute().getId();
     }
@@ -104,7 +102,7 @@ public class RouteParticipationController {
 		
         return "redirect:/route/get/" + participanse.getRoute().getId();
     }
-	
+
 	@RequestMapping(value = "/route/participateResignation/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('ROLE_USER') AND hasPermission(#id, 'RouteParticipateResignation')")
     public String participateRouteResignation(@PathVariable("id") Integer id, ModelMap model) {
@@ -120,4 +118,14 @@ public class RouteParticipationController {
         return "redirect:/route/get/" + participanse.getRoute().getId();
     }
 	
+
+//	@RequestMapping(value = "/route/participateModeration/{id}", method = RequestMethod.GET)
+//	@PreAuthorize("hasPermission(#id, 'RouteParticipateResignation')")
+//    public String participateRouteModeration(@PathVariable("id") Integer id, ModelMap model) {
+//		
+//		Route route = routeBO.getById(id);
+//		
+//		model.addAttribute("route", route);
+//        return "route/display";
+//    }
 }

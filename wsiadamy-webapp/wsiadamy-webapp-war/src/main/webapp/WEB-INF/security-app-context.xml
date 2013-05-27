@@ -40,6 +40,7 @@
                 <beans:entry key="RouteParticipateAccept" value-ref="routeParticipateAcceptPermission" />
                 <beans:entry key="RouteParticipateReject" value-ref="routeParticipateRejectPermission" />
                 <beans:entry key="RouteParticipateResignation" value-ref="routeParticipateResignationPermission" />
+                <beans:entry key="RouteParticipateModeration" value-ref="routeParticipateModerationPermission" />
                 <beans:entry key="FeedbackAddParticipanse" value-ref="feedbackAddParticipansePermission" />
                 <beans:entry key="FeedbackAddRoute" value-ref="feedbackAddRoutePermission" />
                 <beans:entry key="FeedbackAddRouteParticipants" value-ref="feedbackAddRouteParticipantsPermission" />
@@ -55,6 +56,7 @@
     <beans:bean id="routeParticipateAcceptPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateAcceptPermission" />
     <beans:bean id="routeParticipateRejectPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateRejectPermission" />
     <beans:bean id="routeParticipateResignationPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateResignationPermission" />
+    <beans:bean id="routeParticipateModerationPermission" class="pl.wsiadamy.common.security.permission.RouteParticipateModerationPermission" />
     <beans:bean id="feedbackAddParticipansePermission" class="pl.wsiadamy.common.security.permission.FeedbackAddParticipansePermission" />
     <beans:bean id="feedbackAddRoutePermission" class="pl.wsiadamy.common.security.permission.FeedbackAddRoutePermission" />
     <beans:bean id="feedbackAddRouteParticipantsPermission" class="pl.wsiadamy.common.security.permission.FeedbackAddRouteParticipantsPermission" />
