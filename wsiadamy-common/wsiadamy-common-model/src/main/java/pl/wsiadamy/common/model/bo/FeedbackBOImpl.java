@@ -93,7 +93,17 @@ public class FeedbackBOImpl implements FeedbackBO {
 	public Feedback getById(Integer id) {
 		return feedbackDao.get(id);
 	}
-	
+
+	@Override
+	public List<Feedback> listFeedback(Map<String, Object> params, int limit, int offset) {
+		return feedbackDao.listFeedback(params, limit, offset);
+	}
+
+	@Override
+	public Long listFeedbackCount(Map<String, Object> params) {
+		return feedbackDao.listFeedbackCount(params);
+	}
+
 	@Override
 	public List<Route> listRoutesToFeedback(Map<String, Object> params, int limit, int offset) {
 		return feedbackDao.listRoutesToFeedback(params, limit, offset);

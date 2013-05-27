@@ -19,7 +19,7 @@
 		<tbody>
 <c:forEach items="${participanses}" var="participanse">
 			<tr>
-				<td>${participanse.user.userData.firstname} ${participanse.user.userData.lastname}</td>
+				<td><a href="<c:url value='/userProfile/get/${participanse.user.id}' />">${participanse.user.userData.firstname} ${participanse.user.userData.lastname}</a></td>
 				<td>
 <sec:authorize access="@permissionHelper.hasPermission(#participanse, 'RouteParticipateReviewJoin')">
     <div class="btn-group">

@@ -19,6 +19,7 @@ import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.RouteDetails;
+import pl.wsiadamy.common.model.entity.User;
 
 @Component
 public class FeedbackDaoImpl extends AbstractDaoJpaImpl<Feedback, Integer> implements FeedbackDao {
@@ -102,6 +103,64 @@ public class FeedbackDaoImpl extends AbstractDaoJpaImpl<Feedback, Integer> imple
 		}
 
 		where = cb.and(where, cb.equal(from.get("rspvStatus"), ParticipanseRSPV.APPROVED));
+		
+		q.where(where);
+		
+		return getEntityManager().createQuery(q).getSingleResult();
+	}
+	
+	@Override
+	public List<Feedback> listFeedback(Map<String, Object> params, int limit, int offset) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		
+		CriteriaQuery<Feedback> q = cb.createQuery(Feedback.class);
+		Root<Feedback> from = q.from(Feedback.class);
+
+		Join<User, Feedback> joinUser = from.join("user");
+		Join<User, Feedback> joinUserSender = from.join("userSender");
+		
+		q.select(from);
+		
+		// predicates
+		Predicate where = cb.conjunction();
+		
+		if(null != params) {
+			if(params.containsKey("userId")) {
+				where = cb.and(where, cb.equal(joinUser.get("id"), params.get("userId")));
+			}
+		}
+		
+		q.where(where);
+		
+		q.orderBy(cb.desc(from.get("dateCreated")));
+		
+		TypedQuery<Feedback> tq = getEntityManager().createQuery(q);
+		
+		tq.setMaxResults(limit);
+		tq.setFirstResult(offset);
+		
+		return tq.getResultList();
+	}
+
+	@Override
+	public Long listFeedbackCount(Map<String, Object> params) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		
+		CriteriaQuery<Long> q = cb.createQuery(Long.class);
+		Root<Feedback> from = q.from(Feedback.class);
+
+		Join<User, Feedback> joinUser = from.join("user");
+		Join<User, Feedback> joinUserSender = from.join("userSender");
+		
+		q.select(cb.count(from));
+		
+		// predicates
+		Predicate where = cb.conjunction();
+		if(null != params) {
+			if(params.containsKey("userId")) {
+				where = cb.and(where, cb.equal(joinUser.get("id"), params.get("userId")));
+			}
+		}
 		
 		q.where(where);
 		

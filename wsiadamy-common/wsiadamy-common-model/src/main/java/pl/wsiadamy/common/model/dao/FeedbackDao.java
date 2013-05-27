@@ -9,6 +9,10 @@ import pl.wsiadamy.common.model.entity.Route;
 
 public interface FeedbackDao extends AbstractDao<Feedback, Integer> {
 
+	List<Feedback> listFeedback(Map<String, Object> params, int limit, int offset);
+	
+	Long listFeedbackCount(Map<String, Object> params);
+	
 	List<Route> listRoutesToFeedback(Map<String, Object> params, int limit, int offset);
 	
 	Long listRoutesToFeedbackCount(Map<String, Object> params);

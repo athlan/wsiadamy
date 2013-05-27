@@ -19,10 +19,15 @@ public interface FeedbackBO {
 	Feedback createFeedback(Participanse participanse, User user, User feedbackAuthor, FeedbackInput input);
 	
 	Feedback editFeedback(Integer id, FeedbackInput input);
+
+	List<Feedback> listFeedback(Map<String, Object> params, int limit, int offset);
+	
+	Long listFeedbackCount(Map<String, Object> params);
 	
 	List<Route> listRoutesToFeedback(Map<String, Object> params, int limit, int offset);
 
 	Long listRoutesToFeedbackCount(Map<String, Object> params);
 	
 	List<Participanse> getParticipansesToFeedback(Route route);
+	
 }

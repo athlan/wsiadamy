@@ -60,7 +60,7 @@
      w dniu <fmt:formatDate value="${route.dateDeparture}" pattern="dd.MM.yyyy" />
      </div>
 	</c:forEach>
-		
+
 ${ paginatorViewHelper.display(paginator) }
 
 	</c:when>
