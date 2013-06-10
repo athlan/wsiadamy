@@ -1,6 +1,8 @@
 package pl.wsiadamy.common.model.bo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -123,6 +125,19 @@ public class ParticipanseBOImpl implements ParticipanseBO {
 		update(participanse);
 		
 		return true;
+	}
+
+	@Override
+	public List<Participanse> getRouteParticipationList(Route route) {
+		List<Participanse> result = new ArrayList<Participanse>();
+		
+		for (Participanse participanse : route.getParticipanses()) {
+			if(participanse.getRspvStatus() == ParticipanseRSPV.PENDING
+					|| participanse.getRspvStatus() == ParticipanseRSPV.APPROVED)
+				result.add(participanse);
+		}
+		
+		return result;
 	}
 
 }

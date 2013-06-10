@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Range;
 
 public class RouteAddDetailsInput {
-	
+
 	@NotNull
 	@Min((long) 0.001)
 	private float routeLength;
@@ -27,9 +27,8 @@ public class RouteAddDetailsInput {
 	private boolean participansModeration;
 	
     public RouteAddDetailsInput() {
-    	
     }
-
+    
 	public float getRouteLength() {
 		return routeLength;
 	}

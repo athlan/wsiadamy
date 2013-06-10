@@ -7,7 +7,12 @@
 	
 	<div class="row">
 		<div class="span5">
-		<form:form method="post" action="" commandName="routeAddDetailsInput">
+		<form:form method="post" action="" commandName="routeInput">
+		    <div>
+		        <label for="fieldSeats">Liczba dostępnych miejsc:</label>
+		        <form:input path="seats" id="fieldSeats" />
+		        <form:errors path="seats" cssClass="error" />
+		    </div>
 		    <div>
 		    	<label for="fieldRouteLength">Długość trasy:</label>
 				<form:input path="routeLength" id="fieldRouteLength" />

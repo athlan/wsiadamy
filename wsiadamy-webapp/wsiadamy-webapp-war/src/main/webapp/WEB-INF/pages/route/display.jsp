@@ -7,44 +7,6 @@
 <t:wrapper>
 	<h2>Trasa</h2>
 	
-<c:if test="${not empty participanses}">
-<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteParticipateModeration')">
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Imię i nazwisko</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-<c:forEach items="${participanses}" var="participanse">
-			<tr>
-				<td><a href="<c:url value='/userProfile/get/${participanse.user.id}' />">${participanse.user.userData.firstname} ${participanse.user.userData.lastname}</a></td>
-				<td>
-<sec:authorize access="@permissionHelper.hasPermission(#participanse, 'RouteParticipateReviewJoin')">
-    <div class="btn-group">
-      <a class="btn dropdown-toggle btn-mini btn-info" data-toggle="dropdown" href="#">
-        <i class="icon-envelope icon-white"></i> Zaproszenie
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu">
-<sec:authorize access="@permissionHelper.hasPermission(#participanse, 'RouteParticipateAccept')">
-        <li><a href="<c:url value='/route/participateAccept/${participanse.id}' />">Zaakceptuj</a></li>
-</sec:authorize>
-<sec:authorize access="@permissionHelper.hasPermission(#participanse, 'RouteParticipateReject')">
-        <li><a href="<c:url value='/route/participateReject/${participanse.id}' />">Odrzuć</a></li>
-</sec:authorize>
-      </ul>
-    </div>
-</sec:authorize>
-        </td>
-			</tr>
-</c:forEach>
-		</tbody>
-	</table>
-</sec:authorize>
-</c:if>
-	
 	<div class="row">
 		<div class="span4">
 			User:
@@ -100,19 +62,63 @@
 </c:forEach>
         <li>To: <c:out value="${route.waypointDestination.name}" /></li>
       </ul>
+      
+      
+      
+      
+<c:if test="${not empty participanses}">
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteParticipateShow')">
+	<h2>Uczestnicy</h2>
+	
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Imię i nazwisko</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+<c:forEach items="${participanses}" var="participanse">
+			<tr>
+				<td><a href="<c:url value='/userProfile/get/${participanse.user.id}' />">${participanse.user.userData.firstname} ${participanse.user.userData.lastname}</a></td>
+				<td>
+<sec:authorize access="@permissionHelper.hasPermission(#participanse, 'RouteParticipateReviewJoin')">
+    <div class="btn-group">
+      <a class="btn dropdown-toggle btn-mini btn-info" data-toggle="dropdown" href="#">
+        <i class="icon-envelope icon-white"></i> Zaproszenie
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+<sec:authorize access="@permissionHelper.hasPermission(#participanse, 'RouteParticipateAccept')">
+        <li><a href="<c:url value='/route/participateAccept/${participanse.id}' />">Zaakceptuj</a></li>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#participanse, 'RouteParticipateReject')">
+        <li><a href="<c:url value='/route/participateReject/${participanse.id}' />">Odrzuć</a></li>
+</sec:authorize>
+      </ul>
+    </div>
+</sec:authorize>
+        </td>
+			</tr>
+</c:forEach>
+		</tbody>
+	</table>
+</sec:authorize>
+</c:if>
+	
+      
+      
 		</div>
 		<div class="span7">
 			<div id="map_canvas" style="width: 100%; height: 400px;"></div>
 		</div>
 	</div>
-	
 <c:if test="${not empty route.owner.userData.facebookId}">
 <script>
   window.fbAsyncInit = function() {
     // init the FB JS SDK
     FB.init({
-      appId      : '178030972286479',                        // App ID from the app dashboard
-      channelUrl : '//WWW.YOUR_DOMAIN.COM/channel.html', // Channel file for x-domain comms
+      appId      : '${applicationSettings.getProperty("facebook.app.id")}',                    // App ID from the app dashboard
       status     : true,                                 // Check Facebook Login status
       xfbml      : true                                  // Look for social plugins on the page
     });
@@ -123,9 +129,8 @@
     FB.ui({
         method: 'send',
         to: [<c:out value="${route.owner.userData.facebookId}" />],
-        //display: 'page',
-        //name: 'People Argue Just to Win',
-        //link: 'http://www.nytimes.com/2011/06/15/arts/people-argue-just-to-win-scholars-assert.html',
+        name: 'People Argue Just to Win',
+        link: '${baseURL}<c:url value='/route/get/${route.id}' />',
     });
     }
   

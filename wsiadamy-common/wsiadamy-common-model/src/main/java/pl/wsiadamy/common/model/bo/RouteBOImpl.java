@@ -9,12 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.wsiadamy.common.model.dao.RouteDao;
+import pl.wsiadamy.common.model.dao.UserDao;
 import pl.wsiadamy.common.model.entity.Participanse;
+import pl.wsiadamy.common.model.entity.ParticipanseRSPV;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.RouteWaypoint;
 import pl.wsiadamy.common.model.entity.User;
-import pl.wsiadamy.common.model.input.RouteAddDetailsInput;
-import pl.wsiadamy.common.model.input.RouteAddInput;
+import pl.wsiadamy.common.model.input.RouteInput;
 import pl.wsiadamy.common.model.input.RouteSearchSimpleInput;
 import pl.wsiadamy.common.model.util.GeometryPointFactory;
 import pl.wsiadamy.common.model.wrapper.RouteParticipanseWrapper;
@@ -28,6 +29,9 @@ import com.vividsolutions.jts.geom.Point;
 public class RouteBOImpl implements RouteBO {
 	@Autowired
 	RouteDao routeDao;
+	
+	@Autowired
+	UserDao userDao;
 
 	@Override
 	public List<RouteParticipanseWrapper> listRoutes(Map<String, Object> params, int limit, int offset) {
@@ -40,25 +44,31 @@ public class RouteBOImpl implements RouteBO {
 	}
 
 	@Override
-	public Route createRoute(User owner, RouteAddInput input, RouteAddDetailsInput inputDetails) {
+	public Route createRoute(User owner, RouteInput input) {
 		Route route = new Route();
 		
 		route.setOwner(owner);
 		route.setDateLastModified(new Date());
 		
-		fillRoute(route, input, inputDetails);
-
-		route.addParticipanse(new Participanse(owner, route));
+		fillRoute(route, input);
+		
+		Participanse ownerParticipanse = new Participanse(owner, route);
+		ownerParticipanse.setRspvStatus(ParticipanseRSPV.APPROVED);
+		route.addParticipanse(ownerParticipanse);
 		
 		routeDao.create(route);
 		
 		routeDao.synchronizeWaypointsRoutePositions(route);
 		
+		User routeOwner = route.getOwner();
+		routeOwner.getUserData().setCarCombustion(input.getCarCombustion());
+		userDao.update(routeOwner);
+		
 		return route;
 	}
-
+	
 	@Override
-	public Route editRoute(Integer id, RouteAddInput input, RouteAddDetailsInput inputDetails) {
+	public Route editRoute(Integer id, RouteInput input) {
 		Route route = routeDao.get(id);
 		
 		if(null == route)
@@ -66,28 +76,38 @@ public class RouteBOImpl implements RouteBO {
 		
 		route.setDateLastModified(new Date());
 		
-		fillRoute(route, input, inputDetails);
+		fillRoute(route, input);
 		
 		routeDao.update(route);
+
+		User routeOwner = route.getOwner();
+		routeOwner.getUserData().setCarCombustion(input.getCarCombustion());
+		userDao.update(routeOwner);
 		
 		return route;
 	}
-
-	private void fillRoute(Route route, RouteAddInput input, RouteAddDetailsInput inputDetails) {
+	
+	private void fillRoute(Route route, RouteInput input) {
 		if(null != input)
 		{
 			// set source and destination
-			Point waypointStartPoint = GeometryPointFactory.createPointFromString(input.getLocationSourceCoords());
-			RouteWaypoint waypointStart = new RouteWaypoint(route, waypointStartPoint);
-			waypointStart.setName(input.getLocationSource());
-			
-			route.setWaypointSource(waypointStart);
-			
-			Point waypointStopPoint = GeometryPointFactory.createPointFromString(input.getLocationDestinationCoords());
-			RouteWaypoint waypointStop = new RouteWaypoint(route, waypointStopPoint);
-			waypointStop.setName(input.getLocationDestination());
-			
-			route.setWaypointDestination(waypointStop);
+			if(null != input.getLocationSourceCoords())
+			{
+				Point waypointStartPoint = GeometryPointFactory.createPointFromString(input.getLocationSourceCoords());
+				RouteWaypoint waypointStart = new RouteWaypoint(route, waypointStartPoint);
+				waypointStart.setName(input.getLocationSource());
+				
+				route.setWaypointSource(waypointStart);
+			}
+
+			if(null != input.getLocationDestinationCoords())
+			{
+				Point waypointStopPoint = GeometryPointFactory.createPointFromString(input.getLocationDestinationCoords());
+				RouteWaypoint waypointStop = new RouteWaypoint(route, waypointStopPoint);
+				waypointStop.setName(input.getLocationDestination());
+				
+				route.setWaypointDestination(waypointStop);
+			}
 			
 			// set waypoints
 			for(Map.Entry<String, String> entry : input.getWaypoints().entrySet()) {
@@ -102,24 +122,27 @@ public class RouteBOImpl implements RouteBO {
 				}
 			}
 			
-			// set linestring
-			LineString lineString = GeometryPointFactory.createLineStringFromString(input.getRouteLine());
-			route.getRouteLine().setLineString(lineString);
+			if(null != input.getRouteLine())
+			{
+				// set linestring
+				LineString lineString = GeometryPointFactory.createLineStringFromString(input.getRouteLine());
+				route.getRouteLine().setLineString(lineString);
+			}
 			
 			// set date and details
 			route.setDateDeparture(input.getDateDepartureObject());
-			route.setSeats(input.getSeats() + 1);
+			route.setSeats(input.getSeats());
 		}
 		
-		if(null != inputDetails)
+		if(null != input)
 		{
-			route.setTotalPrice(inputDetails.getTotalPrice());
+			route.setTotalPrice(input.getTotalPrice());
 			
-			route.getRouteDetails().setRouteLength(inputDetails.getRouteLength());
-			route.getRouteDetails().setFuelPrice(inputDetails.getFuelPrice());
-			route.getRouteDetails().setCarCombustion(inputDetails.getCarCombustion());
+			route.getRouteDetails().setRouteLength(input.getRouteLength());
+			route.getRouteDetails().setFuelPrice(input.getFuelPrice());
+			route.getRouteDetails().setCarCombustion(input.getCarCombustion());
 			
-			route.setParticipanseModeration(inputDetails.isParticipansModeration());
+			route.setParticipanseModeration(input.isParticipansModeration());
 		}
 	}
 	

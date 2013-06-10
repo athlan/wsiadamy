@@ -9,6 +9,9 @@
   <jsp:attribute name="scriptsFragment">
     <script src="${pageContext.request.contextPath}/static/js/pages/routeSearch.js" type="text/javascript"></script>
   </jsp:attribute>
+  <jsp:attribute name="cssFragment">
+    <link href="${pageContext.request.contextPath}/static/css/pages/routeSearch.css" rel="stylesheet">
+  </jsp:attribute>
   <jsp:body>
   <form:form method="get" action="" commandName="routeSearchSimpleInput" class="form-search-route">
     <h2>Szukaj przejazdu</h2>
@@ -34,11 +37,11 @@
           <form:input path="dateDeparture" id="fieldDateDeparture" />
           <form:errors path="dateDeparture" cssClass="error" />
         </div>
-        
+        <!--
         <div class="btn-group perspective">
           <button class="btn active" data-field-check="">Pasażer</button>
           <button class="btn" data-field-check="">Kierowca</button>
-        </div>
+        </div>-->
       </div>
       <div class="span3">
         <button class="btn btn-large btn-primary routeSearch"><i class="icon-road icon-white"></i> Szukaj przejazdu</button>

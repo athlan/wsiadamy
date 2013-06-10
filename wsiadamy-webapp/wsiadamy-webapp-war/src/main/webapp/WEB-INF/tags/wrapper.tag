@@ -2,8 +2,11 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@attribute name="scriptsFragment" fragment="true" %>
 <%@attribute name="cssFragment" fragment="true" %>
+<c:set var="baseURL" value="${fn:replace(pageContext.request.requestURL, pageContext.request.requestURI, pageContext.request.contextPath)}" scope="request" />
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -68,10 +71,9 @@
       </div>
     </div>
   	<div class="container">
-      <p>Current Locale : ${pageContext.response.locale}</p>
-      
+      <!--<p>Current Locale : ${pageContext.response.locale}</p>
       Text: <spring:message code="welcome.springmvc" text="default text" />
-      <p>Language : <a href="?language=en">English</a>|<a href="?language=zh_CN">Chinese</a></p>
+      <p>Language : <a href="?language=en">English</a>|<a href="?language=zh_CN">Chinese</a></p>-->
 <jsp:doBody/>
 
 	</div>

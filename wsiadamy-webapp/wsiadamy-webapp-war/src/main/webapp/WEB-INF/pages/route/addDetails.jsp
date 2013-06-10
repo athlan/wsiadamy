@@ -7,7 +7,7 @@
 	
 	<div class="row">
 		<div class="span5">
-		<form:form method="post" action="" commandName="routeAddDetailsInput">
+		<form:form method="post" action="" commandName="routeInput">
 		    <div>
 		    	<label for="fieldRouteLength">Długość trasy:</label>
 				<form:input path="routeLength" id="fieldRouteLength" />
@@ -45,7 +45,7 @@
 		</div>
 	</div>
 	
-	<form:form method="post" action="" commandName="routeAddInput">
+	<form:form method="post" action="" commandName="routeInput">
 		<form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" />
 		<form:input path="locationDestinationCoords" type="hidden" id="fieldLocationDestinationCoords" />
 <c:forEach items="${routeAddInput.waypointsCoords}" var="waypointCoord">

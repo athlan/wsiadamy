@@ -1,0 +1,9 @@
+.results .routeDescription .waypoint {
+  margin-right: 10px;
+  color: #999;
+}
+
+.results .routeDescription .waypoint.waypointInput {
+  font-weight: bold;
+  color: #000;
+}

@@ -63,6 +63,10 @@ public class AccountDataController {
 				birthday.setTime(userData.getBirthday());
 				form.setBirthday(birthday);
 			}
+			
+//			if(null != userData.getCarCombustion())
+				form.setCarCombustion(userData.getCarCombustion());
+
 		}
 		
         return "account/data";
@@ -93,6 +97,7 @@ public class AccountDataController {
 		userData.setLastname(form.getLastname());
 		userData.setBirthday(form.getBirthdayObject().getTime());
 		userData.setContactPhone(form.getContactPhone());
+		userData.setCarCombustion(form.getCarCombustion());
 		
 		userBO.update(user);
 		

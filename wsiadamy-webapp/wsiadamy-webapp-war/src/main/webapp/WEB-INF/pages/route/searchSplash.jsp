@@ -36,11 +36,11 @@
           <form:input path="dateDeparture" id="fieldDateDeparture" />
           <form:errors path="dateDeparture" cssClass="error" />
         </div>
-        
+        <!--
         <div class="btn-group perspective">
           <button class="btn active" data-field-check="">Pasażer</button>
           <button class="btn" data-field-check="">Kierowca</button>
-        </div>
+        </div>-->
       </div>
       <div class="span3">
         <button class="btn btn-large btn-primary routeSearch"><i class="icon-road icon-white"></i> Szukaj przejazdu</button>

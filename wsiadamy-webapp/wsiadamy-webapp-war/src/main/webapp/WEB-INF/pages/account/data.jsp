@@ -26,6 +26,11 @@
 			<form:input path="contactPhone" id="fieldContactPhone" placeholder="" autocomplete="off" />
 			<form:errors path="contactPhone" cssClass="error" />
 	    </div>
+		<div class="control-group">
+			<label class="control-label" for="fieldCarCombustion">Spalanie Twojego samochodu na 100km:</label>
+			<form:input path="carCombustion" id="fieldCarCombustion" />
+			<form:errors path="carCombustion" cssClass="error" />
+		</div>
 	    <div class="control-group">
 			<label class="control-label" for="">Facebook:</label>
 <c:if test="${empty userData.facebookId}">

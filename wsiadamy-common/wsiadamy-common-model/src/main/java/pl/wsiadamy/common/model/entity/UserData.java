@@ -26,10 +26,10 @@ public class UserData extends AbstractEntity<Integer> {
 
 	@Column
 	private String firstname;
-
+	
 	@Column
 	private String lastname;
-
+	
 	@Column
 	private Date birthday;
 
@@ -42,6 +42,9 @@ public class UserData extends AbstractEntity<Integer> {
 	@Column
 	private Long facebookId;
 
+	@Column
+	private float carCombustion;
+	
 	public UserData() {
 	}
 
@@ -108,6 +111,14 @@ public class UserData extends AbstractEntity<Integer> {
 
 	public void setFacebookId(Long facebookId) {
 		this.facebookId = facebookId;
+	}
+	
+	public float getCarCombustion() {
+		return carCombustion;
+	}
+
+	public void setCarCombustion(float carCombustion) {
+		this.carCombustion = carCombustion;
 	}
 	
 	@Override

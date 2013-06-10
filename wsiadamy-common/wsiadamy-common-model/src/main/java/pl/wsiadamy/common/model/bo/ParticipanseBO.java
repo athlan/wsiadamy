@@ -1,5 +1,7 @@
 package pl.wsiadamy.common.model.bo;
 
+import java.util.List;
+
 import pl.wsiadamy.common.model.entity.Participanse;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.entity.User;
@@ -22,4 +24,6 @@ public interface ParticipanseBO {
 	boolean participateRouteApprove(Participanse participanse);
 	
 	boolean participateRouteReject(Participanse participanse);
+	
+	List<Participanse> getRouteParticipationList(Route route);
 }

@@ -7,6 +7,9 @@ import java.util.Calendar;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+
+import pl.wsiadamy.common.model.input.RouteInput.EditValidationGroup;
 
 public class AccountDataInput {
 	
@@ -21,10 +24,14 @@ public class AccountDataInput {
 	private Calendar birthday;
 	
 	private SimpleDateFormat birthdayFormat = new SimpleDateFormat("dd.MM.yyyy");
-	
+
 	@NotNull
 	@Length(min=3)
 	private String contactPhone;
+
+	@NotNull(groups = { EditValidationGroup.class })
+	@Range(min = 1, message="{javax.validation.constraints.required}", groups = { EditValidationGroup.class })
+	private float carCombustion;
 	
     public AccountDataInput() {
     }
@@ -71,6 +78,14 @@ public class AccountDataInput {
 
 	public void setContactPhone(String contactPhone) {
 		this.contactPhone = contactPhone;
+	}
+
+	public float getCarCombustion() {
+		return carCombustion;
+	}
+
+	public void setCarCombustion(float carCombustion) {
+		this.carCombustion = carCombustion;
 	}
 
 }

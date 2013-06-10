@@ -18,6 +18,8 @@ import pl.wsiadamy.common.model.bo.UserBO;
 import pl.wsiadamy.common.model.entity.Route;
 import pl.wsiadamy.common.model.input.RouteAddDetailsInput;
 import pl.wsiadamy.common.model.input.RouteAddInput;
+import pl.wsiadamy.common.model.input.RouteInput;
+import pl.wsiadamy.webapp.controller.util.ValidatorHelper;
 
 @Controller
 @RequestMapping("/route")
@@ -29,10 +31,13 @@ public class RouteEditController {
 
 	@Autowired
 	RouteBO routeBO;
-	
-	@ModelAttribute("routeAddDetailsInput")
-    public RouteAddDetailsInput getFormAddDetailsRoute() {
-        return new RouteAddDetailsInput();
+
+	@Autowired
+	ValidatorHelper validatorHelper;
+
+	@ModelAttribute("routeInput")
+    public RouteInput getFormRoute() {
+        return new RouteInput();
     }
 	
 	@RequestMapping(value = "/editDetails/{id}", method = RequestMethod.GET)
@@ -41,18 +46,19 @@ public class RouteEditController {
 		@PathVariable
     	Integer id,
     	
-    	@ModelAttribute("routeAddDetailsInput")
-        RouteAddDetailsInput formDetails,
+    	@ModelAttribute("routeInput")
+        RouteInput form,
         
         ModelMap model) {
 		
 		Route route = routeBO.getById(id);
-
-		formDetails.setCarCombustion(route.getRouteDetails().getCarCombustion());
-		formDetails.setFuelPrice(route.getRouteDetails().getFuelPrice());
-		formDetails.setRouteLength(route.getRouteDetails().getRouteLength());
-		formDetails.setTotalPrice(route.getTotalPrice());
-		formDetails.setParticipansModeration(route.isParticipanseModeration());
+		
+		form.setSeats(route.getSeats());
+		form.setCarCombustion(route.getRouteDetails().getCarCombustion());
+		form.setFuelPrice(route.getRouteDetails().getFuelPrice());
+		form.setRouteLength(route.getRouteDetails().getRouteLength());
+		form.setTotalPrice(route.getTotalPrice());
+		form.setParticipansModeration(route.isParticipanseModeration());
 		
         return "route/editDetails";
     }
@@ -63,17 +69,21 @@ public class RouteEditController {
 		@PathVariable
     	Integer id,
     	
-        @ModelAttribute("routeAddDetailsInput")
-        @Valid RouteAddDetailsInput formDetails,
+        @ModelAttribute("routeInput")
+        RouteInput form,
         
         BindingResult result,
         
         ModelMap model) {
 		
-        if (!result.hasErrors()) {
-        	Route route = routeBO.editRoute(id, null, formDetails);
+		if (validatorHelper.isValid(result, form, RouteInput.EditValidationGroup.class )) {
+			Route route = routeBO.editRoute(id, form);
         	return "redirect:/route/get/" + route.getId();
         }
+        
+//        if (!result.hasErrors()) {
+//        	
+//        }
         
         return "route/editDetails";
     }

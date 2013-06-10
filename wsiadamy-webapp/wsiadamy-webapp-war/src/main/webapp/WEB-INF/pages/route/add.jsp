@@ -7,7 +7,7 @@
 
 	<div class="row">
 		<div class="span5">
-		<form:form method="post" action="" commandName="routeAddInput">
+		<form:form method="post" action="" commandName="routeInput">
 			<div>
 				<form:input path="locationSource" id="fieldLocationSource" placeholder="Wyruszam z..." class="location locationSoure locationAutocomplete" />
 				<form:input path="locationSourceCoords" type="hidden" id="fieldLocationSourceCoords" class="locationAutocompleteCoords" />
@@ -40,7 +40,6 @@
         <form:input path="dateDeparture" id="fieldDateDeparture" />
         <form:errors path="dateDeparture" cssClass="error" />
       </div>
-      
       <div>
         <label for="fieldSeats">Liczba dostępnych miejsc:</label>
         <form:input path="seats" id="fieldSeats" />

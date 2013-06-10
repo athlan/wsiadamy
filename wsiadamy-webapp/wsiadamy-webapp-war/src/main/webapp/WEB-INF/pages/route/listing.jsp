@@ -65,7 +65,7 @@ ${ paginatorViewHelper.display(paginator) }
 
 	</c:when>
 	<c:otherwise>
-		No routes to display
+		<div class="empty">Brak tras do wyświetlenia</div>
 	</c:otherwise>
 </c:choose>
   

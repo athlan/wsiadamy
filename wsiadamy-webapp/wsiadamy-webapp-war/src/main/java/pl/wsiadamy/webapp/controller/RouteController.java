@@ -63,7 +63,7 @@ public class RouteController {
 			model.addAttribute("routeParticipanse", routeParticipanse);
 		}
 		
-		model.addAttribute("participanses", route.getParticipanses());
+		model.addAttribute("participanses", participanseBO.getRouteParticipationList(route));
 		
         return "route/display";
     }

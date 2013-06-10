@@ -11,23 +11,27 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
-public class RouteAddInput {
+public class RouteInput {
+
+	public interface BasicDataValidationGroup {};
+	public interface EditValidationGroup {};
 	
-	@NotNull
-	@Length(min=1, message="{javax.validation.constraints.required}")
+	@NotNull(groups = { BasicDataValidationGroup.class } )
+	@Length(min=1, message="{javax.validation.constraints.required}", groups = { BasicDataValidationGroup.class } )
 	private String locationSource;
-
-	@NotNull
-	@Length(min=1, message="{javax.validation.constraints.required}")
+	
+	@NotNull(groups = { BasicDataValidationGroup.class } )
+	@Length(min=1, message="{javax.validation.constraints.required}", groups = { BasicDataValidationGroup.class } )
 	private String locationSourceCoords;
 	
-	@NotNull
-	@Length(min=1, message="{javax.validation.constraints.required}")
+	@NotNull(groups = { BasicDataValidationGroup.class } )
+	@Length(min=1, message="{javax.validation.constraints.required}", groups = { BasicDataValidationGroup.class } )
 	private String locationDestination;
-
-	@NotNull
-	@Length(min=1, message="{javax.validation.constraints.required}")
+	
+	@NotNull(groups = { BasicDataValidationGroup.class } )
+	@Length(min=1, message="{javax.validation.constraints.required}", groups = { BasicDataValidationGroup.class } )
 	private String locationDestinationCoords;
 	
 //	@NotEmpty
@@ -43,16 +47,35 @@ public class RouteAddInput {
 	@Length(min=1)
 	private String routeLine;
 
-	@NotNull
+	@NotNull(groups = { BasicDataValidationGroup.class, EditValidationGroup.class })
 	@Min(1)
 	private int seats;
 	
-    public RouteAddInput() {
-    	setLocationSource("");
-    	setLocationDestination("");
-    	
-    	setLocationSourceCoords("");
-    	setLocationDestinationCoords("");
+	@NotNull(groups = { EditValidationGroup.class })
+	@Min((long) 0.001)
+	private float routeLength;
+	
+	@NotNull(groups = { EditValidationGroup.class })
+	@Range(min = 1, message="{javax.validation.constraints.required}", groups = { EditValidationGroup.class })
+	private float carCombustion;
+	
+	@NotNull(groups = { EditValidationGroup.class })
+	@Range(min = 1, message="{javax.validation.constraints.required}", groups = { EditValidationGroup.class })
+	private float fuelPrice;
+	
+	@NotNull(groups = { EditValidationGroup.class })
+	@Range(min = 1, message="{javax.validation.constraints.required}", groups = { EditValidationGroup.class })
+	private float totalPrice;
+	
+	@NotNull(groups = { EditValidationGroup.class })
+	private boolean participansModeration;
+	
+    public RouteInput() {
+//    	setLocationSource("");
+//    	setLocationDestination("");
+//    	
+//    	setLocationSourceCoords("");
+//    	setLocationDestinationCoords("");
     	
     	Calendar dateTommorow = Calendar.getInstance();
     	dateTommorow.add(Calendar.DATE, 1);
@@ -60,7 +83,7 @@ public class RouteAddInput {
     	
     	waypoints = new LinkedHashMap<String, String>();
     	waypointsCoords = new LinkedHashMap<String, String>();
-
+    	
     	setSeats(2);
     }
     
@@ -143,5 +166,44 @@ public class RouteAddInput {
 	public void setSeats(int seats) {
 		this.seats = seats;
 	}
-	
+
+	public float getRouteLength() {
+		return routeLength;
+	}
+
+	public void setRouteLength(float routeLength) {
+		this.routeLength = routeLength;
+	}
+
+	public float getCarCombustion() {
+		return carCombustion;
+	}
+
+	public void setCarCombustion(float carCombustion) {
+		this.carCombustion = carCombustion;
+	}
+
+	public float getFuelPrice() {
+		return fuelPrice;
+	}
+
+	public void setFuelPrice(float fuelPrice) {
+		this.fuelPrice = fuelPrice;
+	}
+
+	public float getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(float totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public boolean isParticipansModeration() {
+		return participansModeration;
+	}
+
+	public void setParticipansModeration(boolean participansModeration) {
+		this.participansModeration = participansModeration;
+	}
 }

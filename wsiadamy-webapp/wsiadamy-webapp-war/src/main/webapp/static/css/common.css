@@ -1,3 +1,17 @@
+.container {
+  margin-top: 60px;
+}
+
+.pagination a {
+  padding: 5px;
+  border: 1px solid #eaeaea;
+  margin: 2px;
+}
+
+.pagination .pageCurrent {
+  font-weight: bold;
+}
+
 .locationSoure {
 	background: url(../img/pin-red-mini.png) no-repeat 5px center;
 	padding-left: 30px !important;

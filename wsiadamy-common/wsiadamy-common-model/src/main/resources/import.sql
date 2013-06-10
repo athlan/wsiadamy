@@ -1,18 +1,18 @@
 -- user 1
 INSERT INTO "public"."users" ("id", "password", "password_salt") VALUES ('1', null, null);
 INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('1', '0', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'athlan@vgroup.pl', '1');
-INSERT INTO "public"."users_data" VALUES ('1', '1991-04-21', 'athlan@vgroup.pl', '660011034', null, 'Piotr', 'Pelczar', '1');
+INSERT INTO "public"."users_data" VALUES ('1', '1991-04-21', '8', 'athlan@vgroup.pl', '660011034', null, 'Piotr', 'Pelczar', '1');
 UPDATE "public"."users" SET userdata_id = '1' WHERE id = '1';
 -- user 2
 INSERT INTO "public"."users" ("id", "password", "password_salt") VALUES ('2', null, null);
 INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('2', '1', null, null, '100000302544693', '2');
 INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('3', '0', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'me@athlan.pl', '2');
-INSERT INTO "public"."users_data" VALUES ('2', '1991-04-21', 'me@athlan.pl', '660011034', '100000302544693', 'Piotr2', 'Pelczar2', '2');
+INSERT INTO "public"."users_data" VALUES ('2', '1991-04-21', '8', 'me@athlan.pl', '660011034', '100000302544693', 'Piotr2', 'Pelczar2', '2');
 UPDATE "public"."users" SET userdata_id = '2' WHERE id = '2';
 -- user 3
 INSERT INTO "public"."users" ("id", "password", "password_salt") VALUES ('3', null, null);
 INSERT INTO "public"."users_logins" ("id", "accountscope", "password", "password_salt", "username", "userowner_id") VALUES ('4', '0', '260dcf28b0369dc344d4001b231024a2', 'ce588', 'athlanster@gmail.com', '3');
-INSERT INTO "public"."users_data" VALUES ('3', '1991-04-21', 'athlanster@gmail.com', '660011034', '100000302544693', 'Piotr3', 'Pelczar3', '3');
+INSERT INTO "public"."users_data" VALUES ('3', '1991-04-21', '8', 'athlanster@gmail.com', '660011034', '100000302544693', 'Piotr3', 'Pelczar3', '3');
 UPDATE "public"."users" SET userdata_id = '3' WHERE id = '3';
 
 -- ----------------------------
