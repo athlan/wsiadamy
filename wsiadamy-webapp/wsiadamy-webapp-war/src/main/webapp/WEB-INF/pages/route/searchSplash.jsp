@@ -3,16 +3,17 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <t:wrapper>
+  <jsp:attribute name="scriptsFragment">
+    <script src="${pageContext.request.contextPath}/static/js/pages/routeSearch.js" type="text/javascript"></script>
+  </jsp:attribute>
   <jsp:attribute name="cssFragment">
-    <link href="${pageContext.request.contextPath}/static/css/pages/searchSplash.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/static/css/pages/routeSearch.css" rel="stylesheet">
   </jsp:attribute>
   <jsp:body>
-  <div class="map" id="map_canvas"></div>
-  
   <form:form method="get" action="" commandName="routeSearchSimpleInput" class="form-search-route">
-    <a href="<c:url value="/route/add" />" class="btn btn-success routeAdd"><i class="icon-plus icon-white"></i> Dodaj przejazd</a>
     <h2>Szukaj przejazdu</h2>
     
     <div class="row">
@@ -32,9 +33,14 @@
     <div class="row">
       <div class="span3">
         <div>
-          <label for="fieldSeats">Data wyjazdu:</label>
+          <label for="fieldDateDeparture">Data wyjazdu:</label>
           <form:input path="dateDeparture" id="fieldDateDeparture" />
           <form:errors path="dateDeparture" cssClass="error" />
+        </div>
+        <div>
+          <label for="fieldRange">Szukaj w promieniu:</label>
+          <form:input path="dateDeparture" id="fieldRange" />
+          <form:errors path="range" cssClass="error" />
         </div>
         <!--
         <div class="btn-group perspective">
@@ -46,8 +52,15 @@
         <button class="btn btn-large btn-primary routeSearch"><i class="icon-road icon-white"></i> Szukaj przejazdu</button>
       </div>
     </div>
+    
+    <a href="<c:url value="/route/add" />" class="btn btn-success routeAdd"><i class="icon-plus icon-white"></i> Dodaj przejazd</a>
   </form:form>
   
+<style>
+.routeSearch {
+  float: right;
+}
+</style>
 <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places" type="text/javascript"></script>
 <script type="text/javascript">
   function initLocationService(inputObject) {
@@ -64,8 +77,6 @@
     google.maps.event.addListener(autocompleteFieldLocation, 'place_changed', function() {
       var place = autocompleteFieldLocation.getPlace();
       inputObject.next('.locationAutocompleteCoords').val(place.geometry.location.jb + " " + place.geometry.location.kb);
-      
-      calcRoute();
     });
   }
   
@@ -75,88 +86,9 @@
 	    });
 	});
   
-  	var map;
-  	
-	function initialize() {
-		directionsDisplay = new google.maps.DirectionsRenderer();
-		var centerPoint = new google.maps.LatLng(52.160455, 19.050293);
-		var mapOptions = {
-			zoom: 9,
-			mapTypeId: google.maps.MapTypeId.ROADMAP,
-			center: centerPoint,
-			disableDefaultUI: true,
-			streetViewControl: false
-		}
-		map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-		directionsDisplay.setMap(map);
-    	
-	    calcRoute();
-	    
-	    if(!$('#fieldLocationSource').val())
-	    	initStartLocation();
-	}
-	
-	google.maps.event.addDomListener(window, 'load', initialize);
-	
-	var directionDisplay;
-	var directionsService = new google.maps.DirectionsService();
-	var map;
-	
-	function calcRoute() {
-		var request = {
-		    origin: $('#fieldLocationSourceCoords').val(),
-		    destination: $('#fieldLocationDestinationCoords').val(),
-		    travelMode: google.maps.DirectionsTravelMode.DRIVING
-		};
-		
-		directionsService.route(request, function(response, status) {
-			if (status == google.maps.DirectionsStatus.OK) {
-				directionsDisplay.setDirections(response);
-			}
-		});
-	}
-  
-  function initStartLocation() {
-    if (navigator.geolocation) {
-      $('#fieldLocationSource').addClass('loading');
-      
-      navigator.geolocation.getCurrentPosition(function(position) {
-        console.log(position);
-        
-        $('#fieldLocationSourceCoords').val(position.coords.latitude + ' ' + position.coords.longitude);
-        //$('#fieldLocationSource').val(position.coords.latitude + '' + position.coords.longitude);
-        
-        var placeSearch = new google.maps.Geocoder(map);
-        var placeSearchRequest = {
-          location: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-          //types: ['(cities)'],
-        };
-        placeSearch.geocode(placeSearchRequest, function(geocoderResult, geocoderStatus) {
-          $('#fieldLocationSource').removeClass('loading');
-          
-          if(geocoderStatus == google.maps.GeocoderStatus.OK) {
-            for(var i = 0; i < geocoderResult.length; ++i) {
-              var item = geocoderResult[i];
-              
-              if(item.address_components[0].types[0] == 'administrative_area_level_3') {
-                document.getElementById('fieldLocationDestination').focus();
-                
-                $('#fieldLocationSource').val(item.formatted_address);
-                console.log(item.formatted_address);
-              }
-            }
-          }
-        });
-      }, function(errorMessage) {
-        $('#fieldLocationSource').removeClass('loading');
-        console.log(errorMessage);
-      });
-    }
-  }
 </script>
 <script>
 $(function() {
-
   $("#fieldDateDeparture").datetimepicker({
     controlType: 'select',
     timeFormat: 'HH:mm',
@@ -164,17 +96,94 @@ $(function() {
       dateFormat: 'dd.mm.yy'/*,
       minDate: new Date()*/
   });
-
-	$('.perspective .btn').click(function() {
-		var o = $(this);
-		$('.btn', o.parents('.btn-group')).removeClass('active');
-		o.addClass('active');
-		
-		return false;
-	});
   
-  document.getElementById('fieldLocationSource').focus();
+  $('.perspective .btn').click(function() {
+    var o = $(this);
+    $('.btn', o.parents('.btn-group')).removeClass('active');
+    o.addClass('active');
+    
+    return false;
+  });
+  
+  
 });
 </script>
+	
+	<c:choose>
+		<c:when test="${not empty routes}">
+			<div class="results">
+			<h1>Przejazdy:</h1>
+		<c:forEach items="${routes}" var="routeWrapper">
+<c:set var="route" value="${routeWrapper.route}" />
+<c:set var="routeParticipanse" value="${routeWrapper.participanse}" />
+      <div class="route" data-date-token="<fmt:formatDate value="${route.dateLastModified}" pattern="dd.MM.yyyy HH:mm" />" data-date-next="<fmt:formatDate value="${route.dateDeparture}" pattern="dd.MM.yyyy HH:mm" />">
+      
+      <div class="routeDescription">
+      	${routeWaypointsViewHelper.displayResultLine(routeWrapper, routeSearchSimpleInput)}
+      </div>
+      
+      <div class="details">
+      	 Dojazd do punktu początkowego: ${routeWrapper.distanceSource}km, dojazd do punktu końcowego: ${routeWrapper.distanceDestination}.
+      </div>
+      
+      <a href="<c:url value='/route/get/${route.id}' />">
+        Przejazd #<c:out value="${route.id}" />
+        z <c:out value="${route.waypointSource.name}" />
+        do <c:out value="${route.waypointDestination.name}" />
+      </a>
+      w dniu <fmt:formatDate value="${route.dateDeparture}" pattern="dd.MM.yyyy HH:mm" />
+      <br />
+      
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteParticipateAdd')">
+	<a href="<c:url value="/route/participate/${route.id}" />" class="btn btn-primary">Wsiadaj!</a>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateResignation')">
+	<a href="<c:url value="/route/participateResignation/${routeParticipanse.id}" />" class="btn">Rezygnuj z przejazdu</a>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateReviewJoin')">
+    <div class="btn-group">
+      <a class="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">
+        <i class="icon-envelope icon-white"></i> Zaproszenie
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateAccept')">
+        <li><a href="<c:url value='/route/participateAccept/${routeParticipanse.id}' />">Zaakceptuj</a></li>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateReject')">
+        <li><a href="<c:url value='/route/participateReject/${routeParticipanse.id}' />">Odrzuć</a></li>
+</sec:authorize>
+      </ul>
+    </div>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#routeParticipanse, 'RouteParticipateCancel')">
+	<a href="<c:url value="/route/participateCancel/${routeParticipanse.id}" />" class="btn">Anuluj zaproszenie</a>
+</sec:authorize>
+<sec:authorize access="@permissionHelper.hasPermission(#route, 'RouteRemove')">
+  <a href="<c:url value="/route/remove/${route.id}" />" class="btn btn-danger btn-mini">Usuń trasę</a>
+</sec:authorize>
+      
+      <br />
+      Distance source <c:out value="" /><br />
+      Position source <c:out value="${routeWrapper.positionSource}" /><br />
+      Distance destination <c:out value="${routeWrapper.distanceDestination}" /><br />
+      Position destination <c:out value="${routeWrapper.positionDestination}" /><br />
+      </div>
+      
+      <hr />
+      Pager:
+      
+<c:if test="${not empty pagerNextPage}">
+      <a href="${pagerNextPage}" class="nextPage">next page</a>
+</c:if>
+      
+		</c:forEach>
+			</div><!-- .results //-->
+		</c:when>
+		<c:otherwise>
+			<div class="searchNoRoutes">Nie znaleziono żadnych tras</div>
+		</c:otherwise>
+	</c:choose>
+  	
   </jsp:body>
 </t:wrapper>

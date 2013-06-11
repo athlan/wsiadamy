@@ -33,7 +33,7 @@
     <div class="row">
       <div class="span3">
         <div>
-          <label for="fieldSeats">Data wyjazdu:</label>
+          <label for="fieldDateDeparture">Data wyjazdu:</label>
           <form:input path="dateDeparture" id="fieldDateDeparture" />
           <form:errors path="dateDeparture" cssClass="error" />
         </div>
