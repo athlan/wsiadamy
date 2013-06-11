@@ -25,7 +25,7 @@ public class RouteSearchSimpleInput {
 	@Length(min=1, message="{javax.validation.constraints.required}")
 	private String locationDestinationCoords;
 	
-	private int rangee;
+	private int locationRange;
 
 	private Calendar dateDeparture;
 	private SimpleDateFormat dateDepartureFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -43,8 +43,8 @@ public class RouteSearchSimpleInput {
     	setLocationDestination("");
     	setLocationDestinationCoords("");
     	
-    	setRangee(5);
-
+    	setLocationRange(5);
+    	
     	Calendar dateTommorow = Calendar.getInstance();
     	dateTommorow.add(Calendar.MINUTE, 10);
     	setDateDeparture(dateTommorow);
@@ -85,12 +85,12 @@ public class RouteSearchSimpleInput {
 		this.locationDestinationCoords = locationDestinationCoords;
 	}
 	
-	public int getRangee() {
-		return rangee;
+	public int getLocationRange() {
+		return locationRange;
 	}
-
-	public void setRangee(int range) {
-		this.rangee = range;
+	
+	public void setLocationRange(int locationRange) {
+		this.locationRange = locationRange;
 	}
 
 	public String getDateDeparture() {

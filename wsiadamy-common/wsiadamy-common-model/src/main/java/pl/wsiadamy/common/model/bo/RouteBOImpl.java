@@ -162,7 +162,7 @@ public class RouteBOImpl implements RouteBO {
 		if(null != input.getDateToken())
 			params.put("dateTokenAfter", input.getDateTokenObject());
 		
-		return routeDao.findRoutes(waypointStartPoint, waypointStopPoint, input.getRangee() * 1000, limit, params);
+		return routeDao.findRoutes(waypointStartPoint, waypointStopPoint, input.getLocationRange() * 1000, limit, params);
 	}
 	
 	@Override
